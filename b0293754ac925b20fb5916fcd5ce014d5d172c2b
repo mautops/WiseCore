@@ -1,0 +1,30 @@
+src/copaw/context.py
+  fe55d4cb04cfbef2 1-143
+src/copaw/agents/tools/shell.py
+  fe55d4cb04cfbef2 8,18,26,40-41,58,85-90,113-132,142,151
+src/copaw/app/runner/runner.py
+  fe55d4cb04cfbef2 28,82-90
+docs/user_context.md
+  fe55d4cb04cfbef2 1-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.11",
+  "base_commit_sha": "b0293754ac925b20fb5916fcd5ce014d5d172c2b",
+  "prompts": {
+    "fe55d4cb04cfbef2": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "329b6ea1-1f7e-48dd-8944-d5197616d130",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 2481,
+      "total_deletions": 391,
+      "accepted_lines": 2090,
+      "overriden_lines": 0,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/49ca292a67070e05f7deaea4eb7280ce6b5a2c2a2c82438f795d890feba25b0a"
+    }
+  }
+}
