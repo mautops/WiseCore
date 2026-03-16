@@ -1,0 +1,22 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.11",
+  "base_commit_sha": "17d37fba376045977316e02b3edc88a8c856e03a",
+  "prompts": {
+    "aee2f4a8a2b0d511": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f6e6de2e-c5aa-4324-b9e6-5d21ed1ae0d6",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 125,
+      "overriden_lines": 0,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/d613381bebc40c352db765010c897f47e7b9b324aea36c711dec2771e2f46206"
+    }
+  }
+}
