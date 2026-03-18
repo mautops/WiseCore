@@ -1,0 +1,39 @@
+docs/fangan.md
+  3ac445636fd72fc3 1,3-36,38-49,51-55,57-71,73-105,107-153,156-169,172-415,422,429,436,438-440,443-453,455-501,503-639,641-644,647,650,652-660,666-673,677,679-704,708-740,742-818,820-825,830-835,837,839-845,847,849-851,854-893,895-905,918,920-923,925,927,929-931,933-936,938-941,943-947,949,951-954,956-960,962-966,968,970-974,976-979,981,983-987,989-992,994-997,999-1021,1023-1060,1064-1065
+  249a46a659ba5030 2,37,50,56,72,106,154-155,170-171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.16",
+  "base_commit_sha": "1ea9bc5a73973e4fc466a5129fa24e82fadb4ea8",
+  "prompts": {
+    "249a46a659ba5030": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3aada4ec-a7a3-4302-bf93-51e0efa7fff3",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 1311,
+      "total_deletions": 0,
+      "accepted_lines": 443,
+      "overriden_lines": 0,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/560f6ff892593625cd0194c9371145745984f524df7f75eb0674e3dcfe9183a8"
+    },
+    "3ac445636fd72fc3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dea082f6-589c-4adc-b4cc-e81f0ce3e963",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 1798,
+      "total_deletions": 1985,
+      "accepted_lines": 2090,
+      "overriden_lines": 0,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/8aaa665cf684c744d15e165d7bdc5ab73427d0ad83ec5282d06d00bf9cfafab7"
+    }
+  }
+}
