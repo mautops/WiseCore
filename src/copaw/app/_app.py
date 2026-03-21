@@ -19,6 +19,7 @@ from ..constant import (
     LOG_LEVEL_ENV,
     CORS_ORIGINS,
     WORKING_DIR,
+    WORKFLOW_RUNS_DIR,
     WORKFLOWS_DIR,
 )
 from ..__version__ import __version__
@@ -187,6 +188,7 @@ async def lifespan(
 
     # --- Ensure user-level workflows directory exists ---
     WORKFLOWS_DIR.mkdir(parents=True, exist_ok=True)
+    WORKFLOW_RUNS_DIR.mkdir(parents=True, exist_ok=True)
     logger.debug(f"Workflows directory ensured: {WORKFLOWS_DIR}")
 
     # --- Multi-agent manager initialization ---

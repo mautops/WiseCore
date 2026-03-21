@@ -6,6 +6,7 @@ orchestrate multiple agents.
 """
 
 import logging
+from datetime import datetime
 from pathlib import Path
 from typing import List, Optional
 
@@ -13,7 +14,8 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from ...constant import WORKFLOWS_DIR
-from ..workflow_md_meta import extract_meta_fields, split_frontmatter
+from .md_meta import extract_meta_fields, split_frontmatter
+from .run_store import WorkflowRunStore, delete_runs_file
 
 logger = logging.getLogger(__name__)
 
@@ -86,6 +88,75 @@ class WorkflowCreateRequest(BaseModel):
     )
 
 
+class WorkflowRunCreate(BaseModel):
+    """Append one execution record for a workflow."""
+
+    user_id: str = Field(default="", max_length=512)
+    session_id: str = Field(default="", max_length=512)
+    trigger: str = Field(
+        ...,
+        min_length=1,
+        max_length=128,
+        description="How the run was started (e.g. api, cron, manual)",
+    )
+    status: Optional[str] = Field(
+        None,
+        max_length=64,
+        description="Optional outcome hint (e.g. success, error)",
+    )
+    executed_at: Optional[datetime] = Field(
+        None,
+        description="Defaults to current UTC if omitted",
+    )
+
+
+class WorkflowRunOut(BaseModel):
+    """One persisted workflow run row."""
+
+    run_id: str
+    workflow_id: str
+    user_id: str = ""
+    session_id: str = ""
+    trigger: str
+    executed_at: str
+    status: Optional[str] = None
+
+
+class WorkflowRunListResponse(BaseModel):
+    """List of run records for one workflow (newest first)."""
+
+    runs: List[WorkflowRunOut]
+
+
+def _reject_invalid_basename(filename: str) -> None:
+    if "/" in filename or "\\" in filename:
+        raise HTTPException(
+            status_code=400,
+            detail="Filename cannot contain path separators",
+        )
+    if not filename.endswith((".md", ".markdown")):
+        raise HTTPException(
+            status_code=400,
+            detail="Workflow filename must end with .md or .markdown",
+        )
+
+
+def _workflow_file_or_404(filename: str) -> Path:
+    _reject_invalid_basename(filename)
+    file_path = WORKFLOWS_DIR / filename
+    if not file_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"Workflow '{filename}' not found",
+        )
+    if not file_path.is_file():
+        raise HTTPException(
+            status_code=400,
+            detail=f"'{filename}' is not a file",
+        )
+    return file_path
+
+
 def _read_workflow_text(file_path: Path) -> str:
     return file_path.read_text(encoding="utf-8")
 
@@ -151,28 +222,71 @@ async def list_workflows() -> WorkflowListResponse:
 
 
 @router.get(
+    "/{filename}/runs/{run_id}",
+    response_model=WorkflowRunOut,
+    summary="Get one workflow run record",
+)
+async def get_workflow_run(filename: str, run_id: str) -> WorkflowRunOut:
+    """Return a single run by ``run_id`` from this workflow's history file."""
+    _workflow_file_or_404(filename)
+    store = WorkflowRunStore.get_instance()
+    row = await store.get_run(filename, run_id)
+    if row is None:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Run '{run_id}' not found for workflow '{filename}'",
+        )
+    return WorkflowRunOut.model_validate(row)
+
+
+@router.get(
+    "/{filename}/runs",
+    response_model=WorkflowRunListResponse,
+    summary="List workflow run history",
+)
+async def list_workflow_runs(filename: str) -> WorkflowRunListResponse:
+    """Return all run records for this workflow, newest first."""
+    _workflow_file_or_404(filename)
+    store = WorkflowRunStore.get_instance()
+    raw = await store.list_runs(filename)
+    ordered = list(reversed(raw))
+    runs = [WorkflowRunOut.model_validate(r) for r in ordered]
+    return WorkflowRunListResponse(runs=runs)
+
+
+@router.post(
+    "/{filename}/runs",
+    response_model=WorkflowRunOut,
+    status_code=201,
+    summary="Append a workflow run record",
+)
+async def append_workflow_run(
+    filename: str,
+    body: WorkflowRunCreate,
+) -> WorkflowRunOut:
+    """Append one JSON object to this workflow's run list file."""
+    _workflow_file_or_404(filename)
+    store = WorkflowRunStore.get_instance()
+    row = await store.append_run(
+        filename,
+        user_id=body.user_id,
+        session_id=body.session_id,
+        trigger=body.trigger,
+        status=body.status,
+        executed_at=body.executed_at,
+    )
+    return WorkflowRunOut.model_validate(row)
+
+
+@router.get(
     "/{filename}",
     response_model=WorkflowReadResponse,
     summary="Get workflow content",
-    description=(
-        "Read workflow: raw file, body without frontmatter, and parsed meta"
-    ),
+    description=("Read workflow: raw file, body without frontmatter, and parsed meta"),
 )
 async def get_workflow(filename: str) -> WorkflowReadResponse:
     """Get workflow content by filename."""
-    file_path = WORKFLOWS_DIR / filename
-
-    if not file_path.exists():
-        raise HTTPException(
-            status_code=404,
-            detail=f"Workflow '{filename}' not found",
-        )
-
-    if not file_path.is_file():
-        raise HTTPException(
-            status_code=400,
-            detail=f"'{filename}' is not a file",
-        )
+    file_path = _workflow_file_or_404(filename)
 
     try:
         raw = _read_workflow_text(file_path)
@@ -217,18 +331,7 @@ async def get_workflow(filename: str) -> WorkflowReadResponse:
 )
 async def create_workflow(request: WorkflowCreateRequest) -> dict:
     """Create a new workflow file."""
-    # Validate filename
-    if not request.filename.endswith((".md", ".markdown")):
-        raise HTTPException(
-            status_code=400,
-            detail="Workflow filename must end with .md or .markdown",
-        )
-
-    if "/" in request.filename or "\\" in request.filename:
-        raise HTTPException(
-            status_code=400,
-            detail="Filename cannot contain path separators",
-        )
+    _reject_invalid_basename(request.filename)
 
     file_path = WORKFLOWS_DIR / request.filename
 
@@ -265,26 +368,7 @@ async def update_workflow(
     content: WorkflowContent,
 ) -> dict:
     """Update an existing workflow file."""
-    # Validate filename
-    if "/" in filename or "\\" in filename:
-        raise HTTPException(
-            status_code=400,
-            detail="Filename cannot contain path separators",
-        )
-
-    file_path = WORKFLOWS_DIR / filename
-
-    if not file_path.exists():
-        raise HTTPException(
-            status_code=404,
-            detail=f"Workflow '{filename}' not found",
-        )
-
-    if not file_path.is_file():
-        raise HTTPException(
-            status_code=400,
-            detail=f"'{filename}' is not a file",
-        )
+    file_path = _workflow_file_or_404(filename)
 
     try:
         file_path.write_text(content.content, encoding="utf-8")
@@ -309,29 +393,11 @@ async def update_workflow(
 )
 async def delete_workflow(filename: str) -> dict:
     """Delete a workflow file."""
-    # Validate filename
-    if "/" in filename or "\\" in filename:
-        raise HTTPException(
-            status_code=400,
-            detail="Filename cannot contain path separators",
-        )
-
-    file_path = WORKFLOWS_DIR / filename
-
-    if not file_path.exists():
-        raise HTTPException(
-            status_code=404,
-            detail=f"Workflow '{filename}' not found",
-        )
-
-    if not file_path.is_file():
-        raise HTTPException(
-            status_code=400,
-            detail=f"'{filename}' is not a file",
-        )
+    file_path = _workflow_file_or_404(filename)
 
     try:
         file_path.unlink()
+        delete_runs_file(filename)
         logger.info(f"Deleted workflow: {file_path}")
         return {
             "success": True,

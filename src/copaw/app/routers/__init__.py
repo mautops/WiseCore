@@ -11,7 +11,7 @@ from .providers import router as providers_router
 from .skills import router as skills_router
 from .skills_stream import router as skills_stream_router
 from .workspace import router as workspace_router
-from .workflows import router as workflows_router
+from ..workflow import router as workflows_router
 from .envs import router as envs_router
 from .ollama_models import router as ollama_models_router
 from .mcp import router as mcp_router

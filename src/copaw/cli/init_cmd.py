@@ -26,7 +26,7 @@ from ..config.config import (
 )
 from ..constant import HEARTBEAT_DEFAULT_EVERY
 from ..providers import ProviderManager
-from ..constant import WORKING_DIR, WORKFLOWS_DIR
+from ..constant import WORKING_DIR, WORKFLOW_RUNS_DIR, WORKFLOWS_DIR
 
 SECURITY_WARNING = """
 Security warning — please read.
@@ -199,6 +199,7 @@ def init_cmd(
 
     # --- Ensure user-level workflows directory exists ---
     WORKFLOWS_DIR.mkdir(parents=True, exist_ok=True)
+    WORKFLOW_RUNS_DIR.mkdir(parents=True, exist_ok=True)
     click.echo(f"✓ Workflows directory: {WORKFLOWS_DIR}")
 
     # Get default workspace path for subsequent operations
