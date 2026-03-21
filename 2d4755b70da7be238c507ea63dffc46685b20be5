@@ -1,0 +1,38 @@
+src/copaw/cli/init_cmd.py
+  63da2dc42fe465c0 29,202
+src/copaw/app/routers/__init__.py
+  63da2dc42fe465c0 14
+src/copaw/app/_app.py
+  63da2dc42fe465c0 22,191
+src/copaw/app/workflow/router.py
+  63da2dc42fe465c0 1-411
+src/copaw/app/workflow/__init__.py
+  63da2dc42fe465c0 1-6
+src/copaw/constant.py
+  63da2dc42fe465c0 150-151
+src/copaw/app/workflow/run_store.py
+  63da2dc42fe465c0 1-133
+src/copaw/app/workflow/md_meta.py
+  63da2dc42fe465c0 1-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.16",
+  "base_commit_sha": "2d4755b70da7be238c507ea63dffc46685b20be5",
+  "prompts": {
+    "63da2dc42fe465c0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "29f41bca-8106-4be6-a5ca-93790220cd97",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 141,
+      "total_deletions": 202,
+      "accepted_lines": 924,
+      "overriden_lines": 0,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/6405770551ec62984a8bda686d3efeb92cfcfbb335b67d53fab64bd72542dd55"
+    }
+  }
+}
