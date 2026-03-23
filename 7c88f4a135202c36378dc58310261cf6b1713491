@@ -1,0 +1,146 @@
+src/copaw/app/audit.py
+  0e6a5544f61d465d 1-104
+src/copaw/app/stream_concurrency.py
+  0e6a5544f61d465d 1-51
+src/copaw/app/routers/providers.py
+  0e6a5544f61d465d 14-15,98,103,135,139,218,224,250,255,288,294,318,322,339,344,361,366,390-391,442-443
+src/copaw/agents/tools/file_search.py
+  0e6a5544f61d465d 13-18,86-104,115,121,140-142,144,179,184,250,256,268-272,298-299
+src/copaw/agents/tools/file_io.py
+  0e6a5544f61d465d 11-15,19-21,24-26,76-79,81-82,87,92,97,103,164-169,193-196,199,204,247-250,252-253,258,263,268,274,296-299,301-305,342-345,348-349,355
+tests/unit/utils/test_workspace_path.py
+  0e6a5544f61d465d 1-65
+tests/unit/agents/test_skills_policy_hub.py
+  0e6a5544f61d465d 1-15,17,19-70
+tests/unit/app/test_channel_binding.py
+  0e6a5544f61d465d 1-47
+tests/unit/app/test_membership_tenant.py
+  0e6a5544f61d465d 1-84
+src/copaw/utils/workspace_path.py
+  0e6a5544f61d465d 1-2,4-50
+src/copaw/app/_app.py
+  0e6a5544f61d465d 21,67,69-70,190-200,260,262,291,294-296
+src/copaw/app/crons/executor.py
+  0e6a5544f61d465d 8-9,66-80,82-83,85-88
+src/copaw/app/channels/base.py
+  0e6a5544f61d465d 509-510,603-644
+src/copaw/security/tool_guard/l2_policy.py
+  0e6a5544f61d465d 1-20,22-111
+README_zh.md
+  0e6a5544f61d465d 80
+tests/unit/app/test_audit_emit.py
+  0e6a5544f61d465d 1-156
+src/copaw/app/policy.py
+  0e6a5544f61d465d 1-11,13-174
+src/copaw/cli/auth_cmd.py
+  0e6a5544f61d465d 11-12,22-29,37,44-46,49-55,58-61,73-74
+src/copaw/app/routers/skills.py
+  0e6a5544f61d465d 22-23,25,31-40,142-145,187-190,370-374,421-425,516-519,551-554,569-572,606-609,634-637,672-675,748-751,786-789
+src/copaw/app/workspace/workspace.py
+  0e6a5544f61d465d 187
+src/copaw/app/break_glass.py
+  0e6a5544f61d465d 1-35
+src/copaw/agents/tools/send_file.py
+  0e6a5544f61d465d 16-20,39-40,51-71,74-75,85,96,103,133
+src/copaw/agents/skills_policy.py
+  0e6a5544f61d465d 1-63
+src/copaw/app/user_agent_prefs.py
+  0e6a5544f61d465d 1-7,9-96
+docs/permission_actions.md
+  0e6a5544f61d465d 1-151
+src/copaw/app/routers/workspace.py
+  0e6a5544f61d465d 17-18,133-134,193-194
+src/copaw/agents/tools/shell.py
+  0e6a5544f61d465d 15-44,157,171-173,184-186,188-202
+src/copaw/agents/react_agent.py
+  0e6a5544f61d465d 29-32,244-246
+src/copaw/app/routers/agent_scoped.py
+  0e6a5544f61d465d 8,13,50-66
+src/copaw/app/routers/auth.py
+  0e6a5544f61d465d 7,9-10,16,20-47,70,73-119,137,145,148-151,164,172,176,191-205,213-435
+src/copaw/app/routers/console.py
+  0e6a5544f61d465d 18,85-86,164-165,179-180,217-218
+src/copaw/app/permission_actions.py
+  0e6a5544f61d465d 1-2,4-41
+src/copaw/config/config.py
+  0e6a5544f61d465d 439-442,722-728,748-751,759-802,864-867
+src/copaw/app/routers/tools.py
+  0e6a5544f61d465d 17,43-44,93-94
+src/copaw/app/runner/runner.py
+  0e6a5544f61d465d 221,242-247,265-267,276,373-378
+tests/unit/app/test_user_agent_prefs.py
+  0e6a5544f61d465d 1-30
+src/copaw/agents/tools/view_image.py
+  0e6a5544f61d465d 10-15,32-33,43-65,94
+tests/unit/app/test_break_glass_and_rate_limit.py
+  0e6a5544f61d465d 1-16,18,21-146
+src/copaw/app/mcp/manager.py
+  0e6a5544f61d465d 13,18,37-42,45-48,195-208,210-215,224,233
+src/copaw/app/service_account.py
+  0e6a5544f61d465d 1-2,4-29,31-241
+src/copaw/app/http_policy_middleware.py
+  0e6a5544f61d465d 1-65
+tests/unit/app/test_policy.py
+  0e6a5544f61d465d 1-2,4-93
+src/copaw/app/crons/api.py
+  0e6a5544f61d465d 7,14,16-17,21,30-35,39,44,54,67,78,89,101,113,127
+src/copaw/app/agent_context.py
+  0e6a5544f61d465d 2,5-6,8,12-46,61-62,66-67,71-73,79,83-84,94-101,119-120,129,137-159,163,168
+tests/unit/security/test_l2_mcp_policy.py
+  0e6a5544f61d465d 1-81
+src/copaw/app/membership.py
+  0e6a5544f61d465d 1-2,4-187
+src/copaw/app/crons/models.py
+  0e6a5544f61d465d 118-121,140-147
+scripts/migrate_tenant_workspaces.py
+  0e6a5544f61d465d 1-100
+tests/unit/app/test_http_policy_middleware.py
+  0e6a5544f61d465d 1-158
+docs/tasks.md
+  0e6a5544f61d465d 1-168
+src/copaw/app/auth.py
+  0e6a5544f61d465d 2,4-5,7-12,24,80,86-88,91,96-151,153-161,221-223,226-229,232-237,240-250,254-256,259,264-265,286-287,289-290,292-293,303-305,327-344,374-377,379
+src/copaw/app/routers/mcp.py
+  0e6a5544f61d465d 12,200-201,225-226,254-255,325-326,388-389,438-439
+src/copaw/app/rate_limit.py
+  0e6a5544f61d465d 1-64
+src/copaw/app/routers/agent.py
+  0e6a5544f61d465d 19-23,56-57,84-85,112-113,136-137,164-165,192-193,212-213,253-254,456-457,478-479,515-516,537-538
+src/copaw/app/routers/config.py
+  0e6a5544f61d465d 39-43,74-75,137-138,191-192,243-244,296-297,320-321
+src/copaw/app/runner/api.py
+  0e6a5544f61d465d 25,27
+src/copaw/app/routers/agents.py
+  0e6a5544f61d465d 25-39,103-104,107-117,120-121,155-157,160-165,183-184,187,207,221-222,224,247-252,264,269-274,301,311,320,324-329,345,365,369-373,394,399-403,426,432-436,454,458-462
+docs/multi_agent_permission.md
+  0e6a5544f61d465d 1-170
+tests/integrated/test_authz_http.py
+  0e6a5544f61d465d 1-6,8-314
+src/copaw/agents/tool_guard_mixin.py
+  0e6a5544f61d465d 40-44,50-60,74-127,190-206,220-251,273,275,299,310-311,319-323
+src/copaw/app/channel_binding.py
+  0e6a5544f61d465d 1-138
+CHANGELOG.md
+  0e6a5544f61d465d 1-13
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.18",
+  "base_commit_sha": "7c88f4a135202c36378dc58310261cf6b1713491",
+  "prompts": {
+    "0e6a5544f61d465d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "60cd5c8b-6648-4295-9d95-d61cc8467d72",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 2990,
+      "total_deletions": 992,
+      "accepted_lines": 4910,
+      "overriden_lines": 6,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/46145140115aea025a5e44f659010660ac2a673aa0ca83d6619747d0820b73ce"
+    }
+  }
+}
