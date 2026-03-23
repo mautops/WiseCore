@@ -1,0 +1,57 @@
+next-console/app/(app)/agent/chat/use-chat-stream.ts
+  c26b5135ae15514d 59-60,62-67
+deploy/Dockerfile
+  c26b5135ae15514d 2,4,19-29
+next-console/package.json
+  c26b5135ae15514d 39
+next-console/app/(app)/agent/chat/chat-message-list.tsx
+  c26b5135ae15514d 5-6,31,161,168-176,220-221,224-225,227-231,233-273,275-277,280-283,285,287-289,291-293,295-309,311-312
+src/copaw/app/_app.py
+  c26b5135ae15514d 308-310,328-331
+next-console/app/(app)/agent/workflows/workflow-domain.ts
+  c26b5135ae15514d 11-13,171-222
+next-console/app/(app)/agent/workflows/workflow-runs-daily-chart.tsx
+  c26b5135ae15514d 1-100
+next-console/lib/chat-api.ts
+  c26b5135ae15514d 86-89,91,93-129,247,250-251,266-267,269,271-274,276,278-279,325,333-345,347-353,355-356,363-364
+next-console/app/(app)/agent/chat/page.tsx
+  c26b5135ae15514d 185-186,196-200,227
+next-console/components/ui/chart.tsx
+  c26b5135ae15514d 1-356
+docker-compose.yml
+  c26b5135ae15514d 1,11-13,26-46
+next-console/app/api/copaw/[[...path]]/route.ts
+  c26b5135ae15514d 2-4,7,32-62,67-69,85-91,94
+next-console/app/(app)/agent/workflows/workflow-list-card.tsx
+  c26b5135ae15514d 3,7,23,51-68,70-72,75-78,80,84-90,93-95,98-102,106-166
+next-console/app/(app)/agent/workflows/workflow-create-dialog.tsx
+  c26b5135ae15514d 17-33,61,63-64,71
+next-console/lib/workflow-api.ts
+  c26b5135ae15514d 11-28
+next-console/app/(app)/agent/workflows/workflows-client.tsx
+  c26b5135ae15514d 13,23-25,56,165-168,172,232,253-257,295-301
+next-console/components/ai-elements/message.tsx
+  c26b5135ae15514d 326-337
+next-console/lib/copaw-access-jwt.ts
+  c26b5135ae15514d 1-78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.18",
+  "base_commit_sha": "4c08b98e8d9d2d071d121e76d97c157cc9d8e081",
+  "prompts": {
+    "c26b5135ae15514d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2fe94c1a-9e9e-4760-a1dc-9ff6e725d745",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 845,
+      "total_deletions": 523,
+      "accepted_lines": 1072,
+      "overriden_lines": 2
+    }
+  }
+}
