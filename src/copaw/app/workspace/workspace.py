@@ -31,7 +31,7 @@ from ...agents.memory import MemoryManager
 from ...config.config import load_agent_config
 
 if TYPE_CHECKING:
-    from ..channels.base import BaseChannel
+    pass
 
 logger = logging.getLogger(__name__)
 

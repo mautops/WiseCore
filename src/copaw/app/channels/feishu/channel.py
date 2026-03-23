@@ -312,9 +312,6 @@ class FeishuChannel(BaseChannel):
         native_payload: Any,
     ) -> "AgentRequest":
         """Build AgentRequest from Feishu native dict (content_parts)."""
-        from agentscope_runtime.engine.schemas.agent_schemas import (
-            AgentRequest,
-        )
 
         payload = native_payload if isinstance(native_payload, dict) else {}
         channel_id = payload.get("channel_id") or self.channel

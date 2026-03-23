@@ -14,6 +14,7 @@ from starlette.responses import FileResponse, StreamingResponse
 
 from agentscope_runtime.engine.schemas.agent_schemas import AgentRequest
 from ..agent_context import get_agent_for_request
+from ..runner.chat_access import ensure_chat_visible, token_user_id
 
 
 logger = logging.getLogger(__name__)
@@ -65,6 +66,15 @@ def _extract_session_and_payload(request_data: Union[AgentRequest, dict]):
     return native_payload
 
 
+def _apply_token_sender(request: Request, native_payload: dict) -> None:
+    """Bind console chat to JWT user when present (ignore spoofed body user_id)."""
+    tu = token_user_id(request)
+    if tu is None:
+        return
+    native_payload["sender_id"] = tu
+    native_payload["meta"]["user_id"] = tu
+
+
 @router.post(
     "/chat",
     status_code=200,
@@ -90,6 +100,7 @@ async def post_console_chat(
         native_payload = _extract_session_and_payload(request_data)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e)) from e
+    _apply_token_sender(request, native_payload)
     session_id = console_channel.resolve_session_id(
         sender_id=native_payload["sender_id"],
         channel_meta=native_payload["meta"],
@@ -156,6 +167,7 @@ async def post_console_chat_stop(
 ) -> dict:
     """Stop the running chat. Only stops when called."""
     workspace = await get_agent_for_request(request)
+    ensure_chat_visible(await workspace.chat_manager.get_chat(chat_id), request)
     stopped = await workspace.task_tracker.request_stop(chat_id)
     return {"stopped": stopped}
 
