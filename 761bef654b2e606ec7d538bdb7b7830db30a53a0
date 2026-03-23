@@ -1,0 +1,40 @@
+next-console/components/layout/user-profile-menu.tsx
+  c26b5135ae15514d 1-74
+next-console/components/ai-elements/message.tsx
+  c26b5135ae15514d 1-357
+next-console/components/ui/textarea.tsx
+  c26b5135ae15514d 1-18
+next-console/app/(app)/agent/chat/chat-input.tsx
+  c26b5135ae15514d 1-75
+next-console/app/(app)/agent/chat/chat-message-list.tsx
+  c26b5135ae15514d 1-292
+next-console/app/(app)/agent/chat/page.tsx
+  c26b5135ae15514d 1-259
+next-console/app/(app)/agent/chat/use-chat-stream.ts
+  c26b5135ae15514d 1-322
+next-console/components/ai-elements/reasoning.tsx
+  c26b5135ae15514d 1-222
+next-console/components/ai-elements/conversation.tsx
+  c26b5135ae15514d 1-168
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.18",
+  "base_commit_sha": "761bef654b2e606ec7d538bdb7b7830db30a53a0",
+  "prompts": {
+    "c26b5135ae15514d": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "2fe94c1a-9e9e-4760-a1dc-9ff6e725d745",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 1855,
+      "overriden_lines": 0,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/13710751ee9b0a7e49c01dc36d92f315a058e0cb88fba465b30e8a4e97ce558b"
+    }
+  }
+}
