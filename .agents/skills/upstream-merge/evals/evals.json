@@ -1,0 +1,23 @@
+{
+  "skill_name": "upstream-merge",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "We forked CoPaw from agentscope-ai/CoPaw and ship our own release. I want to merge upstream main into our local main but I have never set upstream. Walk me through the exact git commands and what to do if merge conflicts appear in deploy/Dockerfile.",
+      "expected_output": "Adds upstream remote, fetches, merges upstream/<default-branch>, explains conflict resolution for Dockerfile, suggests running tests after merge",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Upstream PR 42 fixes a bug we need, but it is still open. I only want those commits on our branch `local`, not a full upstream merge. How do I fetch that PR and cherry-pick safely?",
+      "expected_output": "Uses git fetch upstream pull/42/head, inspects log, cherry-picks onto a topic branch from local, mentions gh pr view as optional",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "After cherry-picking three commits from upstream, `git cherry-pick` stopped with conflicts in next-console/package.json. I do not want to lose our pnpm overrides. What should I check before continuing the cherry-pick?",
+      "expected_output": "Open conflicted file, preserve downstream overrides while taking upstream dependency changes intentionally, git add and cherry-pick --continue, or abort path",
+      "files": []
+    }
+  ]
+}
