@@ -1,0 +1,83 @@
+next-console/components/console-mirror/layout.tsx
+  243a7218809a11b8 1-68
+next-console/app/(app)/agent/mcp/mcp-client.tsx
+  243a7218809a11b8 5-8,120-124,211
+next-console/app/(app)/settings/agents/agents-toolbar.tsx
+  243a7218809a11b8 3,46-49
+next-console/app/(app)/settings/environments/environments-client.tsx
+  243a7218809a11b8 5-8,142-146,254
+next-console/app/(app)/agent/config/config-client.tsx
+  243a7218809a11b8 8-11,163-178,613
+next-console/app/(app)/settings/models/models-toolbar.tsx
+  243a7218809a11b8 4
+next-console/app/(app)/settings/token-usage/token-usage-client.tsx
+  243a7218809a11b8 5-9,83-87,134-137,356
+next-console/app/(app)/agent/mcp/mcp-toolbar.tsx
+  243a7218809a11b8 3,47-50
+next-console/app/(app)/control/channels/channels-client.tsx
+  243a7218809a11b8 5-8,383-387,468
+next-console/app/(app)/control/cron-jobs/cron-jobs-client.tsx
+  243a7218809a11b8 5-8,315-319,456
+next-console/components/console-mirror/index.ts
+  243a7218809a11b8 1-7
+next-console/app/(app)/agent/skills/skills-client.tsx
+  243a7218809a11b8 4-7,148-152,239
+next-console/app/(app)/control/heartbeat/heartbeat-client.tsx
+  243a7218809a11b8 6-9,136-152,300
+next-console/app/(app)/settings/models/models-domain.ts
+  243a7218809a11b8 12-23,25,33-64
+next-console/app/(app)/agent/skills/skills-toolbar.tsx
+  243a7218809a11b8 3,43-46
+next-console/app/(app)/settings/models/models-client.tsx
+  243a7218809a11b8 3,28,32,36,48-54,67-74,81-105,108,110,116,151,159-164,166-167,176-183,189-190,194-213,215-315,317-318,320-335,337-343,346-361,363-390,392-393,402
+next-console/app/(app)/agent/tools/tools-client.tsx
+  243a7218809a11b8 6-9,88-103,163
+next-console/app/(app)/settings/voice/voice-client.tsx
+  243a7218809a11b8 5-8,113-117,313
+next-console/app/(app)/agent/config/config-toolbar.tsx
+  243a7218809a11b8 3,42-44
+next-console/lib/auth.ts
+  243a7218809a11b8 20
+next-console/app/(app)/agent/workflows/workflow-list-content.tsx
+  243a7218809a11b8 3-6,43-47,113
+next-console/app/(app)/control/sessions/sessions-client.tsx
+  243a7218809a11b8 5-8,127-131,221
+next-console/app/(app)/settings/agents/agents-client.tsx
+  243a7218809a11b8 5-8,196-200,278
+next-console/app/(app)/settings/security/security-client.tsx
+  243a7218809a11b8 6-9,265-280,731
+next-console/app/(app)/agent/workspace/workspace-client.tsx
+  243a7218809a11b8 5,279
+next-console/app/(app)/settings/environments/environments-toolbar.tsx
+  243a7218809a11b8 3,46-49
+next-console/app/(app)/control/heartbeat/heartbeat-toolbar.tsx
+  243a7218809a11b8 3,42-44
+next-console/app/(app)/agent/workflows/workflow-toolbar.tsx
+  243a7218809a11b8 3,28,63-66
+next-console/app/(app)/agent/workspace/workspace-toolbar.tsx
+  243a7218809a11b8 3,75-79
+next-console/app/(app)/settings/models/provider-summary-card.tsx
+  243a7218809a11b8 1-258
+next-console/app/(app)/control/cron-jobs/cron-jobs-toolbar.tsx
+  243a7218809a11b8 3,46-49
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.18",
+  "base_commit_sha": "169c53c7f6f711f89e17b97e4f62ec8e895b263d",
+  "prompts": {
+    "243a7218809a11b8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a80c17d1-dd44-4674-9493-ea3fee0f3998",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 696,
+      "total_deletions": 377,
+      "accepted_lines": 881,
+      "overriden_lines": 0
+    }
+  }
+}
