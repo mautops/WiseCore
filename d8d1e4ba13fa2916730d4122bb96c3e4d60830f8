@@ -1,0 +1,157 @@
+src/copaw/agents/tools/get_current_time.py
+  243a7218809a11b8 17-21
+console/src/api/modules/skill.ts
+  243a7218809a11b8 6-7,11
+src/copaw/app/channels/imessage/channel.py
+  243a7218809a11b8 94,117
+console/src/api/config.ts
+  243a7218809a11b8 1,12
+src/copaw/app/channels/qq/channel.py
+  243a7218809a11b8 523,540,661-665,1369-1370,1394-1401
+src/copaw/app/channels/discord_/channel.py
+  243a7218809a11b8 250,275
+src/copaw/config/config.py
+  243a7218809a11b8 14-16,88,264,271-305
+console/src/pages/Chat/ModelSelector/index.tsx
+  243a7218809a11b8 134-135
+src/copaw/providers/gemini_provider.py
+  243a7218809a11b8 7-8,16-21,24,140-260,262-330
+tests/unit/providers/test_anthropic_provider.py
+  243a7218809a11b8 189-304
+src/copaw/app/channels/renderer.py
+  243a7218809a11b8 368
+website/public/docs/config.en.md
+  243a7218809a11b8 164-167,283-294
+tests/unit/providers/test_multimodal_prober.py
+  243a7218809a11b8 1-533
+website/public/docs/config.zh.md
+  243a7218809a11b8 179-182,273-283
+src/copaw/config/utils.py
+  243a7218809a11b8 5,8,13-15,35,430-477,479-482,484,492-493,496,522-523,528-531
+console/src/pages/Agent/Config/components/index.ts
+  243a7218809a11b8 4
+tests/unit/agents/__init__.py
+  243a7218809a11b8 1-2
+src/copaw/providers/anthropic_provider.py
+  243a7218809a11b8 7-8,14-18,21-22,165-197,199-255
+console/src/pages/Agent/Config/index.tsx
+  243a7218809a11b8 8,33,101-102
+console/src/locales/ja.json
+  243a7218809a11b8 554-564,570-588,700-706
+src/copaw/cli/channels_cmd.py
+  243a7218809a11b8 209,247,312,362,402,448,624,701
+console/src/locales/zh.json
+  243a7218809a11b8 568-578,584-602,714-720
+.github/workflows/issue-welcome.yml
+  243a7218809a11b8 1-169
+src/copaw/app/channels/manager.py
+  243a7218809a11b8 348-350
+tests/unit/providers/test_ollama_provider.py
+  243a7218809a11b8 5,74-83,121-130,176-185,380-479
+src/copaw/agents/model_factory.py
+  243a7218809a11b8 34,309,314-319,353-356
+console/src/api/modules/provider.ts
+  243a7218809a11b8 13,91-97
+tests/unit/providers/test_capability_baseline.py
+  243a7218809a11b8 1-274
+console/src/api/types/agent.ts
+  243a7218809a11b8 11-14
+console/vite.config.ts
+  243a7218809a11b8 8-9,13
+src/copaw/providers/provider.py
+  243a7218809a11b8 4-5,7,12-13,19-40,203-215
+.gitignore
+  243a7218809a11b8 92-98
+src/copaw/agents/utils/file_handling.py
+  243a7218809a11b8 21-23,27-30,32,159,167-168,176-178,200,212-213,225-227
+console/src/locales/en.json
+  243a7218809a11b8 602-612,618-636,748-754
+console/src/pages/Settings/Models/components/modals/RemoteModelManageModal.tsx
+  243a7218809a11b8 15,42,132-160,264-292,304-316,346-358
+console/src/pages/Chat/index.tsx
+  243a7218809a11b8 18,175-181,281-326,328-348,550,553-557,559,576-586,654
+src/copaw/agents/tools/browser_control.py
+  243a7218809a11b8 18,32-33,39-48,1122,1521,1646-1647,1649,1852-1853,1859-1860,2219-2220,2226-2227
+pyproject.toml
+  243a7218809a11b8 36,72
+console/src/pages/Agent/Config/components/LlmRetryCard.tsx
+  243a7218809a11b8 1-116
+console/src/locales/ru.json
+  243a7218809a11b8 559-569,575-593,705-711
+src/copaw/agents/tools/desktop_screenshot.py
+  243a7218809a11b8 13-14,117-118,131-132
+.github/workflows/pr-welcome.yml
+  243a7218809a11b8 1-234
+tests/unit/providers/test_gemini_provider.py
+  243a7218809a11b8 341-540
+tests/unit/providers/test_multimodal_model_info.py
+  243a7218809a11b8 1-262
+src/copaw/agents/react_agent.py
+  243a7218809a11b8 286-291,564-608,610-651,656-663,665-666,668-678,689-697,707-708,710-715,718-719,721-731,744-749,778-785,791-794,796,799-807,826-827,839-843
+src/copaw/providers/retry_chat_model.py
+  243a7218809a11b8 12,28-35,83-101,103-106,118-122,125,138-140,162,199,227-230
+src/copaw/app/channels/base.py
+  243a7218809a11b8 731
+src/copaw/app/channels/console/channel.py
+  243a7218809a11b8 145,178,454
+src/copaw/cli/main.py
+  243a7218809a11b8 55-129
+src/copaw/providers/openai_provider.py
+  243a7218809a11b8 7-9,16-20,164-548
+src/copaw/providers/provider_manager.py
+  243a7218809a11b8 41-43,45-50,55-61,65-74,79-134,138-214,218-273,277-304,308-314,318-320,325-327,332-341,346-348,353-366,372-378,380-385,389-398,400-419,595,755-762,764-781,812-837,839-870,1042-1077
+src/copaw/app/runner/utils.py
+  243a7218809a11b8 73
+src/copaw/app/channels/wecom/channel.py
+  243a7218809a11b8 65,125,152,633
+tests/unit/agents/test_multimodal_filtering.py
+  243a7218809a11b8 1-471
+src/copaw/__version__.py
+  243a7218809a11b8 2
+src/copaw/agents/tools/view_image.py
+  243a7218809a11b8 24-44,59-72
+src/copaw/app/routers/providers.py
+  243a7218809a11b8 341-380
+src/copaw/providers/multimodal_prober.py
+  243a7218809a11b8 1-101
+src/copaw/providers/ollama_provider.py
+  243a7218809a11b8 7,18-19,167-193
+tests/unit/providers/test_provider_manager.py
+  243a7218809a11b8 12,441-717
+tests/unit/workspace/test_agent_model.py
+  243a7218809a11b8 7,11,15-19,259-300
+src/copaw/providers/models.py
+  243a7218809a11b8 11-13
+tests/unit/providers/test_capability_baseline_props.py
+  243a7218809a11b8 1-2076
+src/copaw/app/channels/feishu/channel.py
+  243a7218809a11b8 27,221,253,282,410-412,427,433,435,842,866,886,907,927,1053-1057,1062,1079,1089,1094,1107,1110,1128,1130,1137,1142,1159-1164,1168-1170,1177-1180,1185,1199,1218,1230,1236,1257-1261,1268-1272,1342,1353-1357,1449-1453,1594,1846-1849,1918-1922,1928
+src/copaw/app/channels/dingtalk/channel.py
+  243a7218809a11b8 199,233,593,677,1242,1303
+console/src/api/types/provider.ts
+  243a7218809a11b8 4-6,146-152
+console/src/pages/Settings/Models/useProviders.ts
+  243a7218809a11b8 27
+src/copaw/providers/capability_baseline.py
+  243a7218809a11b8 1-573
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.18",
+  "base_commit_sha": "d8d1e4ba13fa2916730d4122bb96c3e4d60830f8",
+  "prompts": {
+    "243a7218809a11b8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a80c17d1-dd44-4674-9493-ea3fee0f3998",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 3112,
+      "total_deletions": 468,
+      "accepted_lines": 7914,
+      "overriden_lines": 0
+    }
+  }
+}
