@@ -1,0 +1,25 @@
+next-console/.gitignore
+  243a7218809a11b8 46-48
+next-console/components/migration/migration-placeholder.tsx
+  243a7218809a11b8 35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.18",
+  "base_commit_sha": "8a1a7311fbe8b005964793cee8911757dba0ba08",
+  "prompts": {
+    "243a7218809a11b8": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "a80c17d1-dd44-4674-9493-ea3fee0f3998",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 167,
+      "total_deletions": 198,
+      "accepted_lines": 111,
+      "overriden_lines": 2
+    }
+  }
+}
