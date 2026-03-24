@@ -25,8 +25,7 @@ export function rowMatchesEnvFilter(row: EnvVar, q: string): boolean {
   const s = q.trim().toLowerCase();
   if (!s) return true;
   return (
-    row.key.toLowerCase().includes(s) ||
-    row.value.toLowerCase().includes(s)
+    row.key.toLowerCase().includes(s) || row.value.toLowerCase().includes(s)
   );
 }
 

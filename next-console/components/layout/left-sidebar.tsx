@@ -21,7 +21,9 @@ export function LeftSidebar({ user, appVersion }: LeftSidebarProps) {
         href="/dashboard"
         className="flex items-center gap-3 px-4 py-5 transition-opacity hover:opacity-80"
       >
-        <span className="text-3xl leading-none" aria-hidden>🦀</span>
+        <span className="text-3xl leading-none" aria-hidden>
+          🦀
+        </span>
         <div className="min-w-0">
           <p className="text-lg font-semibold tracking-tight text-foreground">
             Hi-Ops

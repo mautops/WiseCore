@@ -117,7 +117,10 @@ function SheetTitle({
   return (
     <DialogPrimitive.Title
       data-slot="sheet-title"
-      className={cn("truncate text-base font-semibold leading-tight", className)}
+      className={cn(
+        "truncate text-base font-semibold leading-tight",
+        className,
+      )}
       {...props}
     />
   );

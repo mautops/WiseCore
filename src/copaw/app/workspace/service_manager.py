@@ -4,6 +4,7 @@
 Provides unified registration, lifecycle management, and dependency handling
 for all workspace services (MemoryManager, ChatManager, etc.).
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -97,8 +98,7 @@ class ServiceManager:
         """
         if descriptor.name in self.descriptors:
             logger.warning(
-                f"Service '{descriptor.name}' already registered, "
-                f"overwriting",
+                f"Service '{descriptor.name}' already registered, overwriting",
             )
         self.descriptors[descriptor.name] = descriptor
         logger.debug(f"Registered service: {descriptor.name}")

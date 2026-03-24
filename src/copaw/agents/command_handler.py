@@ -3,6 +3,7 @@
 
 This module handles system commands like /compact, /new, /clear, etc.
 """
+
 import json
 import logging
 from pathlib import Path
@@ -378,7 +379,7 @@ class CommandHandler(ConversationCommandHandlerMixin):
         except Exception as e:
             logger.exception(f"Failed to dump history: {e}")
             return await self._make_system_msg(
-                f"**Dump Failed**\n\n" f"- Error: {e}",
+                f"**Dump Failed**\n\n- Error: {e}",
             )
 
     async def _process_load_history(
@@ -454,7 +455,7 @@ class CommandHandler(ConversationCommandHandlerMixin):
         except Exception as e:
             logger.exception(f"Failed to load history: {e}")
             return await self._make_system_msg(
-                f"**Load Failed**\n\n" f"- Error: {e}",
+                f"**Load Failed**\n\n- Error: {e}",
             )
 
     async def handle_conversation_command(self, query: str) -> Msg:

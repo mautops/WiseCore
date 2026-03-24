@@ -9,6 +9,7 @@ endpoint or via POST /console/chat. This channel handles the **output** side:
 whenever a completed message event or a proactive send arrives, it is
 pretty-printed to the terminal.
 """
+
 from __future__ import annotations
 
 import logging
@@ -429,8 +430,7 @@ class ConsoleChannel(BaseChannel):
     def _print_error(self, err: str) -> None:
         ts = _ts()
         self._safe_print(
-            f"\n{_RED}{_BOLD}❌ [{ts}] Error{_RESET}\n"
-            f"{_RED}{err}{_RESET}\n",
+            f"\n{_RED}{_BOLD}❌ [{ts}] Error{_RESET}\n{_RED}{err}{_RESET}\n",
         )
 
     def _parts_to_text(

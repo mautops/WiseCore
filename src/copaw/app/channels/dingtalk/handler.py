@@ -138,10 +138,10 @@ class DingTalkChannelHandler(dingtalk_stream.ChatbotHandler):
                 )
                 if not dl_code or not robot_code:
                     continue
-                mapped = type_mapping.get(
-                    item.get("type", "file"),
-                    item.get("type", "file"),
-                )
+                itype = item.get("type", "file")
+                itype_s = itype if isinstance(itype, str) else "file"
+                mapped_raw = type_mapping.get(itype_s, itype_s)
+                mapped = mapped_raw if isinstance(mapped_raw, str) else itype_s
                 filename_hint = self._extract_filename_hint(item)
                 part_content = self._fetch_download_url_and_content(
                     dl_code,

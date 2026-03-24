@@ -77,7 +77,8 @@ export function TokenUsageClient() {
       <ScrollArea className="min-h-0 flex-1">
         <div className="space-y-4 p-4">
           <p className="text-sm text-muted-foreground">
-            数据来自 CoPaw 本地聚合; 默认最近 30 天. 可按模型名或 Provider ID 过滤.
+            数据来自 CoPaw 本地聚合; 默认最近 30 天. 可按模型名或 Provider ID
+            过滤.
           </p>
 
           <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 sm:flex-row sm:flex-wrap sm:items-end">

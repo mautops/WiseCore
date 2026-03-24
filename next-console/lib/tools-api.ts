@@ -32,8 +32,7 @@ export const toolsApi = {
   list: () => apiRequest<ToolInfo[]>("/tools"),
 
   toggle: (toolName: string) =>
-    apiRequest<ToolInfo>(
-      `/tools/${encodeURIComponent(toolName)}/toggle`,
-      { method: "PATCH" },
-    ),
+    apiRequest<ToolInfo>(`/tools/${encodeURIComponent(toolName)}/toggle`, {
+      method: "PATCH",
+    }),
 };

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=protected-access
 """Unit tests for QQ channel."""
+
 from __future__ import annotations
 
 import json

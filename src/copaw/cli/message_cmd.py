@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """CLI commands for agent messaging - send to channels and inter-agent."""
+
 from __future__ import annotations
 
 import json

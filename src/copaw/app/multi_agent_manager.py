@@ -4,6 +4,7 @@
 Provides centralized management for multiple Workspace objects,
 including lazy loading, lifecycle management, and hot reloading.
 """
+
 import asyncio
 import logging
 from typing import Dict, Set
@@ -239,8 +240,7 @@ class MultiAgentManager:
         config = load_config()
         if agent_id not in config.agents.profiles:
             logger.error(
-                f"Agent '{agent_id}' not found in configuration "
-                f"during reload",
+                f"Agent '{agent_id}' not found in configuration during reload",
             )
             return False
 

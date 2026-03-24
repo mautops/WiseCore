@@ -56,14 +56,12 @@ export function WorkspaceClient() {
     [sorted, selected],
   );
 
-  const tooLarge =
-    selectedMeta != null && selectedMeta.size > MAX_EDITOR_BYTES;
+  const tooLarge = selectedMeta != null && selectedMeta.size > MAX_EDITOR_BYTES;
 
   const fileQuery = useQuery({
     queryKey: fileQueryKey(selected),
     queryFn: () => workspaceApi.getWorkingFile(selected!),
-    enabled:
-      Boolean(selected) && !tooLarge,
+    enabled: Boolean(selected) && !tooLarge,
   });
 
   useEffect(() => {

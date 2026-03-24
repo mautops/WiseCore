@@ -122,7 +122,9 @@ export function SessionsClient() {
       <ScrollArea className="min-h-0 flex-1">
         <div className="space-y-4 p-4">
           <p className="text-sm text-muted-foreground">
-            列表来自当前活动智能体的 Chat 注册表. 服务端可按用户 ID 过滤; 搜索框仅在当前页结果内匹配. 删除仅移除 Chat 记录, 会话状态文件可能仍存在.
+            列表来自当前活动智能体的 Chat 注册表. 服务端可按用户 ID 过滤;
+            搜索框仅在当前页结果内匹配. 删除仅移除 Chat 记录,
+            会话状态文件可能仍存在.
           </p>
 
           {listQuery.isError ? (

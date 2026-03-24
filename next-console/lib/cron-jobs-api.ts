@@ -82,9 +82,7 @@ export const cronJobsApi = {
   list: () => apiRequest<CronJobSpec[]>("/cron/jobs"),
 
   get: (jobId: string) =>
-    apiRequest<CronJobView>(
-      `/cron/jobs/${encodeURIComponent(jobId)}`,
-    ),
+    apiRequest<CronJobView>(`/cron/jobs/${encodeURIComponent(jobId)}`),
 
   create: (body: CronJobSpec) =>
     apiRequest<CronJobSpec>("/cron/jobs", {
@@ -93,10 +91,10 @@ export const cronJobsApi = {
     }),
 
   replace: (jobId: string, body: CronJobSpec) =>
-    apiRequest<CronJobSpec>(
-      `/cron/jobs/${encodeURIComponent(jobId)}`,
-      { method: "PUT", body: JSON.stringify(body) },
-    ),
+    apiRequest<CronJobSpec>(`/cron/jobs/${encodeURIComponent(jobId)}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
 
   delete: (jobId: string) =>
     apiRequest<{ deleted: boolean }>(

@@ -1,7 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Loader2Icon, PanelLeftCloseIcon, PanelLeftOpenIcon } from "lucide-react";
+import {
+  Loader2Icon,
+  PanelLeftCloseIcon,
+  PanelLeftOpenIcon,
+} from "lucide-react";
 
 export function HeartbeatToolbar({
   showLeftSidebar,

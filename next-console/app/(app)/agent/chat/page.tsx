@@ -15,7 +15,10 @@ import {
   WORKFLOW_CHAT_EXEC_STORAGE_KEY,
   type WorkflowChatExecPayload,
 } from "@/lib/workflow-chat-bridge";
-import { ChatHistorySidebar, SIDEBAR_DEFAULT_WIDTH } from "./chat-history-sidebar";
+import {
+  ChatHistorySidebar,
+  SIDEBAR_DEFAULT_WIDTH,
+} from "./chat-history-sidebar";
 import { ChatInput } from "./chat-input";
 import { ChatMessageList } from "./chat-message-list";
 import { ChatSearchDialog } from "./chat-search-dialog";
@@ -43,7 +46,9 @@ function ChatPageInner() {
     .toUpperCase();
 
   const [showRightSidebar, setShowRightSidebar] = useState(true);
-  const [rightSidebarWidth, setRightSidebarWidth] = useState(SIDEBAR_DEFAULT_WIDTH);
+  const [rightSidebarWidth, setRightSidebarWidth] = useState(
+    SIDEBAR_DEFAULT_WIDTH,
+  );
   const [searchOpen, setSearchOpen] = useState(false);
 
   const {
@@ -199,13 +204,28 @@ function ChatPageInner() {
               scrollClassName="scroll-pb-[max(18rem,calc(11rem+28vh))]"
             >
               {messages.length === 0 && !isGenerating ? (
-                <ConversationEmptyState title="开始对话" description="发送消息，与 AI 智能体开始聊天">
+                <ConversationEmptyState
+                  title="开始对话"
+                  description="发送消息，与 AI 智能体开始聊天"
+                >
                   <div className="mt-2">
                     <Suggestions>
-                      <Suggestion suggestion="你能做什么？" onClick={handleSuggestion} />
-                      <Suggestion suggestion="帮我分析系统运行状态" onClick={handleSuggestion} />
-                      <Suggestion suggestion="查询最新的任务日志" onClick={handleSuggestion} />
-                      <Suggestion suggestion="有哪些可用的工具？" onClick={handleSuggestion} />
+                      <Suggestion
+                        suggestion="你能做什么？"
+                        onClick={handleSuggestion}
+                      />
+                      <Suggestion
+                        suggestion="帮我分析系统运行状态"
+                        onClick={handleSuggestion}
+                      />
+                      <Suggestion
+                        suggestion="查询最新的任务日志"
+                        onClick={handleSuggestion}
+                      />
+                      <Suggestion
+                        suggestion="有哪些可用的工具？"
+                        onClick={handleSuggestion}
+                      />
                     </Suggestions>
                   </div>
                 </ConversationEmptyState>
@@ -227,7 +247,11 @@ function ChatPageInner() {
             <ConversationScrollButton className="z-30 bottom-[calc(11rem+env(safe-area-inset-bottom,0px))]" />
           </Conversation>
 
-          <ChatInput status={status} onSubmit={handleSubmit} onStop={handleStop} />
+          <ChatInput
+            status={status}
+            onSubmit={handleSubmit}
+            onStop={handleStop}
+          />
         </div>
 
         <div

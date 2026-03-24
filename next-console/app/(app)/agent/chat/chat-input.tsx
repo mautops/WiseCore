@@ -30,7 +30,11 @@ function AttachmentList() {
   return (
     <Attachments variant="inline" className="px-3 pt-2">
       {attachments.files.map((file) => (
-        <Attachment key={file.id} data={file} onRemove={() => attachments.remove(file.id)}>
+        <Attachment
+          key={file.id}
+          data={file}
+          onRemove={() => attachments.remove(file.id)}
+        >
           <AttachmentPreview />
           <AttachmentInfo />
           <AttachmentRemove />

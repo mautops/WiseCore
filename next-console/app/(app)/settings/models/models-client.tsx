@@ -141,7 +141,8 @@ export function ModelsSettingsClient() {
         <div className="space-y-4 p-4">
           <p className="text-sm text-muted-foreground">
             活动模型写入当前智能体配置. Provider 与密钥由 CoPaw 服务端持久化, 与{" "}
-            <span className="font-mono">/agent/config</span> 中的运行参数相互独立.
+            <span className="font-mono">/agent/config</span>{" "}
+            中的运行参数相互独立.
           </p>
 
           {providersQuery.isError ? (
@@ -233,9 +234,7 @@ export function ModelsSettingsClient() {
                 <Button
                   className="text-base"
                   disabled={
-                    !selProvider ||
-                    !selModel ||
-                    setActiveMutation.isPending
+                    !selProvider || !selModel || setActiveMutation.isPending
                   }
                   onClick={applyActiveSelection}
                 >
@@ -340,9 +339,7 @@ export function ModelsSettingsClient() {
             </Button>
             <Button
               disabled={
-                createCustomMutation.isPending ||
-                !cid.trim() ||
-                !cname.trim()
+                createCustomMutation.isPending || !cid.trim() || !cname.trim()
               }
               onClick={() => createCustomMutation.mutate()}
             >

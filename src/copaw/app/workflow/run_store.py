@@ -26,7 +26,7 @@ def _safe_basename(name: str) -> str:
 
 
 def runs_file_path(username: str, workflow_rel_filename: str) -> Path:
-    """Path to the JSON list file for a workflow relative path (e.g. daily.md, a/b.md)."""
+    """JSON list file path for a workflow rel path (e.g. daily.md, a/b.md)."""
     stem = workflow_rel_filename.replace("/", "__")
     safe_user = _safe_basename(username)
     safe_stem = _safe_basename(stem)
@@ -135,7 +135,9 @@ class WorkflowRunStore:
         run_id: str,
     ) -> dict[str, Any] | None:
         async with self._file_lock:
-            for row in _load_list(runs_file_path(username, workflow_rel_filename)):
+            for row in _load_list(
+                runs_file_path(username, workflow_rel_filename)
+            ):
                 if row.get("run_id") == run_id:
                     return row
         return None

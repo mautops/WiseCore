@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Console APIs: push messages, chat, and file upload for chat."""
+
 from __future__ import annotations
 
 import json
@@ -67,7 +68,7 @@ def _extract_session_and_payload(request_data: Union[AgentRequest, dict]):
 
 
 def _apply_token_sender(request: Request, native_payload: dict) -> None:
-    """Bind console chat to JWT user when present (ignore spoofed body user_id)."""
+    """Bind console chat to JWT user; ignore spoofed body user_id."""
     tu = token_user_id(request)
     if tu is None:
         return
@@ -173,7 +174,9 @@ async def post_console_chat_stop(
 ) -> dict:
     """Stop the running chat. Only stops when called."""
     workspace = await get_agent_for_request(request)
-    ensure_chat_visible(await workspace.chat_manager.get_chat(chat_id), request)
+    ensure_chat_visible(
+        await workspace.chat_manager.get_chat(chat_id), request
+    )
     stopped = await workspace.task_tracker.request_stop(chat_id)
     return {"stopped": stopped}
 

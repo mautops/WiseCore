@@ -7,7 +7,7 @@ import plistlib
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 from pydantic import ValidationError
 
 from ..constant import (
@@ -429,14 +429,22 @@ def load_config(config_path: Optional[Path] = None) -> Config:
 
     try:
         with open(config_path, "r", encoding="utf-8") as file:
-            data = json.load(file)
+            raw = json.load(file)
     except (json.JSONDecodeError, UnicodeDecodeError):
         return Config()
 
-    data = _normalize_working_dir_bound_paths(data)
+    normalized = _normalize_working_dir_bound_paths(raw)
+    if not isinstance(normalized, dict):
+        return Config()
+    data: dict[str, Any] = normalized
     # Backward compat: top-level last_api_host / last_api_port -> last_api
     if "last_api_host" in data or "last_api_port" in data:
-        la = data.setdefault("last_api", {})
+        la_obj = data.setdefault("last_api", {})
+        if not isinstance(la_obj, dict):
+            la: dict[str, Any] = {}
+            data["last_api"] = la
+        else:
+            la = la_obj
         if "host" not in la and "last_api_host" in data:
             la["host"] = data.get("last_api_host")
         if "port" not in la and "last_api_port" in data:

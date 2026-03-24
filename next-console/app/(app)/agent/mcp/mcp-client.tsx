@@ -115,7 +115,8 @@ export function McpClientsView() {
       <ScrollArea className="min-h-0 flex-1">
         <div className="p-4">
           <p className="mb-4 text-sm text-muted-foreground">
-            MCP 客户端配置保存在当前活动智能体中; 启用状态表示加载该客户端, 实时连接状态由运行时决定.
+            MCP 客户端配置保存在当前活动智能体中; 启用状态表示加载该客户端,
+            实时连接状态由运行时决定.
           </p>
           {listQuery.isError && (
             <p className="text-destructive">
@@ -161,9 +162,7 @@ export function McpClientsView() {
                   </div>
                   <Switch
                     checked={c.enabled}
-                    disabled={
-                      toggleMutation.isPending && toggleKey === c.key
-                    }
+                    disabled={toggleMutation.isPending && toggleKey === c.key}
                     onCheckedChange={() => {
                       setToggleKey(c.key);
                       toggleMutation.mutate(c.key);

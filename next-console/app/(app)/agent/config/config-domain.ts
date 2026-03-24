@@ -39,7 +39,9 @@ export function defaultRunning(): AgentsRunningConfig {
   };
 }
 
-export function normalizeRunning(raw: AgentsRunningConfig): AgentsRunningConfig {
+export function normalizeRunning(
+  raw: AgentsRunningConfig,
+): AgentsRunningConfig {
   const base = defaultRunning();
   const embIn = raw.embedding_config ?? {};
   return {

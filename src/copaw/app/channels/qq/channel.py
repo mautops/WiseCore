@@ -785,8 +785,7 @@ class QQChannel(BaseChannel):
         fallback_text, had_url = _sanitize_qq_text(text)
         if had_url:
             logger.info(
-                "qq send fallback: stripped URL content "
-                "for API compatibility",
+                "qq send fallback: stripped URL content for API compatibility",
             )
         try:
             await self._dispatch_text(

@@ -5,6 +5,7 @@ These models are intentionally separate from the skill-scanner models so
 that the two sub-systems can evolve independently while sharing the same
 conceptual vocabulary (severity, threat category, finding, result).
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field

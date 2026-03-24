@@ -455,7 +455,7 @@ def _extract_access_token_header(request: Request) -> Optional[str]:
 
 
 class AccessTokenUserMiddleware(BaseHTTPMiddleware):
-    """Set ``request.state.user`` from verified CoPaw token or HS256 upstream JWT."""
+    """Set ``request.state.user`` from CoPaw or HS256 upstream JWT."""
 
     async def dispatch(self, request: Request, call_next):
         if request.method == "OPTIONS":
@@ -524,7 +524,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if request.method == "OPTIONS":
             return True
 
-        if path in _PUBLIC_PATHS or any(path.startswith(p) for p in _PUBLIC_PREFIXES):
+        if path in _PUBLIC_PATHS or any(
+            path.startswith(p) for p in _PUBLIC_PREFIXES
+        ):
             return True
 
         # Only protect /api/ routes

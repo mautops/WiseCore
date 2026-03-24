@@ -451,8 +451,7 @@ class XiaoYiChannel(BaseChannel):
         try:
             message = json.loads(data)
             logger.debug(
-                "XiaoYi: Received message: "
-                f"{json.dumps(message, indent=2)}",
+                f"XiaoYi: Received message: {json.dumps(message, indent=2)}",
             )
 
             # Validate agent_id

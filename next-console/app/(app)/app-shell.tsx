@@ -40,11 +40,13 @@ export function AppShell({
   const [showLeftSidebar, setShowLeftSidebar] = useState(true);
   const toggleLeftSidebar = useCallback(
     () => setShowLeftSidebar((p) => !p),
-    []
+    [],
   );
 
   return (
-    <AppShellContext.Provider value={{ showLeftSidebar, toggleLeftSidebar, user }}>
+    <AppShellContext.Provider
+      value={{ showLeftSidebar, toggleLeftSidebar, user }}
+    >
       <div className="flex h-screen overflow-hidden">
         <div
           className="shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out"

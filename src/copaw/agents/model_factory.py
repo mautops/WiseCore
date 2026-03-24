@@ -9,7 +9,6 @@ Example:
     >>> model, formatter = create_model_and_formatter()
 """
 
-
 import logging
 from typing import List, Sequence, Tuple, Type, Any, Union, Optional
 

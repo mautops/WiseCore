@@ -9,12 +9,7 @@ export function agentDetailKey(id: string | null) {
 export function agentMatchesFilter(row: AgentSummary, q: string): boolean {
   const s = q.trim().toLowerCase();
   if (!s) return true;
-  const hay = [
-    row.id,
-    row.name,
-    row.description,
-    row.workspace_dir,
-  ]
+  const hay = [row.id, row.name, row.description, row.workspace_dir]
     .join(" ")
     .toLowerCase();
   return hay.includes(s);

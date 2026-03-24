@@ -59,8 +59,7 @@ export function SidebarNav() {
             {group.label}
           </p>
           {group.items.map(({ label, href, icon: Icon }) => {
-            const active =
-              pathname === href || pathname.startsWith(`${href}/`);
+            const active = pathname === href || pathname.startsWith(`${href}/`);
             return (
               <Link
                 key={href}
@@ -69,7 +68,7 @@ export function SidebarNav() {
                   "flex items-center gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors",
                   active
                     ? "bg-accent font-medium text-accent-foreground"
-                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
                 )}
               >
                 <Icon className="size-4 shrink-0" />

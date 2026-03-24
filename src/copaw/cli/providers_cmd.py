@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """CLI commands for managing LLM providers."""
+
 from __future__ import annotations
 
 import asyncio
@@ -441,8 +442,7 @@ def list_cmd() -> None:
         else:
             click.echo(f"  {'base_url':16s}: {cur_url or '(not set)'}")
             click.echo(
-                f"  {'api_key':16s}: "
-                f"{_mask_api_key(cur_key) or '(not set)'}",
+                f"  {'api_key':16s}: {_mask_api_key(cur_key) or '(not set)'}",
             )
             if defn.api_key_prefix:
                 click.echo(

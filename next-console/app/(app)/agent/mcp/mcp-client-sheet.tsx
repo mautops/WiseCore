@@ -115,8 +115,7 @@ export function McpClientSheet({
           enabled,
           transport,
           url: transport !== "stdio" ? url.trim() : "",
-          headers:
-            transport !== "stdio" ? parseKeyValueLines(headersText) : {},
+          headers: transport !== "stdio" ? parseKeyValueLines(headersText) : {},
           command: transport === "stdio" ? command.trim() : "",
           args: transport === "stdio" ? parseArgsLine(argsLine) : [],
           env: parseKeyValueLines(envText),

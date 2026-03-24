@@ -52,7 +52,9 @@ export function VoiceClient() {
     void queryClient.invalidateQueries({ queryKey: QK_AUDIO_MODE });
     void queryClient.invalidateQueries({ queryKey: QK_TRANSCRIPTION_TYPE });
     void queryClient.invalidateQueries({ queryKey: QK_LOCAL_WHISPER });
-    void queryClient.invalidateQueries({ queryKey: QK_TRANSCRIPTION_PROVIDERS });
+    void queryClient.invalidateQueries({
+      queryKey: QK_TRANSCRIPTION_PROVIDERS,
+    });
   }, [queryClient]);
 
   const fetching =
@@ -209,7 +211,9 @@ export function VoiceClient() {
           {providerType === "whisper_api" ? (
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">Whisper API Provider</CardTitle>
+                <CardTitle className="text-base">
+                  Whisper API Provider
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {providersQuery.isLoading ? (
@@ -295,9 +299,7 @@ export function VoiceClient() {
                     </li>
                     <li>
                       openai-whisper:{" "}
-                      {localQuery.data?.whisper_installed
-                        ? "已安装"
-                        : "未安装"}
+                      {localQuery.data?.whisper_installed ? "已安装" : "未安装"}
                     </li>
                   </ul>
                 )}

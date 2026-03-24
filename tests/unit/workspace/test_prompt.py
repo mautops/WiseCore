@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Tests for agent identity in system prompt."""
+
 import tempfile
 from pathlib import Path
 import pytest

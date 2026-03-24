@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Workflows API: Markdown under ``WORKFLOWS_DIR/<request.state.user>/`` only."""
+"""Workflows API: Markdown under ``WORKFLOWS_DIR/<user>/`` only."""
 
 from __future__ import annotations
 
@@ -31,17 +31,29 @@ _UUID_SEGMENT = re.compile(
 def _sanitize_username(raw: str) -> str:
     s = (raw or "").strip()
     if not s:
-        raise HTTPException(status_code=400, detail="invalid workflow username")
+        raise HTTPException(
+            status_code=400, detail="invalid workflow username"
+        )
     if len(s) > 256:
-        raise HTTPException(status_code=400, detail="workflow username too long")
+        raise HTTPException(
+            status_code=400, detail="workflow username too long"
+        )
     if "@" in s:
-        raise HTTPException(status_code=400, detail="invalid workflow username")
+        raise HTTPException(
+            status_code=400, detail="invalid workflow username"
+        )
     if re.search(r"[\x00-\x1f/\\\\]", s):
-        raise HTTPException(status_code=400, detail="invalid workflow username")
+        raise HTTPException(
+            status_code=400, detail="invalid workflow username"
+        )
     if ".." in s:
-        raise HTTPException(status_code=400, detail="invalid workflow username")
+        raise HTTPException(
+            status_code=400, detail="invalid workflow username"
+        )
     if _UUID_SEGMENT.match(s):
-        raise HTTPException(status_code=400, detail="invalid workflow username")
+        raise HTTPException(
+            status_code=400, detail="invalid workflow username"
+        )
     return s
 
 
@@ -90,7 +102,9 @@ def _resolve_workflow_file(request: Request, filename: str) -> Path:
     try:
         path.relative_to(ud_r)
     except ValueError:
-        raise HTTPException(status_code=404, detail="workflow not found") from None
+        raise HTTPException(
+            status_code=404, detail="workflow not found"
+        ) from None
     if path.is_file():
         return path
     raise HTTPException(status_code=404, detail="workflow not found")
@@ -191,7 +205,9 @@ class WorkflowCreateRequest(BaseModel):
 
     filename: str = Field(
         ...,
-        description="Relative path under your workflows dir (e.g. daily_report.md)",
+        description=(
+            "Relative path under your workflows dir (e.g. daily_report.md)"
+        ),
     )
     content: str = Field(
         ...,
@@ -291,7 +307,7 @@ def _info_from_path(
     "",
     response_model=WorkflowListResponse,
     summary="List all workflows",
-    description="Markdown files under your ``workflows/<user>/`` directory (recursive)",
+    description=("Markdown under ``workflows/<user>/`` directory (recursive)"),
 )
 async def list_workflows(request: Request) -> WorkflowListResponse:
     uname = _workspace_username(request)
@@ -382,9 +398,13 @@ async def append_workflow_run(
     "/{filename:path}",
     response_model=WorkflowReadResponse,
     summary="Get workflow content",
-    description=("Read workflow: raw file, body without frontmatter, and parsed meta"),
+    description=(
+        "Read workflow: raw file, body without frontmatter, and parsed meta"
+    ),
 )
-async def get_workflow(request: Request, filename: str) -> WorkflowReadResponse:
+async def get_workflow(
+    request: Request, filename: str
+) -> WorkflowReadResponse:
     file_path = _resolve_workflow_file(request, filename)
 
     try:
@@ -439,7 +459,9 @@ async def create_workflow(
     try:
         target.relative_to(udir.resolve())
     except ValueError:
-        raise HTTPException(status_code=400, detail="invalid filename") from None
+        raise HTTPException(
+            status_code=400, detail="invalid filename"
+        ) from None
 
     if target.exists():
         raise HTTPException(

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Skills hub client and install helpers."""
+
 from __future__ import annotations
 
 import json
@@ -26,9 +27,9 @@ from .skills_manager import SkillService
 
 logger = logging.getLogger(__name__)
 
-_cancel_checker_ctx: contextvars.ContextVar[
-    Any | None
-] = contextvars.ContextVar("skills_hub_cancel_checker", default=None)
+_cancel_checker_ctx: contextvars.ContextVar[Any | None] = (
+    contextvars.ContextVar("skills_hub_cancel_checker", default=None)
+)
 
 
 @dataclass
@@ -1309,7 +1310,7 @@ def _fetch_bundle_from_skillsmp_url(
 
 
 def _lobehub_download_url(identifier: str) -> str:
-    return "https://market.lobehub.com/api/v1/skills/" f"{identifier}/download"
+    return f"https://market.lobehub.com/api/v1/skills/{identifier}/download"
 
 
 def _lobehub_zip_to_bundle(identifier: str, payload: bytes) -> dict[str, Any]:
@@ -1468,8 +1469,7 @@ def _fetch_bundle_from_lobehub_url(
         )
     except HTTPError as e:
         raise ValueError(
-            "LobeHub skill download failed: "
-            f"{_lobehub_http_error_message(e)}",
+            f"LobeHub skill download failed: {_lobehub_http_error_message(e)}",
         ) from e
     except ValueError as e:
         raise ValueError(f"LobeHub skill download failed: {e}") from e
@@ -1600,8 +1600,7 @@ def install_skill_from_hub(
         )
         if not created:
             raise RuntimeError(
-                f"Failed to create skill '{name}'. "
-                "This skill already exists.",
+                f"Failed to create skill '{name}'. This skill already exists.",
             )
 
         _ensure_not_cancelled()

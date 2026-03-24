@@ -7,6 +7,7 @@ Tests cover:
 - Estimation fallback
 - Cache pattern with configuration-based lookup
 """
+
 from __future__ import annotations
 
 import asyncio

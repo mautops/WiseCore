@@ -5,10 +5,7 @@ import type { WorkflowInfo } from "@/lib/workflow-api";
 import { Loader2Icon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { WorkflowListCard } from "./workflow-list-card";
-import {
-  PAGE_SIZE,
-  workflowsForStatusTab,
-} from "./workflow-domain";
+import { PAGE_SIZE, workflowsForStatusTab } from "./workflow-domain";
 
 export function WorkflowListContent({
   listQuery,
@@ -23,7 +20,10 @@ export function WorkflowListContent({
   onOpenWorkflow,
   onExecuteWorkflow,
 }: {
-  listQuery: Pick<UseQueryResult<WorkflowInfo[], Error>, "isLoading" | "isError" | "error">;
+  listQuery: Pick<
+    UseQueryResult<WorkflowInfo[], Error>,
+    "isLoading" | "isError" | "error"
+  >;
   sorted: WorkflowInfo[];
   filtered: WorkflowInfo[];
   tabValue: string;
@@ -38,28 +38,20 @@ export function WorkflowListContent({
   return (
     <div className="p-4">
       {listQuery.isError && (
-        <p className="text-destructive">
-          {(listQuery.error as Error).message}
-        </p>
+        <p className="text-destructive">{(listQuery.error as Error).message}</p>
       )}
       {listQuery.isLoading && (
         <div className="flex justify-center py-16">
           <Loader2Icon className="size-8 animate-spin text-muted-foreground" />
         </div>
       )}
-      {!listQuery.isLoading &&
-        sorted.length === 0 &&
-        !listQuery.isError && (
-          <p className="py-12 text-center text-muted-foreground">
-            暂无 workflow, 点击新建添加 Markdown 文件
-          </p>
-        )}
+      {!listQuery.isLoading && sorted.length === 0 && !listQuery.isError && (
+        <p className="py-12 text-center text-muted-foreground">
+          暂无 workflow, 点击新建添加 Markdown 文件
+        </p>
+      )}
       {!listQuery.isLoading && sorted.length > 0 && !listQuery.isError && (
-        <Tabs
-          value={tabValue}
-          onValueChange={onTabChange}
-          className="gap-0"
-        >
+        <Tabs value={tabValue} onValueChange={onTabChange} className="gap-0">
           <TabsList
             variant="line"
             className="mb-4 h-auto min-h-9 w-full flex-wrap justify-start gap-1 py-1"
@@ -77,18 +69,13 @@ export function WorkflowListContent({
           {workflowStatusTabValues.map((tab) => {
             const items = workflowsForStatusTab(filtered, tab);
             const tp = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
-            const ep =
-              tab === tabValue ? Math.min(Math.max(1, page), tp) : 1;
+            const ep = tab === tabValue ? Math.min(Math.max(1, page), tp) : 1;
             const slice = items.slice(
               (ep - 1) * PAGE_SIZE,
               (ep - 1) * PAGE_SIZE + PAGE_SIZE,
             );
             return (
-              <TabsContent
-                key={tab}
-                value={tab}
-                className="mt-0 outline-none"
-              >
+              <TabsContent key={tab} value={tab} className="mt-0 outline-none">
                 {filtered.length === 0 ? (
                   <p className="py-10 text-center text-muted-foreground">
                     没有符合当前过滤条件的 workflow, 按 {modifierKeyPrefix}K

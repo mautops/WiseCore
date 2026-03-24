@@ -326,8 +326,7 @@ def sync_skills_from_active_to_customized(
         try:
             shutil.copytree(skill_dir, target_dir)
             logger.debug(
-                "Synced skill '%s' from active_skills to "
-                "customized_skills.",
+                "Synced skill '%s' from active_skills to customized_skills.",
                 skill_name,
             )
             synced_count += 1

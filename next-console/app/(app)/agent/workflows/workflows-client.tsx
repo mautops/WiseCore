@@ -190,7 +190,9 @@ export function WorkflowsClient() {
     mutationFn: (body: { filename: string; content: string }) =>
       workflowApi.update(body.filename, body.content),
     onSuccess: async (_, vars) => {
-      await queryClient.invalidateQueries({ queryKey: qkDetail(vars.filename) });
+      await queryClient.invalidateQueries({
+        queryKey: qkDetail(vars.filename),
+      });
       await invalidateList();
     },
   });

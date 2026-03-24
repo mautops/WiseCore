@@ -5,6 +5,7 @@ Shared by in-chat /daemon <sub> and CLI `copaw daemon <sub>`.
 Logs: tail WORKING_DIR / "copaw.log". Restart: in-process reload of channels,
 cron and MCP (no process exit); works on Mac/Windows without a process manager.
 """
+
 # pylint: disable=too-many-return-statements
 from __future__ import annotations
 

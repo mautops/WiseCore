@@ -127,8 +127,7 @@ class RetryChatModel(ChatModelBase):
                     raise
                 delay = _compute_backoff(attempt)
                 logger.warning(
-                    "LLM call failed (attempt %d/%d): %s. "
-                    "Retrying in %.1fs …",
+                    "LLM call failed (attempt %d/%d): %s. Retrying in %.1fs …",
                     attempt,
                     attempts,
                     exc,

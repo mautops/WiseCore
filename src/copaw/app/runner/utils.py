@@ -4,7 +4,7 @@ import logging
 import platform
 import os
 from datetime import datetime, timezone
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 from urllib.parse import urlparse
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -409,8 +409,9 @@ def agentscope_msg_to_message(
                     current_message.metadata = metadata
                     current_type = MessageType.MESSAGE
 
-                kwargs = {
-                    "filename": block.get("filename"),
+                fname = block.get("filename")
+                file_kwargs: dict[str, Any] = {
+                    "filename": fname if isinstance(fname, str) else "",
                 }
                 if (
                     isinstance(block.get("source"), dict)
@@ -418,7 +419,7 @@ def agentscope_msg_to_message(
                 ):
                     url = block.get("source", {}).get("url")
                     url = _resolve_content_url(url)
-                    kwargs["file_url"] = url
+                    file_kwargs["file_url"] = url
 
                 elif (
                     isinstance(block.get("source"), dict)
@@ -430,15 +431,15 @@ def agentscope_msg_to_message(
                     )
                     base64_data = block.get("source", {}).get("data", "")
                     url = f"data:{media_type};base64,{base64_data}"
-                    kwargs["file_url"] = url
+                    file_kwargs["file_url"] = url
                 elif isinstance(block.get("source"), str):
                     url = _resolve_content_url(block.get("source", ""))
-                    kwargs["file_url"] = url
+                    file_kwargs["file_url"] = url
 
                 file_content = FileContent(
                     delta=False,
                     index=None,
-                    **kwargs,
+                    **file_kwargs,
                 )
                 current_message.add_content(new_content=file_content)
 

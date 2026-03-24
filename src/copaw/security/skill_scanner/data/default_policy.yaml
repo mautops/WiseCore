@@ -34,7 +34,7 @@ hidden_files:
     - ".python-version"
     - ".ruby-version"
     - ".tool-versions"
-    - ".flake8"
+    - "ruff.toml"
     - ".pylintrc"
     - ".isort.cfg"
     - ".mypy.ini"
@@ -220,7 +220,7 @@ file_classification:
 # ---------------------------------------------------------------------------
 file_limits:
   max_file_count: 100
-  max_file_size_bytes: 5242880  # 5 MB
+  max_file_size_bytes: 5242880 # 5 MB
   max_reference_depth: 5
   max_name_length: 64
   max_description_length: 1024

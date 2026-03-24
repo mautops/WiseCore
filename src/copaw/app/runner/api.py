@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Chat management API."""
+
 from __future__ import annotations
 from typing import Optional
 from uuid import uuid4
@@ -65,12 +66,17 @@ async def get_session(
 @router.get("", response_model=list[ChatSpec])
 async def list_chats(
     request: Request,
-    user_id: Optional[str] = Query(None, description="Filter by user ID (ignored when authenticated)"),
+    user_id: Optional[str] = Query(
+        None, description="Filter by user ID (ignored when authenticated)"
+    ),
     channel: Optional[str] = Query(None, description="Filter by channel"),
     mgr: ChatManager = Depends(get_chat_manager),
     workspace=Depends(get_workspace),
 ):
-    """List chats. When ``request.state.user`` is set, only that user's chats are returned."""
+    """List chats.
+
+    When ``request.state.user`` is set, only that user's chats are returned.
+    """
     tu = token_user_id(request)
     effective_user = tu if tu is not None else user_id
     chats = await mgr.list_chats(user_id=effective_user, channel=channel)

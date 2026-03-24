@@ -3,6 +3,7 @@
 """
 Streaming AI skill optimization API
 """
+
 import json
 import logging
 

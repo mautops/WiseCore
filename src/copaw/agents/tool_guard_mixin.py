@@ -8,6 +8,7 @@ guard / approve flow.
 Separated from ``react_agent.py`` to keep the main agent class
 focused on lifecycle management.
 """
+
 from __future__ import annotations
 
 import asyncio
@@ -738,7 +739,10 @@ class ToolGuardMixin:
                 "Triggered by tool guardrails "
                 "(configurable in Security → Tool Guard / File Guard settings)"
             )
-            hint_zh = "触发工具护栏 & 文件护栏（在安全-工具护栏 / 文件护栏页面可以更改设置）"
+            hint_zh = (
+                "触发工具护栏 & 文件护栏"
+                "（在安全-工具护栏 / 文件护栏页面可以更改设置）"
+            )
         elif has_file:
             label = "File Guard / 文件护栏"
             hint_en = (

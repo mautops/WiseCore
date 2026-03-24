@@ -15,6 +15,7 @@ from __future__ import annotations
 import base64
 import asyncio
 import json
+from functools import partial
 import logging
 import re
 import sys
@@ -1265,11 +1266,12 @@ class FeishuChannel(BaseChannel):
             for chunk in chunks:
                 msg_id = await loop.run_in_executor(
                     None,
-                    lambda c=chunk: self._send_message_sync(
+                    partial(
+                        self._send_message_sync,
                         receive_id_type,
                         receive_id,
                         "interactive",
-                        c,
+                        chunk,
                     ),
                 )
                 if msg_id is not None:
@@ -1279,7 +1281,8 @@ class FeishuChannel(BaseChannel):
         content = json.dumps(post, ensure_ascii=False)
         return await loop.run_in_executor(
             None,
-            lambda: self._send_message_sync(
+            partial(
+                self._send_message_sync,
                 receive_id_type,
                 receive_id,
                 "post",

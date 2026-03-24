@@ -28,7 +28,7 @@
 
 ## Checklist
 
-- [ ] I ran `pre-commit run --all-files` locally and it passes
+- [ ] I ran `.venv/bin/pre-commit run --all-files` (or equivalent after activating `.venv`) and it passes
 - [ ] If pre-commit auto-fixed files, I committed those changes and reran checks
 - [ ] I ran tests locally (`pytest` or as relevant) and they pass
 - [ ] Documentation updated (if needed)
@@ -41,10 +41,10 @@
 ## Local Verification Evidence
 
 ```bash
-pre-commit run --all-files
+.venv/bin/pre-commit run --all-files
 # paste summary result
 
-pytest
+.venv/bin/pytest
 # paste summary result
 ```
 

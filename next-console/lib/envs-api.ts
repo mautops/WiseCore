@@ -38,8 +38,7 @@ export const envsApi = {
     }),
 
   deleteKey: (key: string) =>
-    apiRequest<EnvVar[]>(
-      `/envs/${encodeURIComponent(key)}`,
-      { method: "DELETE" },
-    ),
+    apiRequest<EnvVar[]>(`/envs/${encodeURIComponent(key)}`, {
+      method: "DELETE",
+    }),
 };

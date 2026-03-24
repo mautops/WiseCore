@@ -12,25 +12,29 @@ const features = [
     icon: "🤖",
     title: "AI Agent",
     subtitle: "智能体",
-    description: "Intelligent operations assistant with automated troubleshooting and decision support.",
+    description:
+      "Intelligent operations assistant with automated troubleshooting and decision support.",
   },
   {
     icon: "📊",
     title: "Overview",
     subtitle: "概览",
-    description: "Real-time monitoring of all infrastructure and service health at a glance.",
+    description:
+      "Real-time monitoring of all infrastructure and service health at a glance.",
   },
   {
     icon: "🖥️",
     title: "Virtual Machine",
     subtitle: "虚拟机",
-    description: "Self-service VM provisioning and lifecycle management with one-click deployment.",
+    description:
+      "Self-service VM provisioning and lifecycle management with one-click deployment.",
   },
   {
     icon: "🔐",
     title: "Bastion Host",
     subtitle: "堡垒机",
-    description: "Secure access gateway with full audit trail for all server operations.",
+    description:
+      "Secure access gateway with full audit trail for all server operations.",
   },
 ];
 
@@ -47,7 +51,9 @@ export default function LandingPage() {
       <header className="flex items-center justify-between border-b border-zinc-800/60 px-8 py-4">
         <div className="flex items-center gap-2.5">
           <span className="text-2xl leading-none">🦀</span>
-          <span className="font-mono text-base font-bold tracking-tight">Hi-Ops</span>
+          <span className="font-mono text-base font-bold tracking-tight">
+            Hi-Ops
+          </span>
           <span className="rounded border border-zinc-700 px-1.5 py-0.5 font-mono text-[10px] text-zinc-500">
             v1.0
           </span>
@@ -65,7 +71,8 @@ export default function LandingPage() {
           <div
             className="absolute inset-0 -m-12 rounded-full blur-3xl"
             style={{
-              background: "radial-gradient(circle, rgba(249,115,22,0.15), transparent 70%)",
+              background:
+                "radial-gradient(circle, rgba(249,115,22,0.15), transparent 70%)",
             }}
           />
           <span className="relative text-8xl leading-none" aria-hidden>

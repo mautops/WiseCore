@@ -273,7 +273,7 @@ class AgentsRunningConfig(BaseModel):
         default=3.75,
         gt=1,
         description=(
-            "Divisor for character-based token estimation " "(len / divisor)"
+            "Divisor for character-based token estimation (len / divisor)"
         ),
     )
 
@@ -685,8 +685,7 @@ def _default_builtin_tools() -> Dict[str, BuiltinToolConfig]:
         "view_image": BuiltinToolConfig(
             name="view_image",
             enabled=True,
-            description="Load an image into LLM context "
-            "for visual analysis",
+            description="Load an image into LLM context for visual analysis",
             display_to_user=False,
         ),
         "send_file_to_user": BuiltinToolConfig(

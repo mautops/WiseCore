@@ -35,10 +35,7 @@ export function formatKeyValueLines(obj: Record<string, string>): string {
 
 /** Split command args by whitespace (no quotes). */
 export function parseArgsLine(line: string): string[] {
-  return line
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
+  return line.trim().split(/\s+/).filter(Boolean);
 }
 
 export function transportLabel(t: string): string {

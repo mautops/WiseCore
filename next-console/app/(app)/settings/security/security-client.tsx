@@ -51,7 +51,12 @@ import {
   QK_TOOL_GUARD,
   type GuardedToolsMode,
 } from "./security-domain";
-import { ChevronDownIcon, Loader2Icon, PencilIcon, Trash2Icon } from "lucide-react";
+import {
+  ChevronDownIcon,
+  Loader2Icon,
+  PencilIcon,
+  Trash2Icon,
+} from "lucide-react";
 
 function emptyRule(): ToolGuardRuleConfig {
   return {
@@ -159,8 +164,7 @@ export function SecurityClient() {
   });
 
   const putSc = useMutation({
-    mutationFn: (body: SkillScannerConfig) =>
-      securityApi.putSkillScanner(body),
+    mutationFn: (body: SkillScannerConfig) => securityApi.putSkillScanner(body),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: QK_SKILL_SCANNER });
     },
@@ -296,7 +300,9 @@ export function SecurityClient() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <span className="text-sm font-medium leading-none">保护范围</span>
+                    <span className="text-sm font-medium leading-none">
+                      保护范围
+                    </span>
                     <Select
                       value={tgMode}
                       onValueChange={(v) => setTgMode(v as GuardedToolsMode)}
@@ -305,9 +311,7 @@ export function SecurityClient() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="default">
-                          内置默认工具集
-                        </SelectItem>
+                        <SelectItem value="default">内置默认工具集</SelectItem>
                         <SelectItem value="none">不保护任何工具</SelectItem>
                         <SelectItem value="list">仅列表中的工具</SelectItem>
                       </SelectContent>
@@ -331,7 +335,9 @@ export function SecurityClient() {
                     ) : null}
                   </div>
                   <div className="space-y-2">
-                    <span className="text-sm font-medium leading-none">全局拒绝的工具名 (每行)</span>
+                    <span className="text-sm font-medium leading-none">
+                      全局拒绝的工具名 (每行)
+                    </span>
                     <Textarea
                       value={linesFromList(tgDraft.denied_tools)}
                       onChange={(e) =>
@@ -345,7 +351,9 @@ export function SecurityClient() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <span className="text-sm font-medium leading-none">禁用的规则 ID (每行或逗号分隔)</span>
+                    <span className="text-sm font-medium leading-none">
+                      禁用的规则 ID (每行或逗号分隔)
+                    </span>
                     <Textarea
                       value={linesFromList(tgDraft.disabled_rules)}
                       onChange={(e) =>
@@ -362,13 +370,17 @@ export function SecurityClient() {
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-medium leading-none">自定义规则</span>
+                      <span className="text-sm font-medium leading-none">
+                        自定义规则
+                      </span>
                       <Button size="sm" variant="outline" onClick={openNewRule}>
                         添加规则
                       </Button>
                     </div>
                     {tgDraft.custom_rules.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">暂无自定义规则</p>
+                      <p className="text-sm text-muted-foreground">
+                        暂无自定义规则
+                      </p>
                     ) : (
                       <div className="space-y-2 rounded-md border border-border p-2">
                         {tgDraft.custom_rules.map((r, i) => (
@@ -458,7 +470,10 @@ export function SecurityClient() {
                     <ScrollArea className="max-h-[320px] rounded-md border border-border p-2">
                       <ul className="space-y-3 text-sm">
                         {(builtinQuery.data ?? []).map((r) => (
-                          <li key={r.id} className="border-b border-border/60 pb-3 last:border-0">
+                          <li
+                            key={r.id}
+                            className="border-b border-border/60 pb-3 last:border-0"
+                          >
                             <p className="font-mono font-medium">{r.id}</p>
                             <p className="text-xs text-muted-foreground">
                               {r.severity} · {r.category}
@@ -493,7 +508,9 @@ export function SecurityClient() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <span className="text-sm font-medium leading-none">敏感路径 (每行)</span>
+                    <span className="text-sm font-medium leading-none">
+                      敏感路径 (每行)
+                    </span>
                     <Textarea
                       value={fgPathsText}
                       onChange={(e) => setFgPathsText(e.target.value)}
@@ -535,7 +552,9 @@ export function SecurityClient() {
                 <>
                   <div className="flex flex-wrap items-end gap-4">
                     <div className="space-y-2">
-                      <span className="text-sm font-medium leading-none">模式</span>
+                      <span className="text-sm font-medium leading-none">
+                        模式
+                      </span>
                       <Select
                         value={scDraft.mode}
                         onValueChange={(v) =>
@@ -556,7 +575,9 @@ export function SecurityClient() {
                       </Select>
                     </div>
                     <div className="space-y-2">
-                      <span className="text-sm font-medium leading-none">超时 (秒)</span>
+                      <span className="text-sm font-medium leading-none">
+                        超时 (秒)
+                      </span>
                       <Input
                         type="number"
                         min={5}
@@ -574,7 +595,9 @@ export function SecurityClient() {
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-sm font-medium leading-none">白名单</span>
+                      <span className="text-sm font-medium leading-none">
+                        白名单
+                      </span>
                       <Button
                         size="sm"
                         variant="outline"
@@ -584,7 +607,9 @@ export function SecurityClient() {
                       </Button>
                     </div>
                     {scDraft.whitelist.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">暂无白名单</p>
+                      <p className="text-sm text-muted-foreground">
+                        暂无白名单
+                      </p>
                     ) : (
                       <div className="space-y-2 rounded-md border border-border p-2">
                         {scDraft.whitelist.map((w) => (
@@ -592,7 +617,9 @@ export function SecurityClient() {
                             key={w.skill_name}
                             className="flex items-center justify-between gap-2 text-sm"
                           >
-                            <span className="truncate font-mono">{w.skill_name}</span>
+                            <span className="truncate font-mono">
+                              {w.skill_name}
+                            </span>
                             <Button
                               size="sm"
                               variant="ghost"
@@ -629,7 +656,9 @@ export function SecurityClient() {
 
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="text-sm font-medium leading-none">拦截 / 警告记录</span>
+                      <span className="text-sm font-medium leading-none">
+                        拦截 / 警告记录
+                      </span>
                       <Button
                         size="sm"
                         variant="outline"
@@ -775,7 +804,9 @@ export function SecurityClient() {
                 />
               </div>
               <div className="space-y-1">
-                <span className="text-sm font-medium">exclude_patterns (每行)</span>
+                <span className="text-sm font-medium">
+                  exclude_patterns (每行)
+                </span>
                 <Textarea
                   rows={2}
                   value={linesFromList(ruleEdit.exclude_patterns)}
@@ -824,7 +855,8 @@ export function SecurityClient() {
           <DialogHeader>
             <DialogTitle>白名单技能</DialogTitle>
             <DialogDescription>
-              与后端 SkillScannerWhitelistEntry 一致, content_hash 可留空表示任意内容.
+              与后端 SkillScannerWhitelistEntry 一致, content_hash
+              可留空表示任意内容.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-3">

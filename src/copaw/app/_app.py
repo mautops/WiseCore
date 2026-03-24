@@ -261,7 +261,8 @@ app = FastAPI(
 app.add_middleware(AgentContextMiddleware)
 
 app.add_middleware(AuthMiddleware)
-# Outermost on request: resolve HS256 / CoPaw token into request.state.user before AuthMiddleware
+# Outermost on request: resolve HS256 / CoPaw token into
+# request.state.user before AuthMiddleware
 app.add_middleware(AccessTokenUserMiddleware)
 
 # Apply CORS middleware if CORS_ORIGINS is set

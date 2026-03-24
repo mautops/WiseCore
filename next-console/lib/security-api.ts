@@ -87,8 +87,7 @@ export const securityApi = {
     apiRequest<ToolGuardRuleConfig[]>(
       "/config/security/tool-guard/builtin-rules",
     ),
-  getFileGuard: () =>
-    apiRequest<FileGuardState>("/config/security/file-guard"),
+  getFileGuard: () => apiRequest<FileGuardState>("/config/security/file-guard"),
   putFileGuard: (body: FileGuardUpdate) =>
     apiRequest<FileGuardState>("/config/security/file-guard", {
       method: "PUT",

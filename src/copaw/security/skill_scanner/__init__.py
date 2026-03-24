@@ -27,6 +27,7 @@ Quick start::
     if not result.is_safe:
         print(f"Blocked: {result.max_severity.value} findings detected")
 """
+
 from __future__ import annotations
 
 from concurrent import futures
@@ -396,7 +397,7 @@ class SkillScanError(Exception):
     def __init__(self, result: ScanResult) -> None:
         self.result = result
         findings_summary = "; ".join(
-            f"[{f.severity.value}] {f.title} " f"{_format_finding_location(f)}"
+            f"[{f.severity.value}] {f.title} {_format_finding_location(f)}"
             for f in result.findings[:5]
         )
         truncated = (

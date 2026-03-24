@@ -86,14 +86,12 @@ export const mcpApi = {
     }),
 
   toggle: (clientKey: string) =>
-    apiRequest<MCPClientInfo>(
-      `/mcp/${encodeURIComponent(clientKey)}/toggle`,
-      { method: "PATCH" },
-    ),
+    apiRequest<MCPClientInfo>(`/mcp/${encodeURIComponent(clientKey)}/toggle`, {
+      method: "PATCH",
+    }),
 
   delete: (clientKey: string) =>
-    apiRequest<{ message: string }>(
-      `/mcp/${encodeURIComponent(clientKey)}`,
-      { method: "DELETE" },
-    ),
+    apiRequest<{ message: string }>(`/mcp/${encodeURIComponent(clientKey)}`, {
+      method: "DELETE",
+    }),
 };

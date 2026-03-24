@@ -104,8 +104,7 @@ export function AgentConfigClient() {
   });
 
   const putPromptsMutation = useMutation({
-    mutationFn: (files: string[]) =>
-      agentConfigApi.putSystemPromptFiles(files),
+    mutationFn: (files: string[]) => agentConfigApi.putSystemPromptFiles(files),
   });
 
   const saving = putRunningMutation.isPending || putPromptsMutation.isPending;
@@ -172,9 +171,7 @@ export function AgentConfigClient() {
           {runningQuery.isError ? (
             <Alert variant="destructive">
               <AlertTitle>运行配置加载失败</AlertTitle>
-              <AlertDescription>
-                {runningQuery.error.message}
-              </AlertDescription>
+              <AlertDescription>{runningQuery.error.message}</AlertDescription>
             </Alert>
           ) : null}
           {runningQuery.isLoading ? (
@@ -469,10 +466,7 @@ export function AgentConfigClient() {
                       }
                     />
                   </Field>
-                  <Field
-                    label="Base URL (base_url)"
-                    className="md:col-span-2"
-                  >
+                  <Field label="Base URL (base_url)" className="md:col-span-2">
                     <Input
                       value={draft.embedding_config.base_url}
                       onChange={(e) =>
@@ -565,7 +559,8 @@ export function AgentConfigClient() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <p className="text-sm text-muted-foreground">
-                    每行一个相对于工作区的 Markdown 文件名, 将并入系统提示. 文件内容可在{" "}
+                    每行一个相对于工作区的 Markdown 文件名, 将并入系统提示.
+                    文件内容可在{" "}
                     <Link
                       href="/agent/workspace"
                       className="text-primary underline-offset-4 hover:underline"

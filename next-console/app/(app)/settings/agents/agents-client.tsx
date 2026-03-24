@@ -94,7 +94,9 @@ export function AgentsSettingsClient() {
     }
     const d = detailQuery.data;
     if (!d || typeof d.id !== "string" || d.id !== editId) return;
-    if (detailHydratedRef.current === `${editId}:${detailQuery.dataUpdatedAt}`) {
+    if (
+      detailHydratedRef.current === `${editId}:${detailQuery.dataUpdatedAt}`
+    ) {
       return;
     }
     const b = pickBasics(d);
@@ -102,12 +104,7 @@ export function AgentsSettingsClient() {
     setEDesc(b.description);
     setELang(b.language);
     detailHydratedRef.current = `${editId}:${detailQuery.dataUpdatedAt}`;
-  }, [
-    sheetOpen,
-    editId,
-    detailQuery.data,
-    detailQuery.dataUpdatedAt,
-  ]);
+  }, [sheetOpen, editId, detailQuery.data, detailQuery.dataUpdatedAt]);
 
   const invalidateList = () =>
     void queryClient.invalidateQueries({ queryKey: QK_AGENTS_LIST });
@@ -194,7 +191,8 @@ export function AgentsSettingsClient() {
       <ScrollArea className="min-h-0 flex-1">
         <div className="space-y-4 p-4">
           <p className="text-sm text-muted-foreground">
-            此处管理根配置中的智能体注册表. 控制台当前会话使用哪一智能体由网关 / JWT / 请求头决定, 与下表无直接绑定.
+            此处管理根配置中的智能体注册表. 控制台当前会话使用哪一智能体由网关 /
+            JWT / 请求头决定, 与下表无直接绑定.
           </p>
 
           {listQuery.isError ? (
@@ -208,11 +206,9 @@ export function AgentsSettingsClient() {
             <p className="text-sm text-muted-foreground">加载中...</p>
           ) : null}
 
-          {!listQuery.isLoading &&
-            !listQuery.isError &&
-            rows.length === 0 && (
-              <p className="text-sm text-muted-foreground">无匹配项.</p>
-            )}
+          {!listQuery.isLoading && !listQuery.isError && rows.length === 0 && (
+            <p className="text-sm text-muted-foreground">无匹配项.</p>
+          )}
 
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full min-w-[720px] text-left text-sm">
@@ -262,9 +258,7 @@ export function AgentsSettingsClient() {
                           className="text-destructive text-base"
                           disabled={row.id === "default"}
                           title={
-                            row.id === "default"
-                              ? "不能删除 default"
-                              : "删除"
+                            row.id === "default" ? "不能删除 default" : "删除"
                           }
                           onClick={() => setDeleteId(row.id)}
                         >
@@ -370,7 +364,10 @@ export function AgentsSettingsClient() {
 
               <div className="space-y-1.5">
                 <div className="text-sm font-medium">名称</div>
-                <Input value={eName} onChange={(e) => setEName(e.target.value)} />
+                <Input
+                  value={eName}
+                  onChange={(e) => setEName(e.target.value)}
+                />
               </div>
               <div className="space-y-1.5">
                 <div className="text-sm font-medium">描述</div>
@@ -414,9 +411,7 @@ export function AgentsSettingsClient() {
                 取消
               </Button>
               <Button
-                disabled={
-                  updateMutation.isPending || !editId || !eName.trim()
-                }
+                disabled={updateMutation.isPending || !editId || !eName.trim()}
                 className="inline-flex gap-2"
                 onClick={() => {
                   if (!editId) return;
@@ -444,8 +439,8 @@ export function AgentsSettingsClient() {
             <DialogTitle>删除智能体</DialogTitle>
             <DialogDescription>
               将注销{" "}
-              <span className="font-mono text-foreground">{deleteId}</span>
-              . 工作区目录不会自动删除.
+              <span className="font-mono text-foreground">{deleteId}</span>.
+              工作区目录不会自动删除.
             </DialogDescription>
           </DialogHeader>
           {deleteMutation.isError ? (

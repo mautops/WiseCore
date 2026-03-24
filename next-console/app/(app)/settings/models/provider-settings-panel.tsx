@@ -116,8 +116,7 @@ export function ProviderSettingsPanel({
     onSuccess: (r) => {
       setModelTestLine({ ok: r.success, text: r.message });
     },
-    onError: (e: Error) =>
-      setModelTestLine({ ok: false, text: e.message }),
+    onError: (e: Error) => setModelTestLine({ ok: false, text: e.message }),
   });
 
   const addMutation = useMutation({
@@ -184,7 +183,9 @@ export function ProviderSettingsPanel({
             onChange={(e) => setBaseUrl(e.target.value)}
           />
           {p.freeze_url ? (
-            <p className="text-xs text-muted-foreground">URL 由 Provider 固定</p>
+            <p className="text-xs text-muted-foreground">
+              URL 由 Provider 固定
+            </p>
           ) : null}
         </div>
         <div className="space-y-1.5 sm:col-span-2">
@@ -274,7 +275,11 @@ export function ProviderSettingsPanel({
       ) : null}
 
       {discoverHint ? (
-        <Alert variant={discoverHint.startsWith("发现失败") ? "destructive" : "default"}>
+        <Alert
+          variant={
+            discoverHint.startsWith("发现失败") ? "destructive" : "default"
+          }
+        >
           <AlertTitle>发现模型</AlertTitle>
           <AlertDescription>{discoverHint}</AlertDescription>
         </Alert>
@@ -306,10 +311,7 @@ export function ProviderSettingsPanel({
             <tbody>
               {rows.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={3}
-                    className="px-3 py-2 text-muted-foreground"
-                  >
+                  <td colSpan={3} className="px-3 py-2 text-muted-foreground">
                     暂无模型
                   </td>
                 </tr>
@@ -434,8 +436,7 @@ export function ProviderSettingsPanel({
           <DialogHeader>
             <DialogTitle>移除模型</DialogTitle>
             <DialogDescription>
-              确定从列表移除{" "}
-              <span className="font-mono">{removeModelId}</span>?
+              确定从列表移除 <span className="font-mono">{removeModelId}</span>?
             </DialogDescription>
           </DialogHeader>
           {removeMutation.isError ? (

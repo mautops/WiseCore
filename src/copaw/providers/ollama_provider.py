@@ -128,7 +128,8 @@ class OllamaProvider(Provider):
         "registry/model:tag" or "registry/model".
         """
         if model_info.id in {
-            model.id for model in self.extra_models  # type: ignore [has-type]
+            model.id
+            for model in self.extra_models  # type: ignore [has-type]
         }:
             return False, f"Model '{model_info.id}' already exists"
         client = self._client(timeout=timeout)

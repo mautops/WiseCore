@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Telemetry collection for installation analytics."""
+
 from __future__ import annotations
 
 import json
@@ -67,7 +68,7 @@ def get_system_info() -> dict[str, Any]:
         "os": _safe_get(platform.system, "unknown"),
         "os_version": _safe_get(platform.release, "unknown"),
         "python_version": (
-            f"{sys.version_info.major}." f"{sys.version_info.minor}"
+            f"{sys.version_info.major}.{sys.version_info.minor}"
         ),
         "architecture": _safe_get(platform.machine, "unknown"),
         "has_gpu": _detect_gpu(),

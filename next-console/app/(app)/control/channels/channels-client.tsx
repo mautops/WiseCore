@@ -230,7 +230,9 @@ function CommonFields({
       </div>
       <div className="space-y-1.5 md:col-span-2">
         <div className="text-sm font-medium">允许列表 (allow_from)</div>
-        <p className="text-xs text-muted-foreground">每行一个 ID, 与策略 allowlist 配合使用.</p>
+        <p className="text-xs text-muted-foreground">
+          每行一个 ID, 与策略 allowlist 配合使用.
+        </p>
         <Textarea
           value={allowFromText}
           onChange={(e) => onAllowFromText(e.target.value)}
@@ -242,12 +244,16 @@ function CommonFields({
       <div className="space-y-1.5 md:col-span-2">
         <div className="text-sm font-medium">拒绝提示 (deny_message)</div>
         <Input
-          value={typeof local.deny_message === "string" ? local.deny_message : ""}
+          value={
+            typeof local.deny_message === "string" ? local.deny_message : ""
+          }
           onChange={(e) => onPatch("deny_message", e.target.value)}
         />
       </div>
       <div className="space-y-1.5 md:col-span-2">
-        <div className="text-sm font-medium">需要 @ 才响应 (require_mention)</div>
+        <div className="text-sm font-medium">
+          需要 @ 才响应 (require_mention)
+        </div>
         <div className="flex items-center gap-2">
           <Switch
             checked={Boolean(local.require_mention)}
@@ -332,9 +338,7 @@ export function ChannelsClient() {
   }, [listQuery.data, filterQuery]);
 
   const extraKeys = useMemo(() => {
-    return sortChannelKeys(Object.keys(local)).filter(
-      (k) => !COMMON.has(k),
-    );
+    return sortChannelKeys(Object.keys(local)).filter((k) => !COMMON.has(k));
   }, [local]);
 
   const handleSaveSheet = () => {
@@ -374,7 +378,8 @@ export function ChannelsClient() {
       <ScrollArea className="min-h-0 flex-1">
         <div className="space-y-4 p-4">
           <p className="text-sm text-muted-foreground">
-            通道配置绑定当前活动智能体. 修改后服务端会尝试热加载; 若失败请查看 CoPaw 日志.
+            通道配置绑定当前活动智能体. 修改后服务端会尝试热加载; 若失败请查看
+            CoPaw 日志.
           </p>
 
           {listQuery.isError ? (

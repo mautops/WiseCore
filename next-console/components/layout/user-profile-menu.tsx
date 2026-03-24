@@ -48,7 +48,11 @@ const MENU_GROUPS: {
     label: "智能体与运行",
     items: [
       { label: "工作区", href: "/agent/workspace", icon: FolderTreeIcon },
-      { label: "智能体配置", href: "/agent/config", icon: SlidersHorizontalIcon },
+      {
+        label: "智能体配置",
+        href: "/agent/config",
+        icon: SlidersHorizontalIcon,
+      },
     ],
   },
   {
@@ -56,7 +60,11 @@ const MENU_GROUPS: {
     items: [
       { label: "通道", href: "/control/channels", icon: RadioIcon },
       { label: "会话", href: "/control/sessions", icon: MessageSquareIcon },
-      { label: "定时任务", href: "/control/cron-jobs", icon: CalendarClockIcon },
+      {
+        label: "定时任务",
+        href: "/control/cron-jobs",
+        icon: CalendarClockIcon,
+      },
       { label: "心跳", href: "/control/heartbeat", icon: ActivityIcon },
     ],
   },
@@ -67,7 +75,11 @@ const MENU_GROUPS: {
       { label: "模型", href: "/settings/models", icon: CpuIcon },
       { label: "环境变量", href: "/settings/environments", icon: BoxesIcon },
       { label: "安全", href: "/settings/security", icon: ShieldIcon },
-      { label: "Token 用量", href: "/settings/token-usage", icon: BarChart3Icon },
+      {
+        label: "Token 用量",
+        href: "/settings/token-usage",
+        icon: BarChart3Icon,
+      },
       { label: "语音转写", href: "/settings/voice", icon: MicIcon },
     ],
   },

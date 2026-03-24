@@ -76,9 +76,7 @@ function WorkflowSourceEditor({
         <Button
           type="button"
           className="absolute right-2 bottom-2 text-base shadow-sm"
-          disabled={
-            !selectedFilename || updateMutation.isPending || !detailOk
-          }
+          disabled={!selectedFilename || updateMutation.isPending || !detailOk}
           onClick={() =>
             selectedFilename &&
             updateMutation.mutate({
@@ -87,9 +85,7 @@ function WorkflowSourceEditor({
             })
           }
         >
-          {updateMutation.isPending && (
-            <Loader2Icon className="animate-spin" />
-          )}
+          {updateMutation.isPending && <Loader2Icon className="animate-spin" />}
           保存
         </Button>
       ) : null}

@@ -66,8 +66,7 @@ class GeminiProvider(Provider):
         except genai_errors.APIError:
             return (
                 False,
-                "Failed to connect to Google Gemini API. "
-                "Check your API key.",
+                "Failed to connect to Google Gemini API. Check your API key.",
             )
         except Exception:
             return (

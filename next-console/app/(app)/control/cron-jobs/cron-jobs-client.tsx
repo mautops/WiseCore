@@ -208,14 +208,11 @@ export function CronJobsClient() {
     [],
   );
 
-  const patchRuntime = useCallback(
-    (patch: Partial<CronJobSpec["runtime"]>) => {
-      setDraft((prev) =>
-        prev ? { ...prev, runtime: { ...prev.runtime, ...patch } } : prev,
-      );
-    },
-    [],
-  );
+  const patchRuntime = useCallback((patch: Partial<CronJobSpec["runtime"]>) => {
+    setDraft((prev) =>
+      prev ? { ...prev, runtime: { ...prev.runtime, ...patch } } : prev,
+    );
+  }, []);
 
   const buildSpecFromForm = useCallback((): CronJobSpec | null => {
     if (!draft) return null;
@@ -226,7 +223,9 @@ export function CronJobsClient() {
     }
     let meta: Record<string, unknown> = {};
     try {
-      meta = metaJson.trim() ? (JSON.parse(metaJson) as Record<string, unknown>) : {};
+      meta = metaJson.trim()
+        ? (JSON.parse(metaJson) as Record<string, unknown>)
+        : {};
     } catch {
       setFormError("meta 须为合法 JSON");
       return null;
@@ -311,7 +310,8 @@ export function CronJobsClient() {
       <ScrollArea className="min-h-0 flex-1">
         <div className="space-y-4 p-4">
           <p className="text-sm text-muted-foreground">
-            Cron 为 5 段 (分 时 日 月 周). 启用关闭会写入任务配置并重新调度; 「暂停/恢复」仅作用于调度器任务, 与 enabled 不同.
+            Cron 为 5 段 (分 时 日 月 周). 启用关闭会写入任务配置并重新调度;
+            「暂停/恢复」仅作用于调度器任务, 与 enabled 不同.
           </p>
 
           {listQuery.isError ? (
@@ -334,11 +334,9 @@ export function CronJobsClient() {
             </Alert>
           ) : null}
 
-          {!listQuery.isLoading &&
-            !listQuery.isError &&
-            rows.length === 0 && (
-              <p className="text-sm text-muted-foreground">暂无任务.</p>
-            )}
+          {!listQuery.isLoading && !listQuery.isError && rows.length === 0 && (
+            <p className="text-sm text-muted-foreground">暂无任务.</p>
+          )}
 
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full min-w-[960px] text-left text-sm">
@@ -555,9 +553,7 @@ export function CronJobsClient() {
                       </Select>
                     </div>
                     <div className="space-y-1.5 sm:col-span-2">
-                      <div className="text-sm font-medium">
-                        Cron (5 段)
-                      </div>
+                      <div className="text-sm font-medium">Cron (5 段)</div>
                       <Input
                         className="font-mono text-sm"
                         value={draft.schedule.cron}
@@ -650,7 +646,8 @@ export function CronJobsClient() {
                         Agent request (JSON)
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        须含 input; 保存时会将 user_id / session_id 与上方目标对齐.
+                        须含 input; 保存时会将 user_id / session_id
+                        与上方目标对齐.
                       </p>
                       <Textarea
                         className="min-h-[200px] font-mono text-xs"

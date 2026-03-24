@@ -12,9 +12,7 @@ async function parseErrorMessage(res: Response): Promise<string> {
   return `HTTP ${res.status}`;
 }
 
-function buildQuery(
-  params: Record<string, string | undefined>,
-): string {
+function buildQuery(params: Record<string, string | undefined>): string {
   const u = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (v != null && v !== "") u.set(k, v);

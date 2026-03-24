@@ -49,12 +49,17 @@ export function WorkflowRunsDailyChart({ filename }: { filename: string }) {
     return null;
   }
 
-  const data = dailyRunCountsForChart(query.data ?? [], WORKFLOW_RUNS_CHART_DAYS);
+  const data = dailyRunCountsForChart(
+    query.data ?? [],
+    WORKFLOW_RUNS_CHART_DAYS,
+  );
   const lastIdx = data.length > 0 ? data.length - 1 : -1;
 
   return (
     <div className="mt-2 w-full">
-      <p className="mb-0.5 text-xs text-muted-foreground">近 {WORKFLOW_RUNS_CHART_DAYS} 日执行</p>
+      <p className="mb-0.5 text-xs text-muted-foreground">
+        近 {WORKFLOW_RUNS_CHART_DAYS} 日执行
+      </p>
       <ChartContainer
         config={chartConfig}
         className="h-21 w-full aspect-auto! p-0 [&_.recharts-responsive-container]:aspect-auto"
@@ -63,7 +68,11 @@ export function WorkflowRunsDailyChart({ filename }: { filename: string }) {
           data={data}
           margin={{ top: 2, right: 2, left: 0, bottom: 0 }}
         >
-          <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border/40" />
+          <CartesianGrid
+            vertical={false}
+            strokeDasharray="3 3"
+            className="stroke-border/40"
+          />
           <XAxis
             dataKey="label"
             tickLine={false}

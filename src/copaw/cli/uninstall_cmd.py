@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """copaw uninstall — remove the CoPaw environment and CLI wrapper."""
+
 from __future__ import annotations
 
 import shutil

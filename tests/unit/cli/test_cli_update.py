@@ -893,11 +893,7 @@ def test_update_worker_foreground_propagates_failure_exit_code(
             sys.executable,
             "-u",
             "-c",
-            (
-                "import sys;"
-                "print('installer: failing', flush=True);"
-                "sys.exit(7)"
-            ),
+            ("import sys;print('installer: failing', flush=True);sys.exit(7)"),
         ],
     )
 

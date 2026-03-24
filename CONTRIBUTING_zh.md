@@ -25,11 +25,13 @@
 我们遵循 [Conventional Commits](https://www.conventionalcommits.org/) 规范，以保持清晰的历史记录和工具支持。
 
 **格式：**
+
 ```
 <type>(<scope>): <subject>
 ```
 
 **类型：**
+
 - `feat:` 新功能
 - `fix:` Bug 修复
 - `docs:` 仅文档更改
@@ -40,6 +42,7 @@
 - `chore:` 构建、工具或维护
 
 **示例：**
+
 ```bash
 feat(channels): add Telegram channel stub
 fix(skills): correct SKILL.md front matter parsing
@@ -52,13 +55,14 @@ test(agents): add tests for skill loading
 
 PR 标题应遵循相同的约定：
 
-**格式：** ` <type>(<scope>): <description> `
+**格式：** `<type>(<scope>): <description>`
 
 - 使用以下之一：`feat`、`fix`、`docs`、`test`、`refactor`、`chore`、`perf`、`style`、`build`、`revert`。
 - **scope 必须小写**（仅字母、数字、连字符、下划线）。
 - 保持描述简短且描述性强。
 
 **示例：**
+
 ```
 feat(models): add custom provider for Azure OpenAI
 fix(channels): handle empty content_parts in Discord
@@ -67,15 +71,18 @@ docs(skills): document Skills Hub import
 
 ### 4. 代码和质量
 
-- **本地必跑门禁（push/提 PR 前必须通过）：**
+- **本地必跑门禁（push/提 PR 前必须通过）：** 在项目根目录使用 `.venv`，工具安装在 `.venv/bin/` 下，避免污染全局 Python。
   ```bash
-  pip install -e ".[dev,full]"
-  pre-commit install
-  pre-commit run --all-files
-  pytest
+  python -m venv .venv
+  .venv/bin/pip install -U pip setuptools wheel
+  .venv/bin/pip install -e ".[dev,full]"
+  .venv/bin/pre-commit install
+  .venv/bin/pre-commit run --all-files
+  .venv/bin/pytest
   ```
+  Windows 下将 `.venv/bin/` 换成 `.venv\Scripts\`。
 - **如果 pre-commit 自动修改了文件：** 先提交这些修改，再重复执行
-  `pre-commit run --all-files`，直到无修改且通过。
+  `.venv/bin/pre-commit run --all-files`，直到无修改且通过。
 - **CI 策略：** pre-commit 检查失败的 PR 视为未就绪（not merge-ready）。
 - **前端代码格式化：** 如果你的修改涉及到 `console` 或 `website` 目录，请在提交前运行格式化：
   ```bash
@@ -155,6 +162,7 @@ CoPaw 支持**多种模型后端**：云 API（如 DashScope、ModelScope）、*
 为了让 model 能够准确识别并调用你的 skill，`description` 字段必须**清晰、具体且包含触发词**。请遵循以下最佳实践：
 
 **✅ 推荐格式：**
+
 ```yaml
 ---
 name: example_skill
@@ -165,6 +173,7 @@ description: "Use this skill whenever user wants to [主要功能]. Trigger espe
 ```
 
 **✅ 最佳实践：**
+
 1. **明确触发时机**：使用 "Use this skill whenever user wants to..." 或 "Trigger when user asks for..."
 2. **列出触发关键词**：在 description 中明确列出触发词，例如：
    - "Trigger especially when user mentions: \"call\", \"dial\", \"phone\", \"microsip\""
@@ -175,16 +184,17 @@ description: "Use this skill whenever user wants to [主要功能]. Trigger espe
 4. **提供使用示例**：如果技能有特定用法，在 SKILL.md 主体部分说明
 
 **❌ 常见问题：**
+
 - 描述过于抽象（如"控制桌面"、"处理文件"）
 - 没有列出触发关键词，导致 model 无法识别
 - 缺少使用场景说明
 
 **📝 示例对比：**
 
-| 技能 | 描述（不好） | 描述（好） |
-|------|---------------|-------------|
+| 技能            | 描述（不好）   | 描述（好）                                                                                                                                                                                                                                   |
+| --------------- | -------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Desktop Control | "控制桌面应用" | "Use this skill whenever user wants to control desktop applications or make phone calls. Trigger especially when user mentions: \"call\" (呼叫), \"dial\" (拨打), \"phone\" (电话), \"microsip\", or requests to use specific desktop apps." |
-| File Reader | "读取文件" | "Use this skill when user asks to read or summarize local text-based files. PDFs, Office documents, and images are out of scope." |
+| File Reader     | "读取文件"     | "Use this skill when user asks to read or summarize local text-based files. PDFs, Office documents, and images are out of scope."                                                                                                            |
 
 - **Skills Hub：** CoPaw 支持从社区 hub（如 ClawHub）导入 skills。如果你希望你的 skill 可以通过 hub 安装，请遵循相同的 `SKILL.md` + `references/`/`scripts/` 布局和 hub 的打包格式。
 

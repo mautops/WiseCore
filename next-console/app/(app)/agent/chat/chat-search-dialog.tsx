@@ -28,10 +28,7 @@ export function ChatSearchDialog({
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <Command>
-        <CommandInput
-          placeholder="搜索对话..."
-          className="text-base"
-        />
+        <CommandInput placeholder="搜索对话..." className="text-base" />
         <CommandList>
           <CommandEmpty>未找到对话</CommandEmpty>
           {sessions.length > 0 && (

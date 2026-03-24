@@ -331,7 +331,7 @@ def _run_shutdown_for_update(
         )
     except OSError as exc:
         raise click.ClickException(
-            "Failed to run `copaw shutdown`: " f"{exc}",
+            f"Failed to run `copaw shutdown`: {exc}",
         ) from exc
 
     output = (result.stdout or "").strip()
@@ -506,7 +506,7 @@ def _run_update_worker_foreground(plan_path: Path) -> int:
         proc = _spawn_update_worker(plan_path)
     except OSError as exc:
         raise click.ClickException(
-            "Failed to start update worker: " f"{exc}",
+            f"Failed to start update worker: {exc}",
         ) from exc
 
     try:
@@ -528,7 +528,7 @@ def _run_update_worker_detached(plan_path: Path) -> None:
         _spawn_update_worker(plan_path, capture_output=False)
     except OSError as exc:
         raise click.ClickException(
-            "Failed to start update worker: " f"{exc}",
+            f"Failed to start update worker: {exc}",
         ) from exc
 
 
@@ -582,8 +582,7 @@ def run_update_worker(plan_path: str | Path) -> int:
     else:
         click.echo(f"[copaw] Update failed with exit code {return_code}.")
         click.echo(
-            "[copaw] Please fix the error above and run "
-            "`copaw update` again.",
+            "[copaw] Please fix the error above and run `copaw update` again.",
         )
 
     return return_code
@@ -595,8 +594,7 @@ def _echo_install_summary(info: InstallInfo, latest_version: str) -> None:
     click.echo(f"Latest version:  {latest_version}")
     click.echo(f"Python:          {info.python_executable}")
     click.echo(
-        f"Environment:     {info.environment_kind} "
-        f"({info.environment_root})",
+        f"Environment:     {info.environment_kind} ({info.environment_root})",
     )
     click.echo(f"Install path:    {info.package_dir}")
     click.echo(f"Installer:       {info.installer}")
@@ -622,8 +620,7 @@ def _confirm_source_override(info: InstallInfo, yes: bool) -> bool:
 
     click.echo(f"Warning: {message}")
     return click.confirm(
-        "Continue and replace the current installation with the PyPI "
-        "version?",
+        "Continue and replace the current installation with the PyPI version?",
         default=False,
     )
 

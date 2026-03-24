@@ -26,7 +26,13 @@ import {
   QK_ENVS,
   rowMatchesEnvFilter,
 } from "./environments-domain";
-import { EyeIcon, EyeOffIcon, Loader2Icon, PencilIcon, Trash2Icon } from "lucide-react";
+import {
+  EyeIcon,
+  EyeOffIcon,
+  Loader2Icon,
+  PencilIcon,
+  Trash2Icon,
+} from "lucide-react";
 
 export function EnvironmentsClient() {
   const queryClient = useQueryClient();
@@ -133,7 +139,8 @@ export function EnvironmentsClient() {
           <Alert>
             <AlertTitle>全量保存</AlertTitle>
             <AlertDescription>
-              保存与新增会调用 PUT /envs 覆盖服务端全部键值; 未包含的键会被删除. 行内「删除」使用 DELETE 单键接口. 请勿多终端同时改同一套环境变量.
+              保存与新增会调用 PUT /envs 覆盖服务端全部键值; 未包含的键会被删除.
+              行内「删除」使用 DELETE 单键接口. 请勿多终端同时改同一套环境变量.
             </AlertDescription>
           </Alert>
 
@@ -157,11 +164,9 @@ export function EnvironmentsClient() {
             <p className="text-sm text-muted-foreground">加载中...</p>
           ) : null}
 
-          {!listQuery.isLoading &&
-            !listQuery.isError &&
-            rows.length === 0 && (
-              <p className="text-sm text-muted-foreground">无匹配项.</p>
-            )}
+          {!listQuery.isLoading && !listQuery.isError && rows.length === 0 && (
+            <p className="text-sm text-muted-foreground">无匹配项.</p>
+          )}
 
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full min-w-[640px] text-left text-sm">
@@ -245,7 +250,9 @@ export function EnvironmentsClient() {
         <DialogContent className="text-base">
           <DialogHeader>
             <DialogTitle>新增环境变量</DialogTitle>
-            <DialogDescription>键名保存前会 trim, 不可与现有键重复.</DialogDescription>
+            <DialogDescription>
+              键名保存前会 trim, 不可与现有键重复.
+            </DialogDescription>
           </DialogHeader>
           <Input
             placeholder="KEY"
@@ -269,9 +276,7 @@ export function EnvironmentsClient() {
             </Button>
             <Button
               disabled={
-                putAllMutation.isPending ||
-                !addKey.trim() ||
-                duplicateAddKey
+                putAllMutation.isPending || !addKey.trim() || duplicateAddKey
               }
               className="inline-flex gap-2"
               onClick={() => void saveAdd()}
@@ -290,8 +295,7 @@ export function EnvironmentsClient() {
           <DialogHeader>
             <DialogTitle>编辑值</DialogTitle>
             <DialogDescription>
-              键名{" "}
-              <span className="font-mono text-foreground">{editKey}</span>{" "}
+              键名 <span className="font-mono text-foreground">{editKey}</span>{" "}
               不可在此修改; 需删除后重建.
             </DialogDescription>
           </DialogHeader>

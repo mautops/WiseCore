@@ -60,8 +60,8 @@ export function WorkflowCreateDialog({
         <DialogHeader>
           <DialogTitle>新建工作流</DialogTitle>
           <DialogDescription>
-            文件名无需写后缀, 未以 .md / .markdown 结尾时将自动补全为 .md. 内容为完整
-            Markdown (可含 YAML 头信息).
+            文件名无需写后缀, 未以 .md / .markdown 结尾时将自动补全为 .md.
+            内容为完整 Markdown (可含 YAML 头信息).
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-3 py-2">

@@ -20,11 +20,7 @@ import {
   ToolInput,
   ToolOutput,
 } from "@/components/ai-elements/tool";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { ToolCallInfo } from "@/lib/chat-api";
 import type { ChatStatus } from "ai";
 import { BotIcon, CopyIcon } from "lucide-react";
@@ -35,7 +31,10 @@ import type { LocalMessage } from "./types";
 
 function BotAvatar({ center = false }: { center?: boolean }) {
   return (
-    <Avatar size="default" className={`shrink-0 ring-2 ring-border${center ? "" : " mt-0.5"}`}>
+    <Avatar
+      size="default"
+      className={`shrink-0 ring-2 ring-border${center ? "" : " mt-0.5"}`}
+    >
       <AvatarFallback>
         <BotIcon className="size-3.5" />
       </AvatarFallback>
@@ -43,7 +42,15 @@ function BotAvatar({ center = false }: { center?: boolean }) {
   );
 }
 
-function UserAvatar({ image, name, initials }: { image?: string; name?: string; initials: string }) {
+function UserAvatar({
+  image,
+  name,
+  initials,
+}: {
+  image?: string;
+  name?: string;
+  initials: string;
+}) {
   return (
     <Avatar size="default" className="mt-0.5 shrink-0 ring-2 ring-border">
       <AvatarImage src={image} alt={name ?? "User"} />
@@ -56,7 +63,13 @@ const AVATAR_PLACEHOLDER = <div className="size-8 shrink-0" />;
 
 // ── Tool block ───────────────────────────────────────────────────────────────
 
-function ToolBlock({ tool, defaultOpen = false }: { tool: ToolCallInfo; defaultOpen?: boolean }) {
+function ToolBlock({
+  tool,
+  defaultOpen = false,
+}: {
+  tool: ToolCallInfo;
+  defaultOpen?: boolean;
+}) {
   const toolState =
     tool.state === "error"
       ? "output-error"
@@ -66,11 +79,21 @@ function ToolBlock({ tool, defaultOpen = false }: { tool: ToolCallInfo; defaultO
 
   return (
     <Tool defaultOpen={defaultOpen} className="min-w-0 flex-1">
-      <ToolHeader title={tool.name} type="dynamic-tool" toolName={tool.name} state={toolState} />
+      <ToolHeader
+        title={tool.name}
+        type="dynamic-tool"
+        toolName={tool.name}
+        state={toolState}
+      />
       <ToolContent>
-        {tool.input != null && <ToolInput input={tool.input as Record<string, unknown>} />}
+        {tool.input != null && (
+          <ToolInput input={tool.input as Record<string, unknown>} />
+        )}
         {tool.output !== undefined && (
-          <ToolOutput output={tool.output} errorText={tool.state === "error" ? tool.output : undefined} />
+          <ToolOutput
+            output={tool.output}
+            errorText={tool.state === "error" ? tool.output : undefined}
+          />
         )}
       </ToolContent>
     </Tool>
@@ -113,7 +136,12 @@ export function ChatMessageList({
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
-  }, [messages.length, streamingContent, streamingThinking, streamingTools.length]);
+  }, [
+    messages.length,
+    streamingContent,
+    streamingThinking,
+    streamingTools.length,
+  ]);
 
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col px-6">
@@ -125,7 +153,10 @@ export function ChatMessageList({
 
         if (msg.type === "thinking") {
           return (
-            <div key={msg.id} className={`${marginTop} flex flex-row items-center gap-3`}>
+            <div
+              key={msg.id}
+              className={`${marginTop} flex flex-row items-center gap-3`}
+            >
               {showAvatar ? <BotAvatar center /> : AVATAR_PLACEHOLDER}
               <Reasoning className="min-w-0 flex-1" defaultOpen={false}>
                 <ReasoningTrigger />
@@ -137,7 +168,10 @@ export function ChatMessageList({
 
         if (msg.type === "tool" && msg.tool) {
           return (
-            <div key={msg.id} className={`${marginTop} flex flex-row items-start gap-3`}>
+            <div
+              key={msg.id}
+              className={`${marginTop} flex flex-row items-start gap-3`}
+            >
               {showAvatar ? <BotAvatar /> : AVATAR_PLACEHOLDER}
               <ToolBlock tool={msg.tool} />
             </div>
@@ -151,7 +185,11 @@ export function ChatMessageList({
           >
             {showAvatar ? (
               isUser ? (
-                <UserAvatar image={userImage} name={userName} initials={userInitials} />
+                <UserAvatar
+                  image={userImage}
+                  name={userName}
+                  initials={userInitials}
+                />
               ) : (
                 <BotAvatar />
               )
@@ -169,7 +207,9 @@ export function ChatMessageList({
                   <MessageAction
                     tooltip="复制"
                     label="复制"
-                    onClick={() => void navigator.clipboard.writeText(msg.content)}
+                    onClick={() =>
+                      void navigator.clipboard.writeText(msg.content)
+                    }
                   >
                     <CopyIcon className="size-4" />
                   </MessageAction>
@@ -216,13 +256,18 @@ function StreamingBlock({
   const prevIsAssistant = messages.at(-1)?.role === "assistant";
   const showThinking = isThinkingStreaming || !!streamingThinking;
   const showShimmer =
-    status === "submitted" && !showThinking && streamingTools.length === 0 && !streamingContent;
+    status === "submitted" &&
+    !showThinking &&
+    streamingTools.length === 0 &&
+    !streamingContent;
   // Do not gate text on !isThinkingStreaming: answer tokens often overlap reasoning in time.
   // Hiding MessageResponse until thinking ends makes streamingContent jump in as one block.
   const showText =
     !showShimmer &&
     (!!streamingContent ||
-      (streamingTools.length === 0 && !streamingThinking && !isThinkingStreaming));
+      (streamingTools.length === 0 &&
+        !streamingThinking &&
+        !isThinkingStreaming));
 
   type StreamRow = {
     key: string;
@@ -282,7 +327,9 @@ function StreamingBlock({
               tooltip="复制"
               label="复制"
               disabled={!streamingContent}
-              onClick={() => void navigator.clipboard.writeText(streamingContent)}
+              onClick={() =>
+                void navigator.clipboard.writeText(streamingContent)
+              }
             >
               <CopyIcon className="size-4" />
             </MessageAction>

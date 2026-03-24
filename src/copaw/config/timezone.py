@@ -52,9 +52,7 @@ def _probe_python() -> Optional[str]:
     """Ask the Python runtime for the local IANA name."""
     try:
         name = (
-            datetime.now(timezone.utc)
-            .astimezone()
-            .tzinfo.tzname(None)  # type: ignore[union-attr]
+            datetime.now(timezone.utc).astimezone().tzinfo.tzname(None)  # type: ignore[union-attr]
         )
         if _is_iana(name):
             return name

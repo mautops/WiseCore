@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Logging setup for CoPaw: console output and optional file handler."""
+
 import io
 import logging
 import logging.handlers

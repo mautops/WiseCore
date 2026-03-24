@@ -9,7 +9,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { PanelLeftCloseIcon, PanelLeftOpenIcon, SearchIcon } from "lucide-react";
+import {
+  PanelLeftCloseIcon,
+  PanelLeftOpenIcon,
+  SearchIcon,
+} from "lucide-react";
 
 export function SessionsToolbar({
   showLeftSidebar,

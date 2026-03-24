@@ -59,7 +59,9 @@ class CreateSkillRequest(BaseModel):
     content: str = Field(..., description="Skill content (SKILL.md)")
     overwrite: bool = Field(
         default=False,
-        description="Replace existing customized skill with the same directory name",
+        description=(
+            "Replace existing customized skill with the same directory name"
+        ),
     )
     references: dict[str, Any] | None = Field(
         None,
@@ -478,8 +480,7 @@ async def upload_skill_zip(
         raise HTTPException(
             status_code=400,
             detail=(
-                "Expected a zip file, "
-                f"got content-type: {file.content_type}"
+                f"Expected a zip file, got content-type: {file.content_type}"
             ),
         )
 

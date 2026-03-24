@@ -1,7 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { PanelLeftCloseIcon, PanelLeftOpenIcon, RefreshCwIcon } from "lucide-react";
+import {
+  PanelLeftCloseIcon,
+  PanelLeftOpenIcon,
+  RefreshCwIcon,
+} from "lucide-react";
 
 export function VoiceToolbar({
   showLeftSidebar,

@@ -138,7 +138,8 @@ export function HeartbeatClient() {
             >
               HEARTBEAT.md
             </Link>{" "}
-            等内容触发代理运行. 保存后会尝试重调度 Cron 中的心跳任务 (需 CronManager 可用).
+            等内容触发代理运行. 保存后会尝试重调度 Cron 中的心跳任务 (需
+            CronManager 可用).
           </p>
 
           {heartbeatQuery.isError ? (

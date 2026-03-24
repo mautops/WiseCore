@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Data models for skill scanning results.
+"""Data models for skill scanning results."""
 
-"""
 from __future__ import annotations
 
 from dataclasses import dataclass, field

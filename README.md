@@ -8,7 +8,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.10%20~%20%3C3.14-blue.svg?logo=python&label=Python)](https://www.python.org/downloads/)
 [![Last Commit](https://img.shields.io/github/last-commit/agentscope-ai/CoPaw)](https://github.com/agentscope-ai/CoPaw)
 [![License](https://img.shields.io/badge/license-Apache%202.0-red.svg?logo=apache&label=License)](LICENSE)
-[![Code Style](https://img.shields.io/badge/code%20style-black-black.svg?logo=python&label=CodeStyle)](https://github.com/psf/black)
+[![Code Style](https://img.shields.io/badge/code%20style-ruff-261230.svg?logo=ruff&logoColor=d7ff64&label=CodeStyle)](https://github.com/astral-sh/ruff)
 [![GitHub Stars](https://img.shields.io/github/stars/agentscope-ai/CoPaw?style=flat&logo=github&color=yellow&label=Stars)](https://github.com/agentscope-ai/CoPaw/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/agentscope-ai/CoPaw?style=flat&logo=github&color=purple&label=Forks)](https://github.com/agentscope-ai/CoPaw/network)
 [![DeepWiki](https://img.shields.io/badge/DeepWiki-Ask_Devin-navy.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACwAAAAyCAYAAAAnWDnqAAAAAXNSR0IArs4c6QAAA05JREFUaEPtmUtyEzEQhtWTQyQLHNak2AB7ZnyXZMEjXMGeK/AIi+QuHrMnbChYY7MIh8g01fJoopFb0uhhEqqcbWTp06/uv1saEDv4O3n3dV60RfP947Mm9/SQc0ICFQgzfc4CYZoTPAswgSJCCUJUnAAoRHOAUOcATwbmVLWdGoH//PB8mnKqScAhsD0kYP3j/Yt5LPQe2KvcXmGvRHcDnpxfL2zOYJ1mFwrryWTz0advv1Ut4CJgf5uhDuDj5eUcAUoahrdY/56ebRWeraTjMt/00Sh3UDtjgHtQNHwcRGOC98BJEAEymycmYcWwOprTgcB6VZ5JK5TAJ+fXGLBm3FDAmn6oPPjR4rKCAoJCal2eAiQp2x0vxTPB3ALO2CRkwmDy5WohzBDwSEFKRwPbknEggCPB/imwrycgxX2NzoMCHhPkDwqYMr9tRcP5qNrMZHkVnOjRMWwLCcr8ohBVb1OMjxLwGCvjTikrsBOiA6fNyCrm8V1rP93iVPpwaE+gO0SsWmPiXB+jikdf6SizrT5qKasx5j8ABbHpFTx+vFXp9EnYQmLx02h1QTTrl6eDqxLnGjporxl3NL3agEvXdT0WmEost648sQOYAeJS9Q7bfUVoMGnjo4AZdUMQku50McDcMWcBPvr0SzbTAFDfvJqwLzgxwATnCgnp4wDl6Aa+Ax283gghmj+vj7feE2KBBRMW3FzOpLOADl0Isb5587h/U4gGvkt5v60Z1VLG8BhYjbzRwyQZemwAd6cCR5/XFWLYZRIMpX39AR0tjaGGiGzLVyhse5C9RKC6ai42ppWPKiBagOvaYk8lO7DajerabOZP46Lby5wKjw1HCRx7p9sVMOWGzb/vA1hwiWc6jm3MvQDTogQkiqIhJV0nBQBTU+3okKCFDy9WwferkHjtxib7t3xIUQtHxnIwtx4mpg26/HfwVNVDb4oI9RHmx5WGelRVlrtiw43zboCLaxv46AZeB3IlTkwouebTr1y2NjSpHz68WNFjHvupy3q8TFn3Hos2IAk4Ju5dCo8B3wP7VPr/FGaKiG+T+v+TQqIrOqMTL1VdWV1DdmcbO8KXBz6esmYWYKPwDL5b5FA1a0hwapHiom0r/cKaoqr+27/XcrS5UwSMbQAAAABJRU5ErkJggg==)](https://deepwiki.com/agentscope-ai/CoPaw)
@@ -16,7 +16,7 @@
 [![X](https://img.shields.io/badge/X-Follow_Us-black.svg?logo=x)](https://x.com/agentscope_ai)
 [![DingTalk](https://img.shields.io/badge/DingTalk-Join_Us-orange.svg)](https://qr.dingtalk.com/action/joingroup?code=v1,k1,OmDlBXpjW+I2vWjKDsjvI9dhcXjGZi3bQiojOq3dlDw=&_dt_no_comment=1&origin=11)
 
-[[Documentation](https://copaw.agentscope.io/)] [[中文 README](README_zh.md)] [[日本語](README_ja.md)]
+[[Documentation](https://copaw.agentscope.io/)] [[中文 README](README_zh.md)]
 
 <p align="center">
   <img src="https://img.alicdn.com/imgextra/i2/O1CN014TIqyO1U5wDiSbFfA_!!6000000002467-2-tps-816-192.png" alt="CoPaw Logo" width="120">
@@ -149,6 +149,7 @@ irm https://copaw.agentscope.io/install.ps1 | iex
 > **⚠️ Special Notice for Windows Enterprise LTSC Users**
 >
 > If you are using Windows LTSC or an enterprise environment governed by strict security policies, PowerShell may run in **Constrained Language Mode**, potentially causing the following issue:
+>
 > 1. **If using CMD (.bat): Script executes successfully but fails to write to `Path`**
 >
 >    The script completes file installation. Due to **Constrained Language Mode**, it cannot automatically update environment variables. Manually configure as follows:
@@ -161,13 +162,15 @@ irm https://copaw.agentscope.io/install.ps1 | iex
 >      - Click “Advanced” -> “Environment Variables”.
 >      - Under “System variables”, locate and select `Path`, then click “Edit”.
 >      - Click “New”, enter both directory paths sequentially, then click OK to save.
+>
 > 2. **If using PowerShell (.ps1): Script execution interrupted**
 >
->   Due to **Constrained Language Mode**, the script may fail to automatically download `uv`.
->   - **Manually install uv**: Refer to the [GitHub Release](https://github.com/astral-sh/uv/releases) to download `uv.exe` and place it in `%USERPROFILE%\.local\bin` or `%USERPROFILE%\AppData\Local\uv`; or ensure Python is installed and run `python -m pip install -U uv`.
->   - **Configure `uv` environment variables**: Add the `uv` directory and `%USERPROFILE%\.copaw\bin` to your system's `Path` variable.
->   - **Re-run the installation**: Open a new terminal and execute the installation script again to complete the `CoPaw` installation.
->   - **Configure the `CoPaw` environment variable**: Add `%USERPROFILE%\.copaw\bin` to your system's `Path` variable.
+> Due to **Constrained Language Mode**, the script may fail to automatically download `uv`.
+>
+> - **Manually install uv**: Refer to the [GitHub Release](https://github.com/astral-sh/uv/releases) to download `uv.exe` and place it in `%USERPROFILE%\.local\bin` or `%USERPROFILE%\AppData\Local\uv`; or ensure Python is installed and run `python -m pip install -U uv`.
+> - **Configure `uv` environment variables**: Add the `uv` directory and `%USERPROFILE%\.copaw\bin` to your system's `Path` variable.
+> - **Re-run the installation**: Open a new terminal and execute the installation script again to complete the `CoPaw` installation.
+> - **Configure the `CoPaw` environment variable**: Add `%USERPROFILE%\.copaw\bin` to your system's `Path` variable.
 
 Once installed, open a new terminal and run:
 
@@ -228,6 +231,7 @@ copaw uninstall --purge  # removes everything
 ### Desktop Application (Beta)
 
 > **Beta Notice**: The desktop application is currently in Beta testing phase with the following known limitations:
+>
 > - **Incomplete compatibility testing**: Not fully tested across all system versions and hardware configurations
 > - **Potential performance issues**: Startup time, memory usage, and other performance aspects may need further optimization
 > - **Features under development**: Some features may be unstable or missing
@@ -237,6 +241,7 @@ If you're not comfortable with command-line tools, you can download and use CoPa
 #### Download
 
 Download the desktop app from [GitHub Releases](https://github.com/agentscope-ai/CoPaw/releases):
+
 - **Windows**: `CoPaw-Setup-<version>.exe`
 - **macOS**: `CoPaw-<version>-macOS.zip` (Apple Silicon recommended)
 
@@ -253,13 +258,13 @@ Download the desktop app from [GitHub Releases](https://github.com/agentscope-ai
 
 #### macOS: Bypass System Security Restrictions
 
-When you download the CoPaw macOS app from Releases, macOS may show: *"Apple cannot verify that 'CoPaw' contains no malicious software"*. This happens because the app is not notarized. You can still open it as follows:
+When you download the CoPaw macOS app from Releases, macOS may show: _"Apple cannot verify that 'CoPaw' contains no malicious software"_. This happens because the app is not notarized. You can still open it as follows:
 
 - **Right-click to open (recommended)**
   Right-click (or Control+click) the CoPaw app → **Open** → in the dialog click **Open** again. This tells Gatekeeper you trust the app; after that you can double-click to launch as usual.
 
 - **Allow in System Settings**
-  If it is still blocked, go to **System Settings → Privacy & Security**, scroll to the message like *"CoPaw was blocked because it is from an unidentified developer"*, and click **Open Anyway** or **Allow**.
+  If it is still blocked, go to **System Settings → Privacy & Security**, scroll to the message like _"CoPaw was blocked because it is from an unidentified developer"_, and click **Open Anyway** or **Allow**.
 
 - **Remove quarantine attribute (not recommended for most users)**
   In Terminal run:
@@ -289,6 +294,7 @@ Then open **http://127.0.0.1:8088/** for the Console. Config, memory, and skills
 > Inside a Docker container, `localhost` refers to the container itself, not your host machine. If you run Ollama (or other model services) on the host and want CoPaw in Docker to reach them, use one of these approaches:
 >
 > **Option A** — Explicit host binding (all platforms):
+>
 > ```bash
 > docker run -p 127.0.0.1:8088:8088 \
 >   --add-host=host.docker.internal:host-gateway \
@@ -296,15 +302,18 @@ Then open **http://127.0.0.1:8088/** for the Console. Config, memory, and skills
 >   -v copaw-secrets:/app/working.secret \
 >   agentscope/copaw:latest
 > ```
+>
 > Then in CoPaw **Settings → Models**, change the Base URL to `http://host.docker.internal:<port>` — for example, `http://host.docker.internal:11434` for Ollama, or `http://host.docker.internal:1234/v1` for LM Studio.
 >
 > **Option B** — Host networking (Linux only):
+>
 > ```bash
 > docker run --network=host \
 >   -v copaw-data:/app/working \
 >   -v copaw-secrets:/app/working.secret \
 >   agentscope/copaw:latest
 > ```
+>
 > No port mapping (`-p`) is needed; the container shares the host network directly. Note that all container ports are exposed on the host, which may cause conflicts if the port is already in use.
 >
 > **Note:** If you only mount `/app/working` without a separate volume for `/app/working.secret`, the entrypoint will automatically redirect secrets into `/app/working/.secret` so they persist on the same volume.
@@ -339,11 +348,11 @@ Tools that need extra keys (e.g. `TAVILY_API_KEY` for web search) can be set in 
 
 CoPaw can run LLMs entirely on your machine — no API keys or cloud services required. See the [official docs](https://copaw.agentscope.io/docs/models#local-providers-llamacpp--mlx) for details.
 
-| Backend       | Best for                                 | Install                                                              |
-| ------------- | ---------------------------------------- | -------------------------------------------------------------------- |
+| Backend       | Best for                                 | Install                                                                |
+| ------------- | ---------------------------------------- | ---------------------------------------------------------------------- |
 | **llama.cpp** | Cross-platform (macOS / Linux / Windows) | `pip install 'copaw[llamacpp]'` or `bash install.sh --extras llamacpp` |
-| **MLX**       | Apple Silicon Macs (M1/M2/M3/M4)         | `pip install 'copaw[mlx]'` or `bash install.sh --extras mlx`         |
-| **Ollama**    | Cross-platform (requires Ollama service) | `pip install 'copaw[ollama]'` or `bash install.sh --extras ollama`   |
+| **MLX**       | Apple Silicon Macs (M1/M2/M3/M4)         | `pip install 'copaw[mlx]'` or `bash install.sh --extras mlx`           |
+| **Ollama**    | Cross-platform (requires Ollama service) | `pip install 'copaw[ollama]'` or `bash install.sh --extras ollama`     |
 
 After installing, you can download and manage local models in the **Console** UI. You can also use the command line:
 
@@ -357,22 +366,22 @@ copaw app # start the server
 
 ## Documentation
 
-| Topic                                                                 | Description                                      |
-| --------------------------------------------------------------------- | ------------------------------------------------ |
-| [Introduction](https://copaw.agentscope.io/docs/intro)                | What CoPaw is and how to use it                  |
-| [Quick start](https://copaw.agentscope.io/docs/quickstart)            | Install and run (local or ModelScope Studio)    |
-| [Console](https://copaw.agentscope.io/docs/console)                   | Web UI: chat and agent configuration            |
-| [Models](https://copaw.agentscope.io/docs/models)                     | Configure cloud, local, and custom providers    |
-| [Channels](https://copaw.agentscope.io/docs/channels)                  | DingTalk, Feishu, QQ, Discord, iMessage, and more |
-| [Skills](https://copaw.agentscope.io/docs/skills)                      | Extend and customize capabilities               |
-| [MCP](https://copaw.agentscope.io/docs/mcp)                            | Manage MCP clients                               |
-| [Memory](https://copaw.agentscope.io/docs/memory)                     | Long-term memory                     |
-| [Context](https://copaw.agentscope.io/docs/context)                   | Context management mechanism                     |
-| [Magic commands](https://copaw.agentscope.io/docs/commands)           | Control conversation state without waiting for the AI |
-| [Heartbeat](https://copaw.agentscope.io/docs/heartbeat)                | Scheduled check-in and digest                    |
-| [Config & working dir](https://copaw.agentscope.io/docs/config) | Working directory and config file                |
-| [CLI](https://copaw.agentscope.io/docs/cli)                            | Init, cron jobs, skills, clean                   |
-| [FAQ](https://copaw.agentscope.io/docs/faq)                           | Common questions and troubleshooting             |
+| Topic                                                           | Description                                           |
+| --------------------------------------------------------------- | ----------------------------------------------------- |
+| [Introduction](https://copaw.agentscope.io/docs/intro)          | What CoPaw is and how to use it                       |
+| [Quick start](https://copaw.agentscope.io/docs/quickstart)      | Install and run (local or ModelScope Studio)          |
+| [Console](https://copaw.agentscope.io/docs/console)             | Web UI: chat and agent configuration                  |
+| [Models](https://copaw.agentscope.io/docs/models)               | Configure cloud, local, and custom providers          |
+| [Channels](https://copaw.agentscope.io/docs/channels)           | DingTalk, Feishu, QQ, Discord, iMessage, and more     |
+| [Skills](https://copaw.agentscope.io/docs/skills)               | Extend and customize capabilities                     |
+| [MCP](https://copaw.agentscope.io/docs/mcp)                     | Manage MCP clients                                    |
+| [Memory](https://copaw.agentscope.io/docs/memory)               | Long-term memory                                      |
+| [Context](https://copaw.agentscope.io/docs/context)             | Context management mechanism                          |
+| [Magic commands](https://copaw.agentscope.io/docs/commands)     | Control conversation state without waiting for the AI |
+| [Heartbeat](https://copaw.agentscope.io/docs/heartbeat)         | Scheduled check-in and digest                         |
+| [Config & working dir](https://copaw.agentscope.io/docs/config) | Working directory and config file                     |
+| [CLI](https://copaw.agentscope.io/docs/cli)                     | Init, cron jobs, skills, clean                        |
+| [FAQ](https://copaw.agentscope.io/docs/faq)                     | Common questions and troubleshooting                  |
 
 Full docs in this repo: [website/public/docs/](website/public/docs/).
 
@@ -411,8 +420,7 @@ For common questions, troubleshooting tips, and known issues, please visit the *
 | **Cloud-native**                      | Deeper integration with AgentScope Runtime; leverage cloud compute, storage, and tooling                                                         | Long-term Planned    |
 | **Skills Hub**                        | Enrich the [AgentScope Skills](https://github.com/agentscope-ai/agentscope-skills) repository and improve discoverability of high-quality skills | Long-term Planned    |
 
-
-*Status:* *In Progress* — actively being worked on; *Planned* — queued or under design, also **welcome contributions**; *Seeking Contributors* — we **strongly encourage community contributions**; *Long-term Planned* — longer-horizon roadmap.
+_Status:_ _In Progress_ — actively being worked on; _Planned_ — queued or under design, also **welcome contributions**; _Seeking Contributors_ — we **strongly encourage community contributions**; _Long-term Planned_ — longer-horizon roadmap.
 
 ### Get involved
 
@@ -462,8 +470,8 @@ CoPaw represents both a **Co Personal Agent Workstation** and a "co-paw"—a par
 
 ## Contact us
 
-| [Discord](https://discord.gg/eYMpfnkG8h)                     | [X (Twitter)](https://x.com/agentscope_ai)                   | [DingTalk](https://qr.dingtalk.com/action/joingroup?code=v1,k1,OmDlBXpjW+I2vWjKDsjvI9dhcXjGZi3bQiojOq3dlDw=&_dt_no_comment=1&origin=11) |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [Discord](https://discord.gg/eYMpfnkG8h)                                                                                                                                      | [X (Twitter)](https://x.com/agentscope_ai)                                                                                                | [DingTalk](https://qr.dingtalk.com/action/joingroup?code=v1,k1,OmDlBXpjW+I2vWjKDsjvI9dhcXjGZi3bQiojOq3dlDw=&_dt_no_comment=1&origin=11)                                                                                                                                       |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [<img src="https://gw.alicdn.com/imgextra/i1/O1CN01hhD1mu1Dd3BWVUvxN_!!6000000000238-2-tps-400-400.png" width="80" height="80" alt="Discord">](https://discord.gg/eYMpfnkG8h) | [<img src="https://img.shields.io/badge/X-black.svg?logo=x&logoColor=white" width="80" height="80" alt="X">](https://x.com/agentscope_ai) | [<img src="https://img.alicdn.com/imgextra/i2/O1CN01vCWI8a1skHtLGXEMQ_!!6000000005804-2-tps-458-460.png" width="80" height="80" alt="DingTalk">](https://qr.dingtalk.com/action/joingroup?code=v1,k1,OmDlBXpjW+I2vWjKDsjvI9dhcXjGZi3bQiojOq3dlDw=&_dt_no_comment=1&origin=11) |
 
 ---

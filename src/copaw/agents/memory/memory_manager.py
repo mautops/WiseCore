@@ -8,6 +8,7 @@ Extends ReMeLight to provide memory management capabilities including:
 - Vector and full-text search integration
 - Embedding configuration from environment variables
 """
+
 import logging
 import os
 import platform

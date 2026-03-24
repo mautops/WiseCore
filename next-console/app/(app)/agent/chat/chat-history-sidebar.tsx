@@ -4,7 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import type { ChatSpec } from "@/lib/chat-api";
-import { MessageSquareIcon, PlusIcon, Trash2Icon, PencilIcon, CheckIcon, XIcon } from "lucide-react";
+import {
+  MessageSquareIcon,
+  PlusIcon,
+  Trash2Icon,
+  PencilIcon,
+  CheckIcon,
+  XIcon,
+} from "lucide-react";
 import { ChevronRightIcon } from "lucide-react";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 
@@ -19,8 +26,14 @@ function getGroupLabel(dateStr: string | null, now: Date): string {
   if (!dateStr) return "更早";
   const date = new Date(dateStr);
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const sessionDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const diffDays = Math.round((today.getTime() - sessionDay.getTime()) / 86400000);
+  const sessionDay = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
+  const diffDays = Math.round(
+    (today.getTime() - sessionDay.getTime()) / 86400000,
+  );
 
   if (diffDays === 0) return "今天";
   if (diffDays === 1) return "昨天";
@@ -35,8 +48,16 @@ function getGroupLabel(dateStr: string | null, now: Date): string {
 function groupSessions(sessions: ChatSpec[]): SessionGroup[] {
   const now = new Date();
   const sorted = [...sessions].sort((a, b) => {
-    const at = a.updated_at ? new Date(a.updated_at).getTime() : (a.created_at ? new Date(a.created_at).getTime() : 0);
-    const bt = b.updated_at ? new Date(b.updated_at).getTime() : (b.created_at ? new Date(b.created_at).getTime() : 0);
+    const at = a.updated_at
+      ? new Date(a.updated_at).getTime()
+      : a.created_at
+        ? new Date(a.created_at).getTime()
+        : 0;
+    const bt = b.updated_at
+      ? new Date(b.updated_at).getTime()
+      : b.created_at
+        ? new Date(b.created_at).getTime()
+        : 0;
     return bt - at;
   });
 
@@ -47,7 +68,10 @@ function groupSessions(sessions: ChatSpec[]): SessionGroup[] {
     map.get(label)!.push(s);
   }
 
-  return Array.from(map.entries()).map(([label, sessions]) => ({ label, sessions }));
+  return Array.from(map.entries()).map(([label, sessions]) => ({
+    label,
+    sessions,
+  }));
 }
 
 export const SIDEBAR_DEFAULT_WIDTH = 336;
@@ -71,7 +95,13 @@ interface SessionItemProps {
   onRename: (name: string) => Promise<void>;
 }
 
-function SessionItem({ session, isActive, onSelect, onDelete, onRename }: SessionItemProps) {
+function SessionItem({
+  session,
+  isActive,
+  onSelect,
+  onDelete,
+  onRename,
+}: SessionItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(session.name);
   const [isHovered, setIsHovered] = useState(false);
@@ -81,11 +111,14 @@ function SessionItem({ session, isActive, onSelect, onDelete, onRename }: Sessio
     if (isEditing) inputRef.current?.focus();
   }, [isEditing]);
 
-  const startEdit = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    setEditValue(session.name);
-    setIsEditing(true);
-  }, [session.name]);
+  const startEdit = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      setEditValue(session.name);
+      setIsEditing(true);
+    },
+    [session.name],
+  );
 
   const confirmEdit = useCallback(async () => {
     const trimmed = editValue.trim();
@@ -100,15 +133,21 @@ function SessionItem({ session, isActive, onSelect, onDelete, onRename }: Sessio
     setIsEditing(false);
   }, [session.name]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === "Enter") confirmEdit();
-    if (e.key === "Escape") cancelEdit();
-  }, [confirmEdit, cancelEdit]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") confirmEdit();
+      if (e.key === "Escape") cancelEdit();
+    },
+    [confirmEdit, cancelEdit],
+  );
 
-  const handleDelete = useCallback(async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    await onDelete();
-  }, [onDelete]);
+  const handleDelete = useCallback(
+    async (e: React.MouseEvent) => {
+      e.stopPropagation();
+      await onDelete();
+    },
+    [onDelete],
+  );
 
   return (
     <li
@@ -149,7 +188,7 @@ function SessionItem({ session, isActive, onSelect, onDelete, onRename }: Sessio
           onKeyDown={(e) => e.key === "Enter" && onSelect()}
           className={cn(
             "group relative w-full cursor-pointer rounded-md px-3 py-2 text-left transition-colors hover:bg-accent",
-            isActive && "bg-accent text-accent-foreground"
+            isActive && "bg-accent text-accent-foreground",
           )}
         >
           <div className="flex min-w-0 items-center gap-2">
@@ -157,7 +196,10 @@ function SessionItem({ session, isActive, onSelect, onDelete, onRename }: Sessio
             <span className="flex-1 truncate text-sm">{session.name}</span>
 
             {(isHovered || isActive) && (
-              <div className="flex shrink-0 items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+              <div
+                className="flex shrink-0 items-center gap-0.5"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Button
                   size="icon"
                   variant="ghost"
@@ -193,7 +235,13 @@ interface GroupSectionProps {
   onRenameSession: (id: string, name: string) => Promise<void>;
 }
 
-function GroupSection({ group, currentSessionId, onSelectSession, onDeleteSession, onRenameSession }: GroupSectionProps) {
+function GroupSection({
+  group,
+  currentSessionId,
+  onSelectSession,
+  onDeleteSession,
+  onRenameSession,
+}: GroupSectionProps) {
   const collapsible = group.label !== "今天" && group.label !== "昨天";
   const [collapsed, setCollapsed] = useState(collapsible);
 
@@ -203,12 +251,16 @@ function GroupSection({ group, currentSessionId, onSelectSession, onDeleteSessio
         onClick={() => collapsible && setCollapsed((v) => !v)}
         className={cn(
           "mb-1 flex w-full items-center gap-1 rounded px-2 py-0.5 text-[11px] font-medium text-muted-foreground",
-          collapsible && "cursor-pointer hover:text-foreground transition-colors",
+          collapsible &&
+            "cursor-pointer hover:text-foreground transition-colors",
         )}
       >
         {collapsible && (
           <ChevronRightIcon
-            className={cn("size-3 shrink-0 transition-transform", !collapsed && "rotate-90")}
+            className={cn(
+              "size-3 shrink-0 transition-transform",
+              !collapsed && "rotate-90",
+            )}
           />
         )}
         {group.label}
@@ -249,20 +301,26 @@ export function ChatHistorySidebar({
   const startWidth = useRef(0);
   const groups = useMemo(() => groupSessions(sessions), [sessions]);
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    isDragging.current = true;
-    startX.current = e.clientX;
-    startWidth.current = width;
-    document.body.style.cursor = "col-resize";
-    document.body.style.userSelect = "none";
-  }, [width]);
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      isDragging.current = true;
+      startX.current = e.clientX;
+      startWidth.current = width;
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+    },
+    [width],
+  );
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
       if (!isDragging.current) return;
       const delta = startX.current - e.clientX;
-      const next = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startWidth.current + delta));
+      const next = Math.min(
+        MAX_WIDTH,
+        Math.max(MIN_WIDTH, startWidth.current + delta),
+      );
       onWidthChange?.(next);
     };
     const onMouseUp = () => {
@@ -292,7 +350,12 @@ export function ChatHistorySidebar({
 
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
         <span className="text-sm font-medium text-foreground">历史记录</span>
-        <Button onClick={onNewChat} size="icon-sm" variant="ghost" title="新建对话">
+        <Button
+          onClick={onNewChat}
+          size="icon-sm"
+          variant="ghost"
+          title="新建对话"
+        >
           <PlusIcon className="size-4" />
         </Button>
       </div>

@@ -812,7 +812,7 @@ class CoPawAgent(ToolGuardMixin, ReActAgent):
             last_msg.get_text_content() if isinstance(last_msg, Msg) else None
         )
 
-        if self.command_handler.is_command(query):
+        if query is not None and self.command_handler.is_command(query):
             logger.info(f"Received command: {query}")
             msg = await self.command_handler.handle_command(query)
             await self.print(msg)

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """WeCom channel utilities."""
+
 from __future__ import annotations
 
 import re

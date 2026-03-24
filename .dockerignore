@@ -26,7 +26,6 @@ test.py
 *_test.py
 pytest.ini
 .pre-commit-config.yaml
-.flake8
 .eslintrc
 .stylelintrc
 

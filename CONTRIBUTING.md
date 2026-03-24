@@ -25,11 +25,13 @@ Before starting:
 We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification for clear history and tooling.
 
 **Format:**
+
 ```
 <type>(<scope>): <subject>
 ```
 
 **Types:**
+
 - `feat:` New feature
 - `fix:` Bug fix
 - `docs:` Documentation only
@@ -40,6 +42,7 @@ We follow the [Conventional Commits](https://www.conventionalcommits.org/) speci
 - `chore:` Build, tooling, or maintenance
 
 **Examples:**
+
 ```bash
 feat(channels): add Telegram channel stub
 fix(skills): correct SKILL.md front matter parsing
@@ -52,13 +55,14 @@ test(agents): add tests for skill loading
 
 PR titles should follow the same convention:
 
-**Format:** ` <type>(<scope>): <description> `
+**Format:** `<type>(<scope>): <description>`
 
 - Use one of: `feat`, `fix`, `docs`, `test`, `refactor`, `chore`, `perf`, `style`, `build`, `revert`.
 - **Scope must be lowercase** (letters, numbers, hyphens, underscores only).
 - Keep the description short and descriptive.
 
 **Examples:**
+
 ```
 feat(models): add custom provider for Azure OpenAI
 fix(channels): handle empty content_parts in Discord
@@ -67,15 +71,18 @@ docs(skills): document Skills Hub import
 
 ### 4. Code and Quality
 
-- **Required local gate (must pass before push/PR):**
+- **Required local gate (must pass before push/PR):** use a project virtualenv at `.venv` so tools stay under `.venv/bin/` (not global Python).
   ```bash
-  pip install -e ".[dev,full]"
-  pre-commit install
-  pre-commit run --all-files
-  pytest
+  python -m venv .venv
+  .venv/bin/pip install -U pip setuptools wheel
+  .venv/bin/pip install -e ".[dev,full]"
+  .venv/bin/pre-commit install
+  .venv/bin/pre-commit run --all-files
+  .venv/bin/pytest
   ```
+  On Windows, replace `.venv/bin/` with `.venv\Scripts\`.
 - **If pre-commit modifies files:** Commit those changes, then rerun
-  `pre-commit run --all-files` until it passes cleanly.
+  `.venv/bin/pre-commit run --all-files` until it passes cleanly.
 - **CI policy:** Pull requests with failing pre-commit checks are not merge-ready.
 - **Frontend formatting:** If your changes involve the `console` or `website` directories, run the formatter before committing:
   ```bash
@@ -158,6 +165,7 @@ Examples of in-repo base skills: **cron**, **file_reader**, **news**, **pdf**, *
 To help the model accurately recognize and invoke your skill, the `description` field in your SKILL.md front matter must be **clear, specific, and include trigger keywords**. Follow these best practices:
 
 **✅ Recommended format:**
+
 ```yaml
 ---
 name: example_skill
@@ -168,6 +176,7 @@ description: "Use this skill whenever user wants to [main functionality]. Trigge
 ```
 
 **✅ Best practices:**
+
 1. **Clearly state when to trigger**: Use phrases like "Use this skill whenever user wants to..." or "Trigger when user asks for..."
 2. **List trigger keywords explicitly**: Make it easy for the model to recognize, for example:
    - "Trigger especially when user mentions: \"call\", \"dial\", \"phone\", \"microsip\""
@@ -178,16 +187,17 @@ description: "Use this skill whenever user wants to [main functionality]. Trigge
 4. **Provide usage examples**: If the skill has specific usage patterns, explain them in the body of SKILL.md
 
 **❌ Common pitfalls:**
+
 - Overly abstract descriptions (like "control desktop", "process files")
 - Missing trigger keywords, making it hard for the model to identify use cases
 - Lack of usage scenario context
 
 **📝 Examples comparison:**
 
-| Skill | Description (Not ideal) | Description (Better) |
-|-------|-------------------------|----------------------|
+| Skill           | Description (Not ideal)        | Description (Better)                                                                                                                                                                                                    |
+| --------------- | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Desktop Control | "Control desktop applications" | "Use this skill whenever user wants to control desktop applications or make phone calls. Trigger especially when user mentions: \"call\", \"dial\", \"phone\", \"microsip\", or requests to use specific desktop apps." |
-| File Reader | "Read files" | "Use this skill when user asks to read or summarize local text-based files. PDFs, Office documents, images are out of scope." |
+| File Reader     | "Read files"                   | "Use this skill when user asks to read or summarize local text-based files. PDFs, Office documents, images are out of scope."                                                                                           |
 
 ---
 
@@ -211,6 +221,7 @@ If you add or change platform support, please test on the affected OS and mentio
 - **Bug fixes and refactors:** Small fixes, clearer error messages, and refactors that keep behavior the same are valuable. Prefer opening an issue for larger refactors so we can align on approach.
 - **Examples and workflows:** Tutorials or example workflows (e.g. “daily digest to DingTalk”, “local model + cron”) can be documented or linked from the repo/docs.
 - **Any other useful things!**
+
 ---
 
 ## Do's and Don'ts

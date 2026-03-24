@@ -1,6 +1,10 @@
 import type { WorkingMdFile } from "@/lib/workspace-api";
 
-export const QK_WORKSPACE_FILES = ["copaw", "workspace", "working-mds"] as const;
+export const QK_WORKSPACE_FILES = [
+  "copaw",
+  "workspace",
+  "working-mds",
+] as const;
 
 export const DEFAULT_NEW_MD_BODY = `# 新文件
 
@@ -24,7 +28,10 @@ export function safeWorkingMdFilename(raw: string): string {
   return name;
 }
 
-export function matchesWorkspaceFilter(f: WorkingMdFile, query: string): boolean {
+export function matchesWorkspaceFilter(
+  f: WorkingMdFile,
+  query: string,
+): boolean {
   const q = query.trim().toLowerCase();
   if (!q) return true;
   return f.filename.toLowerCase().includes(q);
