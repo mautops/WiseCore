@@ -1,7 +1,14 @@
 # -----------------------------------------------------------------------------
 # CoPaw API runtime only. Web UI is next-console (separate image / compose service).
+#
+# Mirrors (mainland China):
+#   - apt: Debian -> mirrors.aliyun.com (see RUN sed below).
+#   - PyPI: UV_INDEX_URL -> Aliyun simple index (uv pip / wheel download).
 # -----------------------------------------------------------------------------
 FROM python:3.11-slim-bookworm
+
+# uv static binary (pin digest/tag in CI if ghcr is slow; binary is tiny).
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 ENV WORKSPACE_DIR=/app
 ENV COPAW_WORKING_DIR=/app/working
@@ -16,7 +23,7 @@ ENV COPAW_ENABLED_CHANNELS=${COPAW_ENABLED_CHANNELS}
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Debian mirror: Aliyun (faster in mainland China).
+# Debian mirror: Aliyun (faster in mainland China). Covers bookworm .sources and legacy .list.
 RUN set -eux; \
   if [ -f /etc/apt/sources.list.d/debian.sources ]; then \
   sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources; \
@@ -29,9 +36,6 @@ RUN set -eux; \
 
 RUN apt-get update && apt-get install -y --fix-missing \
   curl \
-  python3 \
-  python3-pip \
-  python3-venv \
   build-essential \
   libssl-dev \
   git \
@@ -73,14 +77,19 @@ ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 ENV COPAW_RUNNING_IN_CONTAINER=1
 
+# PyPI mirror for uv (wheel/source download). Also respected by pip-compatible tooling.
+ENV UV_INDEX_URL=https://mirrors.aliyun.com/pypi/simple
+ENV PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple
+
 WORKDIR ${WORKSPACE_DIR}
 
-RUN python3 -m venv venv
+# Base image provides Python 3.11 at /usr/local/bin/python; no pip in runtime path.
+RUN uv venv "${WORKSPACE_DIR}/venv" --python /usr/local/bin/python
 ENV PATH="/app/venv/bin:$PATH"
 
 COPY pyproject.toml setup.py README.md ./
 COPY src ./src
-RUN pip install --no-cache-dir .[ollama]
+RUN uv pip install --no-cache -e ".[ollama]"
 
 RUN copaw init --defaults --accept-security
 
