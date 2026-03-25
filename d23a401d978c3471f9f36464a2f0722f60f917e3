@@ -1,0 +1,194 @@
+next-console/app/(app)/control/sessions/sessions-client.tsx
+  3a3094042f77f8fc 28,55,243-246
+next-console/app/login/loading.tsx
+  3a3094042f77f8fc 1-14
+next-console/app/(app)/agent/workspace/workspace-file-list-panel.tsx
+  3a3094042f77f8fc 1-150
+src/copaw/app/agent_context.py
+  3a3094042f77f8fc 63-66
+next-console/components/ai-elements/web-preview.tsx
+  3a3094042f77f8fc 116-134,136,141-142
+next-console/app/(app)/agent/workspace/workspace-client.tsx
+  3a3094042f77f8fc 3,6-7,9-11,13-14,16,19-20,23-28,31,37-38,47-91,93,96-104,107-110,113-132,135-136,139-158,160-161,164-176,187,195-196,199-203,207,211,214-217,221-222,224,226-230,236,240,243,248-250,255-346,348-357,360,363-365,374,385,387,391,396,399,405-417,420,423-427,442-446,448,451,454-495,497-502,504-512,514,517-532,542
+src/copaw/app/user_primary_agent.py
+  fdd1e20418fa972a 39
+  3a3094042f77f8fc 1-38,40-152
+next-console/app/(app)/agent/chat/page.tsx
+  3a3094042f77f8fc 26,40,201,257-258
+next-console/app/(app)/agent/chat/chat-model-selector.tsx
+  3a3094042f77f8fc 1-167
+next-console/components/ai-elements/message.tsx
+  3a3094042f77f8fc 36-39,55-57,100-105
+src/copaw/app/_app.py
+  3a3094042f77f8fc 28,267-268
+next-console/app/(app)/agent/workflows/workflows-client.tsx
+  3a3094042f77f8fc 22,35,37,62,110,113,119-121,127,133-135,139-140,151-152,210,268-270
+src/copaw/app/workflow/router.py
+  3a3094042f77f8fc 157,174,266-274,282,312,430,441
+next-console/app/(app)/agent/workflows/workflow-domain.ts
+  3a3094042f77f8fc 30-35,37-38,41,127,132,145,150-158
+next-console/app/(app)/agent/chat/chat-mention-utils.ts
+  3a3094042f77f8fc 1-54
+next-console/app/(app)/control/cron-jobs/cron-jobs-client.tsx
+  3a3094042f77f8fc 470-473
+next-console/app/(app)/agent/chat/chat-prompt-textarea.tsx
+  3a3094042f77f8fc 1-394
+next-console/app/(app)/agent/workflows/workflow-detail-sheet.tsx
+  3a3094042f77f8fc 223-225
+next-console/app/(app)/error.tsx
+  3a3094042f77f8fc 1-35
+next-console/app/(app)/agent/chat/loading.tsx
+  3a3094042f77f8fc 1-40
+next-console/app/(app)/agent/chat/use-chat-stream.ts
+  3a3094042f77f8fc 3,10-14,111-132,200-220,245,334-337,343-350
+next-console/app/(app)/agent/workspace/workspace-file-item.tsx
+  3a3094042f77f8fc 1-171
+next-console/app/(app)/agent/skills/skill-detail-sheet.tsx
+  3a3094042f77f8fc 42-46,83
+next-console/app/(app)/agent/workspace/workspace-domain.ts
+  3a3094042f77f8fc 3-24,48-82,85-92
+next-console/app/api/copaw/[[...path]]/route.ts
+  3a3094042f77f8fc 63
+next-console/app/error.tsx
+  3a3094042f77f8fc 1-46
+next-console/lib/workflow-api.ts
+  3a3094042f77f8fc 35-36,51-52,135-138,145-146,151-152
+next-console/app/(app)/agent/chat/chat-search-dialog.tsx
+  3a3094042f77f8fc 50
+next-console/app/(app)/loading.tsx
+  3a3094042f77f8fc 1-16
+next-console/app/not-found.tsx
+  3a3094042f77f8fc 1-20
+next-console/lib/workflow-username.ts
+  3a3094042f77f8fc 1-28
+next-console/app/(app)/agent/chat/chat-message-list.tsx
+  3a3094042f77f8fc 4-9,30-32,70-78,88-96,104,110-133,189,218-220,243,246-255,324-330,351-355,363,366-370
+next-console/app/(app)/control/sessions/sessions-domain.ts
+  3a3094042f77f8fc 2,11,17,19-20
+next-console/app/(app)/settings/agents/agents-client.tsx
+  3a3094042f77f8fc 474-477
+next-console/app/(app)/agent/workspace/workspace-file-editor.tsx
+  3a3094042f77f8fc 1-157
+next-console/lib/copaw-access-jwt.ts
+  3a3094042f77f8fc 3,5-8,27-29,33-35,39
+next-console/tsconfig.json
+  fdd1e20418fa972a 4-8,26-28,37-38,40-43
+next-console/app/layout.tsx
+  3a3094042f77f8fc 1-2,10-13,20,22
+src/copaw/app/runner/manager.py
+  3a3094042f77f8fc 49,54,56,64-65,70
+src/copaw/app/routers/agents.py
+  fdd1e20418fa972a 144,146-148
+  3a3094042f77f8fc 30-34,36,138-139,142-143,145,149,152-153,201-203,206,216-222,224,236-237,240-246,259,267,271,278,282-320,330,335,356-373,402,406,448,452,479,484,513,519,543,547
+next-console/app/(app)/agent/chat/chat-assistant-plan.tsx
+  3a3094042f77f8fc 1-79
+src/copaw/app/runner/repo/base.py
+  3a3094042f77f8fc 10,131,145-151,155
+next-console/components/ai-elements/artifact.tsx
+  3a3094042f77f8fc 126-131
+next-console/lib/workspace-api.ts
+  3a3094042f77f8fc 11-17,32-33,36,51-52,54,57,60,63,67-79,85,87-89,100,107
+next-console/lib/agent-config-api.ts
+  3a3094042f77f8fc 17-26,29,77-78,80,86
+next-console/app/(app)/agent/chat/chat-history-sidebar.tsx
+  fdd1e20418fa972a 40,44-46
+  3a3094042f77f8fc 165,197,254,353,366
+src/copaw/app/runner/api.py
+  3a3094042f77f8fc 10,12-14,84-90
+next-console/package.json
+  3a3094042f77f8fc 14-16
+next-console/app/(app)/agent/chat/chat-query-keys.ts
+  3a3094042f77f8fc 1-4
+src/copaw/app/workspace_subject.py
+  3a3094042f77f8fc 1-24
+next-console/components/ai-elements/prompt-input.tsx
+  3a3094042f77f8fc 512-515,528-529,855,861-863,892,899-907,1063-1066
+next-console/app/(app)/agent/chat/chat-input.tsx
+  3a3094042f77f8fc 18,23-25,27-32,35,39,55-86,95-96,102-104,106-115,117-118,120,134,136-141,144-147,151-152,155,157-170,183
+next-console/lib/chat-api.ts
+  3a3094042f77f8fc 1-2,50-56,303,321-323,335-343
+next-console/app/(app)/agent/workflows/workflow-list-content.tsx
+  3a3094042f77f8fc 12,20,35,67,77-78,94
+next-console/app/(app)/agent/chat/use-chat-sessions.ts
+  fdd1e20418fa972a 2,53-61
+  3a3094042f77f8fc 5,22-23,25,68,79,88
+next-console/app/(app)/agent/workspace/workspace-new-dialog.tsx
+  3a3094042f77f8fc 21,30,38,42-45,99-100,102,105-106
+src/copaw/app/workflow/md_meta.py
+  3a3094042f77f8fc 92,94,99-101,104
+next-console/components/layout/content-topbar.tsx
+  3a3094042f77f8fc 3,20-21,31,68-70
+next-console/app/(app)/control/channels/channels-client.tsx
+  3a3094042f77f8fc 478-481
+next-console/app/login/error.tsx
+  3a3094042f77f8fc 1-46
+next-console/app/(app)/agent/chat/chat-expand-refs.ts
+  3a3094042f77f8fc 1-80
+src/copaw/app/auth.py
+  3a3094042f77f8fc 37,430-431,434,437-450,452,455,458-485,509,553-558
+src/copaw/app/agent_tenancy.py
+  3a3094042f77f8fc 1-61
+next-console/app/(app)/agent/chat/chat-ref-tags.ts
+  3a3094042f77f8fc 1-20
+next-console/app/(app)/agent/workflows/workflow-create-dialog.tsx
+  3a3094042f77f8fc 21
+next-console/app/(app)/agent/workspace/workspace-toolbar.tsx
+  3a3094042f77f8fc 6-11,23-27,32,36-40,45-46,49-50,52-57,59-63,65-149
+src/copaw/app/runner/chat_access.py
+  3a3094042f77f8fc 6,10,15-19,27-70,77-78
+next-console/app/providers.tsx
+  3a3094042f77f8fc 1-23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.19",
+  "base_commit_sha": "d23a401d978c3471f9f36464a2f0722f60f917e3",
+  "prompts": {
+    "3a3094042f77f8fc": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "dfe7fe54-b66d-4a05-a8ec-5b051609075a",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 2435,
+      "total_deletions": 1460,
+      "accepted_lines": 3349,
+      "overriden_lines": 16
+    },
+    "550e3901134f7df0": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "63e3d443-1af3-49be-ad34-67f126a25103",
+        "model": "default"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 680,
+      "total_deletions": 206,
+      "accepted_lines": 452,
+      "overriden_lines": 37
+    },
+    "fdd1e20418fa972a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "e68d22a5-e099-4648-8696-b26657bc10f6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 39,
+      "total_deletions": 28,
+      "accepted_lines": 33,
+      "overriden_lines": 0,
+      "token_usage": {
+        "input_tokens": 2211253,
+        "output_tokens": 29570,
+        "cache_read_tokens": 26186253,
+        "cache_creation_tokens": 0,
+        "total_cost": null
+      }
+    }
+  }
+}
