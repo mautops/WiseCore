@@ -8,6 +8,7 @@ import {
   ConsoleMirrorScrollPadding,
 } from "@/components/console-mirror";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -293,7 +294,7 @@ export function AgentsSettingsClient() {
                         className="border-b border-[#f0f0f0] last:border-0 hover:bg-black/2 dark:border-white/8 dark:hover:bg-white/5"
                       >
                         <td className="px-4 py-3">
-                          <div className="flex min-w-0 items-center gap-2">
+                          <div className="flex min-w-0 flex-wrap items-center gap-2">
                             <BotIcon
                               className="size-4 shrink-0 text-[#1890ff]"
                               aria-hidden
@@ -301,6 +302,14 @@ export function AgentsSettingsClient() {
                             <span className="truncate font-medium text-foreground">
                               {row.name}
                             </span>
+                            {row.is_builtin ? (
+                              <Badge
+                                variant="secondary"
+                                className="shrink-0 text-xs font-normal"
+                              >
+                                内置 QA
+                              </Badge>
+                            ) : null}
                           </div>
                         </td>
                         <td className="px-4 py-3 font-mono text-xs font-medium text-foreground">
@@ -334,11 +343,15 @@ export function AgentsSettingsClient() {
                             <Button
                               variant="link"
                               size="sm"
-                              disabled={row.id === "default"}
+                              disabled={
+                                row.id === "default" || Boolean(row.is_builtin)
+                              }
                               title={
                                 row.id === "default"
                                   ? "不能删除 default"
-                                  : undefined
+                                  : row.is_builtin
+                                    ? "不能删除内置 QA 智能体"
+                                    : undefined
                               }
                               className="h-auto px-2 text-destructive hover:text-destructive disabled:opacity-100 dark:text-[#ff7875] dark:hover:text-[#ff9c9a]"
                               onClick={() => setDeleteId(row.id)}

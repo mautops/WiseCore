@@ -27,6 +27,8 @@ export interface AgentSummary {
   name: string;
   description: string;
   workspace_dir: string;
+  /** Builtin CoPaw QA helper; server refuses DELETE for this profile. */
+  is_builtin?: boolean;
 }
 
 export interface AgentListResponse {
