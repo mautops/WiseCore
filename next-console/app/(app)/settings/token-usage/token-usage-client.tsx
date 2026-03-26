@@ -83,7 +83,7 @@ export function TokenUsageClient() {
         <ConsoleMirrorScrollPadding className="space-y-4">
           <ConsoleMirrorSectionHeader
             title="Token 用量"
-            description="数据来自 CoPaw 本地聚合; 默认最近 30 天. 可按模型名或 Provider ID 过滤."
+            description="数据来自 Wisecore 本地聚合; 默认最近 30 天. 可按模型名或 Provider ID 过滤."
           />
 
           <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 sm:flex-row sm:flex-wrap sm:items-end">

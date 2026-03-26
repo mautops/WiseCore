@@ -2,21 +2,13 @@
 
 Run from **repo root**.
 
-## Build wheel (with latest console)
+## Build wheel
 
 ```bash
 bash scripts/wheel_build.sh
 ```
 
-- Builds the console frontend (`console/`), copies `console/dist` to `src/copaw/console/dist`, then builds the wheel. Output: `dist/*.whl`.
-
-## Build website
-
-```bash
-bash scripts/website_build.sh
-```
-
-- Installs dependencies (pnpm or npm) and runs the Vite build. Output: `website/dist/`.
+- Builds the Python wheel (API only; web UI is `next-console/` separately). Output: `dist/*.whl`.
 
 ## Build Docker image
 
@@ -24,8 +16,8 @@ bash scripts/website_build.sh
 bash scripts/docker_build.sh [IMAGE_TAG] [EXTRA_ARGS...]
 ```
 
-- Default tag: `copaw:latest`. Uses `src/Dockerfile` (API image only; web UI is `next-console/` separately).
-- Example: `bash scripts/docker_build.sh myreg/copaw:v1 --no-cache`.
+- Default tag: `wisecore:latest`. Uses `src/Dockerfile` (API image only; web UI is `next-console/` separately).
+- Example: `bash scripts/docker_build.sh myreg/wisecore:v1 --no-cache`.
 
 ## Run Test
 

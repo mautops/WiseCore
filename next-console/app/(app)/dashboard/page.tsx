@@ -16,7 +16,7 @@ export default function DashboardPage() {
   return (
     <AppStubPage
       title="工作台"
-      description="进入 CoPaw 智能体, 控制面与设置. 侧栏可打开全部模块, 下方为常用跳转."
+      description="进入 Wisecore 智能体, 控制面与设置. 侧栏可打开全部模块, 下方为常用跳转."
       links={[...LINKS]}
     />
   );

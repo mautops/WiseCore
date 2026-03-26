@@ -1,10 +1,10 @@
-# CoPaw
+# Wisecore
 
 Personal AI assistant. This README only covers **building and running the API container image**.
 
 [中文版说明](README_zh.md)
 
-**Stack** — API listens on **8088** (`COPAW_PORT`). Web UI is **`next-console/`** (port **3000**), deployed separately; set `COPAW_API_URL` to the API base URL.
+**Stack** — API listens on **8088** (`WISECORE_PORT`). Web UI is **`next-console/`** (port **3000**), deployed separately; set `WISECORE_API_URL` to the API base URL.
 
 ---
 
@@ -21,7 +21,7 @@ From the repository root, `make` (or `make build`) builds both Docker images: AP
 API image only:
 
 ```bash
-docker build -f src/Dockerfile -t copaw:local .
+docker build -f src/Dockerfile -t wisecore:local .
 ```
 
 ---
@@ -31,22 +31,22 @@ docker build -f src/Dockerfile -t copaw:local .
 Example (replace the image name with the one you built or pulled):
 
 ```bash
-docker run -d --name copaw \
+docker run -d --name wisecore \
   -p 8088:8088 \
-  -v copaw-working:/app/working \
-  -v copaw-secrets:/app/working.secret \
-  copaw:local
+  -v wisecore-working:/app/working \
+  -v wisecore-secrets:/app/working.secret \
+  wisecore:local
 ```
 
-To change the in-container port, set `COPAW_PORT` and publish the same host port, for example:
+To change the in-container port, set `WISECORE_PORT` and publish the same host port, for example:
 
 ```bash
-docker run -d --name copaw \
-  -e COPAW_PORT=3000 \
+docker run -d --name wisecore \
+  -e WISECORE_PORT=3000 \
   -p 3000:3000 \
-  -v copaw-working:/app/working \
-  -v copaw-secrets:/app/working.secret \
-  copaw:local
+  -v wisecore-working:/app/working \
+  -v wisecore-secrets:/app/working.secret \
+  wisecore:local
 ```
 
 Do **not** bind-mount a host directory onto the next-console image app directory (`/srv/next`; older images used `/app`) — it hides `server.js`.
@@ -57,9 +57,9 @@ Do **not** bind-mount a host directory onto the next-console image app directory
 
 | Variable                  | Purpose                                                                              |
 | ------------------------- | ------------------------------------------------------------------------------------ |
-| `COPAW_PORT`              | Listen port inside the container (default `8088`).                                   |
-| `COPAW_DISABLED_CHANNELS` | Comma-separated channel types to disable (default includes `imessage` in the image). |
-| `COPAW_ENABLED_CHANNELS`  | If set, only these channels are enabled (whitelist).                                 |
+| `WISECORE_PORT`              | Listen port inside the container (default `8088`).                                   |
+| `WISECORE_DISABLED_CHANNELS` | Comma-separated channel types to disable (default includes `imessage` in the image). |
+| `WISECORE_ENABLED_CHANNELS`  | If set, only these channels are enabled (whitelist).                                 |
 
 
 ---

@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Create .venv and install CoPaw with dev dependencies
+      - name: Create .venv and install Wisecore with dev dependencies
         run: |
           python -m venv .venv
           .venv/bin/pip install -q -U pip setuptools==68.2.2 wheel==0.41.2

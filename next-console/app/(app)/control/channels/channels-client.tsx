@@ -383,7 +383,7 @@ export function ChannelsClient() {
         <ConsoleMirrorScrollPadding className="space-y-4">
           <ConsoleMirrorSectionHeader
             title="通道"
-            description="通道配置绑定当前活动智能体. 修改后服务端会尝试热加载; 若失败请查看 CoPaw 日志."
+            description="通道配置绑定当前活动智能体. 修改后服务端会尝试热加载; 若失败请查看 Wisecore 日志."
           />
 
           {listQuery.isError ? (

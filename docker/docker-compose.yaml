@@ -1,0 +1,131 @@
+# Wisecore 前后端分离部署配置
+#
+# 使用方法:
+#   开发环境: docker compose up -d
+#   生产环境: docker compose -f docker/docker-compose.yaml --env-file .env.prod up -d
+#
+# 环境变量:
+#   PORT          - 后端 API 端口 (默认 8088)
+#   NEXT_PORT           - 前端端口 (默认 3000)
+#   API_URL       - 后端 API 地址 (前端容器内使用，默认 http://wisecore-api:8088)
+#   WORKING_DIR   - 数据目录 (默认 ./volumes/working)
+#   IMAGE_TAG           - 镜像标签 (默认 local)
+#   NEXT_IMAGE_TAG      - 前端镜像标签 (默认 local)
+
+x-healthcheck-defaults: &healthcheck-defaults
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 10s
+
+x-env-defaults: &env-defaults
+  TZ: Asia/Shanghai
+
+services:
+  # ─────────────────────────────────────────────────────────────────────────────
+  # 后端 API 服务
+  # ─────────────────────────────────────────────────────────────────────────────
+  wisecore-api:
+    image: ${DOCKER_REGISTRY:-}${IMAGE_TAG:-wisecore:local}
+    build:
+      context: .
+      dockerfile: src/Dockerfile
+      platforms:
+        - linux/amd64
+    restart: unless-stopped
+    hostname: wisecore-api
+    ports:
+      - "${PORT:-8088}:8088"
+    environment:
+      <<: *env-defaults
+      PORT: "8088"
+      WORKING_DIR: /app/working
+      SECRET_DIR: /app/working.secret
+      RUNNING_IN_CONTAINER: "1"
+      # 可选: LLM 提供商配置
+      # OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      # ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - wisecore-working:/app/working
+      - wisecore-secret:/app/working.secret
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:8088/api/health"]
+    networks:
+      - wisecore-network
+    profiles:
+      - full
+      - api-only
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # 前端 Next.js 服务
+  # ─────────────────────────────────────────────────────────────────────────────
+  wisecore-console:
+    image: ${DOCKER_REGISTRY:-}${NEXT_IMAGE_TAG:-wisecore-console:local}
+    build:
+      context: next-console
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+    restart: unless-stopped
+    hostname: wisecore-console
+    ports:
+      - "${NEXT_PORT:-3000}:3000"
+    environment:
+      <<: *env-defaults
+      NODE_ENV: production
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      # 后端 API 地址 (容器间通信)
+      API_URL: http://wisecore-api:8088
+      # 可选: Better Auth 数据库
+      # DATABASE_URL: postgresql://postgres:postgres@postgres:5432/next_console
+    depends_on:
+      wisecore-api:
+        condition: service_healthy
+        required: false
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+    networks:
+      - wisecore-network
+    profiles:
+      - full
+      - console-only
+
+  # ─────────────────────────────────────────────────────────────────────────────
+  # PostgreSQL 数据库 (可选，用于 Better Auth)
+  # ─────────────────────────────────────────────────────────────────────────────
+  postgres:
+    image: mcr.microsoft.com/cbl-mariner/base/postgres:14
+    restart: unless-stopped
+    user: postgres
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      <<: *env-defaults
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-next_console}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      <<: *healthcheck-defaults
+      test: ["CMD-SHELL", "pg_isready -U postgres -d next_console"]
+    networks:
+      - wisecore-network
+    profiles:
+      - full
+      - with-db
+
+networks:
+  wisecore-network:
+    driver: bridge
+
+volumes:
+  wisecore-working:
+    driver: local
+  wisecore-secret:
+    driver: local
+  postgres-data:
+    driver: local

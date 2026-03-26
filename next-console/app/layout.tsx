@@ -22,7 +22,7 @@ export default function RootLayout({
       className="dark h-screen antialiased"
       suppressHydrationWarning
     >
-      <body className="h-full bg-background">
+      <body className="h-full bg-background" suppressHydrationWarning>
         <Providers>{children}</Providers>
       </body>
     </html>

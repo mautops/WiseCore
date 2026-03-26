@@ -1,23 +1,13 @@
-const API_BASE = "/api/copaw";
+import { API_BASE, parseErrorMessage } from "./api-utils";
 
-async function parseErrorMessage(res: Response): Promise<string> {
-  try {
-    const j = (await res.json()) as { detail?: unknown };
-    const d = j?.detail;
-    if (typeof d === "string") return d;
-    if (Array.isArray(d)) return JSON.stringify(d);
-  } catch {
-    /* ignore */
-  }
-  return `HTTP ${res.status}`;
-}
-
+/** Extended apiRequest with optional agentId header support */
 async function apiRequest<T>(
   path: string,
   init?: RequestInit,
   agentId?: string,
 ): Promise<T> {
-  const headers = new Headers(init?.headers);
+  const { mergeAuthHeaders } = await import("./auth-headers");
+  const headers = await mergeAuthHeaders(init?.headers);
   if (!headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }

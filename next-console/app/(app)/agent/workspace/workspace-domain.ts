@@ -2,18 +2,18 @@ import type { WorkingMdFile } from "@/lib/workspace-api";
 
 /** Persisted key for last workspace agent (browser). */
 export const WORKSPACE_SELECTED_AGENT_STORAGE_KEY =
-  "copaw.workspace.selectedAgentId";
+  "wisecore.workspace.selectedAgentId";
 
 export function qkWorkspaceFiles(agentId: string) {
-  return ["copaw", "workspace", agentId, "working-mds"] as const;
+  return ["core", "workspace", agentId, "working-mds"] as const;
 }
 
 export function qkWorkspaceMemoryFiles(agentId: string) {
-  return ["copaw", "workspace", agentId, "memory-mds"] as const;
+  return ["core", "workspace", agentId, "memory-mds"] as const;
 }
 
 export function qkWorkspaceSystemPrompt(agentId: string) {
-  return ["copaw", "workspace", agentId, "system-prompt-files"] as const;
+  return ["core", "workspace", agentId, "system-prompt-files"] as const;
 }
 
 export function workspaceFileContentKey(

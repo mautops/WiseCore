@@ -23,7 +23,7 @@ import { ChatModelSelector } from "./chat-model-selector";
 import { ChatInput } from "./chat-input";
 import { ChatMessageList } from "./chat-message-list";
 import { ChatSearchDialog } from "./chat-search-dialog";
-import { copawScopeUserFromSessionUser } from "@/lib/workflow-username";
+import { scopeUserFromSessionUser } from "@/lib/workflow-username";
 import { useChatSessions } from "./use-chat-sessions";
 import { useChatStream } from "./use-chat-stream";
 
@@ -37,7 +37,7 @@ function ChatPageInner() {
 
   const { showLeftSidebar, toggleLeftSidebar, user } = useAppShell();
 
-  const userId = (user && copawScopeUserFromSessionUser(user)) || "default";
+  const userId = (user && scopeUserFromSessionUser(user)) || "default";
 
   const userInitials = (user?.name || user?.username || user?.email || "U")
     .split(/[\s@]/)

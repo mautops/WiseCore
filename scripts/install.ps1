@@ -1,9 +1,9 @@
-# CoPaw Installer for Windows (self-contained: includes uv download via GitHub)
+# Wisecore Installer for Windows (self-contained: includes uv download via GitHub)
 # Usage: irm <url>/install.ps1 | iex
 #    or: .\install.ps1 [-Version X.Y.Z] [-FromSource] [-SourceDir DIR]
 #                            [-Extras "llamacpp,mlx"] [-UvPath PATH]
 #
-# Installs CoPaw into ~/.copaw with a uv-managed Python environment.
+# Installs Wisecore into ~/.wisecore with a uv-managed Python environment.
 # Users do NOT need Python pre-installed — uv handles everything.
 #
 # uv is obtained automatically (no action required from the user):
@@ -27,22 +27,22 @@ param(
 $ErrorActionPreference = "Stop"
 
 # ── Defaults ──────────────────────────────────────────────────────────────────
-$CopawHome     = if ($env:COPAW_HOME) { $env:COPAW_HOME } else { Join-Path $HOME ".copaw" }
-$CopawVenv     = Join-Path $CopawHome "venv"
-$CopawBin      = Join-Path $CopawHome "bin"
+$WisecoreHome     = if ($env:WISECORE_HOME) { $env:WISECORE_HOME } else { Join-Path $HOME ".wisecore" }
+$WisecoreVenv     = Join-Path $WisecoreHome "venv"
+$WisecoreBin      = Join-Path $WisecoreHome "bin"
 $PythonVersion = "3.12"
 $CopawRepo     = "https://github.com/agentscope-ai/CoPaw.git"
 
 # ── Colors ────────────────────────────────────────────────────────────────────
-function Write-Info { param([string]$Message) Write-Host "[copaw] " -ForegroundColor Green  -NoNewline; Write-Host $Message }
-function Write-Warn { param([string]$Message) Write-Host "[copaw] " -ForegroundColor Yellow -NoNewline; Write-Host $Message }
-function Write-Err  { param([string]$Message) Write-Host "[copaw] " -ForegroundColor Red    -NoNewline; Write-Host $Message }
+function Write-Info { param([string]$Message) Write-Host "[wisecore] " -ForegroundColor Green  -NoNewline; Write-Host $Message }
+function Write-Warn { param([string]$Message) Write-Host "[wisecore] " -ForegroundColor Yellow -NoNewline; Write-Host $Message }
+function Write-Err  { param([string]$Message) Write-Host "[wisecore] " -ForegroundColor Red    -NoNewline; Write-Host $Message }
 function Stop-WithError { param([string]$Message) Write-Err $Message; exit 1 }
 
 # ── Help ──────────────────────────────────────────────────────────────────────
 if ($Help) {
     @"
-CoPaw Installer for Windows
+Wisecore Installer for Windows
 
 Usage: .\install.ps1 [OPTIONS]
 
@@ -56,14 +56,14 @@ Options:
   -Help                 Show this help
 
 Environment:
-  COPAW_HOME            Installation directory (default: ~/.copaw)
+  WISECORE_HOME            Installation directory (default: ~/.wisecore)
 "@
     exit 0
 }
 
-Write-Host "[copaw] " -ForegroundColor Green -NoNewline
-Write-Host "Installing CoPaw into " -NoNewline
-Write-Host "$CopawHome" -ForegroundColor White
+Write-Host "[wisecore] " -ForegroundColor Green -NoNewline
+Write-Host "Installing Wisecore into " -NoNewline
+Write-Host "$WisecoreHome" -ForegroundColor White
 
 # ── Execution Policy Check ────────────────────────────────────────────────────
 $policy = Get-ExecutionPolicy
@@ -193,22 +193,22 @@ function Ensure-Uv {
 Ensure-Uv
 
 # ── Step 2: Create / update virtual environment ──────────────────────────────
-if (Test-Path $CopawVenv) {
+if (Test-Path $WisecoreVenv) {
     Write-Info "Existing environment found, upgrading..."
 } else {
     Write-Info "Creating Python $PythonVersion environment..."
 }
 
-uv venv $CopawVenv --python $PythonVersion --quiet --clear
+uv venv $WisecoreVenv --python $PythonVersion --quiet --clear
 if ($LASTEXITCODE -ne 0) { Stop-WithError "Failed to create virtual environment" }
 
-$VenvPython = Join-Path $CopawVenv "Scripts\python.exe"
+$VenvPython = Join-Path $WisecoreVenv "Scripts\python.exe"
 if (-not (Test-Path $VenvPython)) { Stop-WithError "Failed to create virtual environment" }
 
 $pyVersion = & $VenvPython --version 2>&1
 Write-Info "Python environment ready ($pyVersion)"
 
-# ── Step 3: Install CoPaw ────────────────────────────────────────────────────
+# ── Step 3: Install Wisecore ────────────────────────────────────────────────────
 $ExtrasSuffix = ""
 if ($Extras) { $ExtrasSuffix = "[$Extras]" }
 
@@ -219,7 +219,7 @@ function Prepare-Console {
     param([string]$RepoDir)
 
     $consoleSrc  = Join-Path $RepoDir "console\dist"
-    $consoleDest = Join-Path $RepoDir "src\copaw\console"
+    $consoleDest = Join-Path $RepoDir "src\wisecore\console"
 
     # Already populated
     if (Test-Path (Join-Path $consoleDest "index.html")) { $script:ConsoleAvailable = $true; return }
@@ -273,19 +273,19 @@ function Prepare-Console {
 function Cleanup-Console {
     param([string]$RepoDir)
     if ($script:ConsoleCopied) {
-        $consoleDest = Join-Path $RepoDir "src\copaw\console"
+        $consoleDest = Join-Path $RepoDir "src\wisecore\console"
         if (Test-Path $consoleDest) {
             Remove-Item -Path "$consoleDest\*" -Recurse -Force -ErrorAction SilentlyContinue
         }
     }
 }
 
-$VenvCopaw = Join-Path $CopawVenv "Scripts\copaw.exe"
+$VenvWisecore = Join-Path $WisecoreVenv "Scripts\wisecore.exe"
 
 if ($FromSource) {
     if ($SourceDir) {
         $SourceDir = (Resolve-Path $SourceDir).Path
-        Write-Info "Installing CoPaw from local source: $SourceDir"
+        Write-Info "Installing Wisecore from local source: $SourceDir"
         Prepare-Console $SourceDir
         Write-Info "Installing package from source..."
         uv pip install "${SourceDir}${ExtrasSuffix}" --python $VenvPython --prerelease=allow
@@ -293,12 +293,12 @@ if ($FromSource) {
         Cleanup-Console $SourceDir
     } else {
         if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-            Stop-WithError "git is required for -FromSource without a local directory. Please install Git from https://git-scm.com/ or pass a local path: .\install.ps1 -FromSource -SourceDir C:\path\to\CoPaw"
+            Stop-WithError "git is required for -FromSource without a local directory. Please install Git from https://git-scm.com/ or pass a local path: .\install.ps1 -FromSource -SourceDir C:\path\to\wisecore"
         }
-        Write-Info "Installing CoPaw from source (GitHub)..."
-        $cloneDir = Join-Path $env:TEMP "copaw-install-$(Get-Random)"
+        Write-Info "Installing Wisecore from source (GitHub)..."
+        $cloneDir = Join-Path $env:TEMP "wisecore-install-$(Get-Random)"
         try {
-            git clone --depth 1 $CopawRepo $cloneDir
+            git clone --depth 1 $wisecoreRepo $cloneDir
             if ($LASTEXITCODE -ne 0) { Stop-WithError "Failed to clone repository" }
             Prepare-Console $cloneDir
             Write-Info "Installing package from source..."
@@ -311,38 +311,38 @@ if ($FromSource) {
         }
     }
 } else {
-    $package = "copaw"
-    if ($Version) { $package = "copaw==$Version" }
+    $package = "wisecore"
+    if ($Version) { $package = "wisecore==$Version" }
 
     Write-Info "Installing ${package}${ExtrasSuffix} from PyPI..."
-    uv pip install "${package}${ExtrasSuffix}" --python $VenvPython --prerelease=allow --quiet --refresh-package copaw
+    uv pip install "${package}${ExtrasSuffix}" --python $VenvPython --prerelease=allow --quiet --refresh-package wisecore
     if ($LASTEXITCODE -ne 0) { Stop-WithError "Installation failed" }
 }
 
 # Verify the CLI entry point exists
-if (-not (Test-Path $VenvCopaw)) { Stop-WithError "Installation failed: copaw CLI not found in venv" }
+if (-not (Test-Path $VenvWisecore)) { Stop-WithError "Installation failed: wisecore CLI not found in venv" }
 
-Write-Info "CoPaw installed successfully"
+Write-Info "Wisecore installed successfully"
 
 # Check console availability (for PyPI installs, check the installed package)
 if (-not $script:ConsoleAvailable) {
-    $consoleCheck = & $VenvPython -c "import importlib.resources, copaw; p=importlib.resources.files('copaw')/'console'/'index.html'; print('yes' if p.is_file() else 'no')" 2>&1
+    $consoleCheck = & $VenvPython -c "import importlib.resources, wisecore; p=importlib.resources.files('wisecore')/'console'/'index.html'; print('yes' if p.is_file() else 'no')" 2>&1
     if ($consoleCheck -eq "yes") { $script:ConsoleAvailable = $true }
 }
 
 # ── Step 4: Create wrapper scripts ───────────────────────────────────────────
-New-Item -ItemType Directory -Path $CopawBin -Force | Out-Null
+New-Item -ItemType Directory -Path $WisecoreBin -Force | Out-Null
 
-$wrapperPath = Join-Path $CopawBin "copaw.ps1"
+$wrapperPath = Join-Path $WisecoreBin "wisecore.ps1"
 $wrapperContent = @'
-# CoPaw CLI wrapper — delegates to the uv-managed environment.
+# Wisecore CLI wrapper — delegates to the uv-managed environment.
 $ErrorActionPreference = "Stop"
 
-$CopawHome = if ($env:COPAW_HOME) { $env:COPAW_HOME } else { Join-Path $HOME ".copaw" }
-$RealBin   = Join-Path $CopawHome "venv\Scripts\copaw.exe"
+$WisecoreHome = if ($env:WISECORE_HOME) { $env:WISECORE_HOME } else { Join-Path $HOME ".wisecore" }
+$RealBin   = Join-Path $WisecoreHome "venv\Scripts\wisecore.exe"
 
 if (-not (Test-Path $RealBin)) {
-    Write-Error "CoPaw environment not found at $CopawHome\venv"
+    Write-Error "wisecore environment not found at $WisecoreHome\venv"
     Write-Error "Please reinstall: irm <install-url> | iex"
     exit 1
 }
@@ -354,15 +354,15 @@ Set-Content -Path $wrapperPath -Value $wrapperContent -Encoding UTF8
 Write-Info "Wrapper created at $wrapperPath"
 
 # Also create a .cmd wrapper for use from cmd.exe
-$cmdWrapperPath = Join-Path $CopawBin "copaw.cmd"
+$cmdWrapperPath = Join-Path $WisecoreBin "wisecore.cmd"
 $cmdWrapperContent = @"
 @echo off
-REM CoPaw CLI wrapper — delegates to the uv-managed environment.
-set "COPAW_HOME=%COPAW_HOME%"
-if "%COPAW_HOME%"=="" set "COPAW_HOME=%USERPROFILE%\.copaw"
-set "REAL_BIN=%COPAW_HOME%\venv\Scripts\copaw.exe"
+REM Wisecore CLI wrapper — delegates to the uv-managed environment.
+set "WISECORE_HOME=%WISECORE_HOME%"
+if "%WISECORE_HOME%"=="" set "WISECORE_HOME=%USERPROFILE%\.wisecore"
+set "REAL_BIN=%WISECORE_HOME%\venv\Scripts\wisecore.exe"
 if not exist "%REAL_BIN%" (
-    echo Error: CoPaw environment not found at %COPAW_HOME%\venv >&2
+    echo Error: wisecore environment not found at %WISECORE_HOME%\venv >&2
     echo Please reinstall: irm ^<install-url^> ^| iex >&2
     exit /b 1
 )
@@ -373,7 +373,7 @@ Set-Content -Path $cmdWrapperPath -Value $cmdWrapperContent -Encoding UTF8
 Write-Info "CMD wrapper created at $cmdWrapperPath"
 
 # ──Step 5: Update PATH via User Environment Variable ────────────────────────
-$targetPath = $CopawBin
+$targetPath = $WisecoreBin
 $registryPath = "HKCU:\Environment"
 $registryName = "Path"
 
@@ -426,7 +426,7 @@ if (-not $isAlreadyAdded) {
         Write-Host "   Reason: $errorMsg"
         Write-Host "   Context: Your system policy strictly blocks environment modifications."
         Write-Host ""
-        Write-Host "ACTION REQUIRED: You must manually add the path to use CoPaw."
+        Write-Host "ACTION REQUIRED: You must manually add the path to use Wisecore."
         Write-Host "   Target Path: $targetPath"
         Write-Host ""
         Write-Host "Manual Steps (User Variables):"
@@ -451,10 +451,10 @@ if (-not $isAlreadyAdded) {
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 Write-Host ""
-Write-Host "CoPaw installed successfully!" -ForegroundColor Green
+Write-Host "Wisecore installed successfully!" -ForegroundColor Green
 Write-Host ""
 
-Write-Host "  Install location:  " -NoNewline; Write-Host "$CopawHome" -ForegroundColor White
+Write-Host "  Install location:  " -NoNewline; Write-Host "$WisecoreHome" -ForegroundColor White
 Write-Host "  Python:            " -NoNewline; Write-Host "$pyVersion"  -ForegroundColor White
 if ($script:ConsoleAvailable) {
     Write-Host "  Console (web UI):  " -NoNewline; Write-Host "available"     -ForegroundColor Green
@@ -466,11 +466,11 @@ Write-Host ""
 
 Write-Host "To get started, open a new terminal and run:"
 Write-Host ""
-Write-Host "  copaw init" -ForegroundColor White -NoNewline; Write-Host "       # first-time setup"
-Write-Host "  copaw app"  -ForegroundColor White -NoNewline; Write-Host "        # start CoPaw"
+Write-Host "  wisecore init" -ForegroundColor White -NoNewline; Write-Host "       # first-time setup"
+Write-Host "  wisecore app"  -ForegroundColor White -NoNewline; Write-Host "        # start Wisecore"
 Write-Host ""
 Write-Host "To upgrade later, re-run this installer."
 Write-Host "To uninstall, run: " -NoNewline
-Write-Host "copaw uninstall" -ForegroundColor White
+Write-Host "wisecore uninstall" -ForegroundColor White
 
 } @args

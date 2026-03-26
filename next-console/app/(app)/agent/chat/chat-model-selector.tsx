@@ -40,7 +40,7 @@ function activeDisplayLabel(
   return modelId;
 }
 
-export const COPAW_MODEL_SWITCHED_EVENT = "copaw-model-switched";
+export const CORE_MODEL_SWITCHED_EVENT = "core-model-switched";
 
 export function ChatModelSelector() {
   const queryClient = useQueryClient();
@@ -72,7 +72,7 @@ export function ChatModelSelector() {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: QK_MODELS_ACTIVE });
       if (typeof window !== "undefined") {
-        window.dispatchEvent(new CustomEvent(COPAW_MODEL_SWITCHED_EVENT));
+        window.dispatchEvent(new CustomEvent(CORE_MODEL_SWITCHED_EVENT));
       }
     },
     onError: (e) => {

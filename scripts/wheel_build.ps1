@@ -1,32 +1,9 @@
-# Build a full wheel package including the latest console frontend.
+# Build wheel package (API only; web UI is next-console separately).
 # Run from repo root: pwsh -File scripts/wheel_build.ps1
 
 $ErrorActionPreference = "Stop"
 $RepoRoot = (Get-Item $PSScriptRoot).Parent.FullName
 Set-Location $RepoRoot
-
-$ConsoleDir = Join-Path $RepoRoot "console"
-$ConsoleDest = Join-Path $RepoRoot "src\copaw\console"
-
-Write-Host "[wheel_build] Building console frontend..."
-Push-Location $ConsoleDir
-try {
-  npm ci
-  if ($LASTEXITCODE -ne 0) { throw "npm ci failed with exit code $LASTEXITCODE" }
-  npm run build
-  if ($LASTEXITCODE -ne 0) { throw "npm run build failed with exit code $LASTEXITCODE" }
-} finally {
-  Pop-Location
-}
-
-Write-Host "[wheel_build] Copying console/dist/* -> src/copaw/console/..."
-if (Test-Path $ConsoleDest) {
-  Remove-Item -Path (Join-Path $ConsoleDest "*") -Recurse -Force -ErrorAction SilentlyContinue
-} else {
-  New-Item -ItemType Directory -Force -Path $ConsoleDest | Out-Null
-}
-$ConsoleDist = Join-Path $ConsoleDir "dist"
-Copy-Item -Path (Join-Path $ConsoleDist "*") -Destination $ConsoleDest -Recurse -Force
 
 Write-Host "[wheel_build] Building wheel + sdist..."
 python -m pip install --quiet build

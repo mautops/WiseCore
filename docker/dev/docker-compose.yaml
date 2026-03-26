@@ -1,0 +1,22 @@
+# Local Postgres for next-console Better Auth (and optional Wisecore dev).
+# From repo root: docker compose -f docker/dev/docker-compose.yaml up -d
+# From next-console: pnpm docker:db
+services:
+  postgres:
+    image: mcr.microsoft.com/cbl-mariner/base/postgres:14
+    restart: unless-stopped
+    user: postgres
+    privileged: true
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: next_console
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d next_console"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

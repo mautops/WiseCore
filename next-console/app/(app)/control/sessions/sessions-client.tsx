@@ -25,7 +25,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
-import { copawScopeUserFromSessionUser } from "@/lib/workflow-username";
+import { scopeUserFromSessionUser } from "@/lib/workflow-username";
 import type { ChatSpec } from "@/lib/sessions-api";
 import { sessionsApi } from "@/lib/sessions-api";
 import { useAppShell } from "../../app-shell";
@@ -52,7 +52,7 @@ export function SessionsClient() {
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const scopeUserId = useMemo(
-    () => (user ? copawScopeUserFromSessionUser(user) : null),
+    () => (user ? scopeUserFromSessionUser(user) : null),
     [user],
   );
 
@@ -130,7 +130,7 @@ export function SessionsClient() {
         <ConsoleMirrorScrollPadding className="space-y-4">
           <ConsoleMirrorSectionHeader
             title="会话"
-            description="仅展示当前登录账号在 CoPaw 中的工作流用户所对应的会话. 搜索框仅在当前列表内匹配. 删除仅移除 Chat 记录, 会话状态文件可能仍存在."
+            description="仅展示当前登录账号在 Wisecore 中的工作流用户所对应的会话. 搜索框仅在当前列表内匹配. 删除仅移除 Chat 记录, 会话状态文件可能仍存在."
           />
 
           {user && !scopeUserId ? (

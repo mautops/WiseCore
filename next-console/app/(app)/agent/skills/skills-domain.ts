@@ -1,6 +1,6 @@
 import type { SkillSpec } from "@/lib/skills-api";
 
-export const QK_SKILLS = ["copaw", "skills", "list"] as const;
+export const QK_SKILLS = ["core", "skills", "list"] as const;
 
 /** Default SKILL.md body for new skills (YAML front matter required by backend). */
 export const DEFAULT_NEW_SKILL_MARKDOWN = `---

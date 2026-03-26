@@ -1,14 +1,13 @@
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
-import { genericOAuth } from "better-auth/plugins/generic-oauth";
+import {
+  genericOAuth,
+  keycloak,
+} from "better-auth/plugins";
 import { Pool } from "pg";
 
-const isProduction = process.env.NODE_ENV === "production";
 const databaseUrl = process.env.DATABASE_URL?.trim();
-
-if (isProduction && !databaseUrl) {
-  throw new Error("DATABASE_URL is required when NODE_ENV is production");
-}
+const usePgAdapter = Boolean(databaseUrl);
 
 function stripTrailingSlash(s: string): string {
   return s.replace(/\/+$/, "");
@@ -30,12 +29,46 @@ function trustedOriginsFromEnv(): string[] | undefined {
   return merged.length > 0 ? merged : undefined;
 }
 
+/** Check if Keycloak OAuth is configured. */
+function isKeycloakConfigured(): boolean {
+  return Boolean(
+    process.env.KEYCLOAK_CLIENT_ID?.trim() &&
+    process.env.KEYCLOAK_CLIENT_SECRET?.trim() &&
+    process.env.KEYCLOAK_ISSUER?.trim(),
+  );
+}
+
+/** Build plugins array - nextCookies must be last. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildPlugins(): any[] {
+  const plugins = [];
+
+  if (isKeycloakConfigured()) {
+    plugins.push(
+      genericOAuth({
+        config: [
+          keycloak({
+            clientId: process.env.KEYCLOAK_CLIENT_ID!.trim(),
+            clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!.trim(),
+            issuer: stripTrailingSlash(process.env.KEYCLOAK_ISSUER!.trim()),
+          }),
+        ],
+      }),
+    );
+  }
+
+  // nextCookies must be the last plugin
+  plugins.push(nextCookies());
+
+  return plugins;
+}
+
 export const auth = betterAuth({
   trustedOrigins: trustedOriginsFromEnv(),
-  ...(isProduction
+  ...(usePgAdapter
     ? {
         database: new Pool({
-          connectionString: databaseUrl,
+          connectionString: databaseUrl as string,
         }),
       }
     : {}),
@@ -44,26 +77,5 @@ export const auth = betterAuth({
       username: { type: "string", required: false, defaultValue: "" },
     },
   },
-  plugins: [
-    genericOAuth({
-      config: [
-        {
-          providerId: "keycloak",
-          discoveryUrl: `${(process.env.KEYCLOAK_ISSUER ?? "").replace(/\/$/, "")}/.well-known/openid-configuration`,
-          clientId: process.env.KEYCLOAK_CLIENT_ID!,
-          clientSecret: process.env.KEYCLOAK_CLIENT_SECRET!,
-          scopes: ["openid", "profile", "email"],
-          mapProfileToUser(profile) {
-            return {
-              name: profile.name || profile.preferred_username || profile.sub,
-              email: profile.email,
-              image: profile.picture ?? null,
-              username: profile.preferred_username ?? profile.sub ?? "",
-            };
-          },
-        },
-      ],
-    }),
-    nextCookies(),
-  ],
+  plugins: buildPlugins(),
 });

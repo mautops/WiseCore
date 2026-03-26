@@ -1,4 +1,4 @@
-/** Match ``copaw.app.auth._UUID_WORKFLOW_SEGMENT`` (reject uuid-looking local parts). */
+/** Match ``core.app.auth._UUID_WORKFLOW_SEGMENT`` (reject uuid-looking local parts). */
 const UUID_SEGMENT =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -10,10 +10,10 @@ function isValidScopeSegment(local: string): boolean {
 }
 
 /**
- * Stable CoPaw tenant key for chat, workflows, and workspace binding: the mailbox
+ * Stable tenant key for chat, workflows, and workspace binding: the mailbox
  * local-part of the verified session email (before ``@``). Not Better Auth ``user.id``.
  */
-export function copawScopeUserFromSessionUser(user: {
+export function scopeUserFromSessionUser(user: {
   email?: string | null;
 }): string | null {
   const em = typeof user.email === "string" ? user.email.trim() : "";
@@ -23,6 +23,6 @@ export function copawScopeUserFromSessionUser(user: {
   return local;
 }
 
-/** @deprecated Use ``copawScopeUserFromSessionUser`` */
+/** @deprecated Use ``scopeUserFromSessionUser`` */
 export const resolvedWorkflowUsernameFromSessionUser =
-  copawScopeUserFromSessionUser;
+  scopeUserFromSessionUser;

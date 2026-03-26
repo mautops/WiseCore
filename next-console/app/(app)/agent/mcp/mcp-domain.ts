@@ -1,6 +1,6 @@
 import type { MCPClientInfo } from "@/lib/mcp-api";
 
-export const QK_MCP_LIST = ["copaw", "mcp", "list"] as const;
+export const QK_MCP_LIST = ["core", "mcp", "list"] as const;
 
 export function mcpClientKey(client: MCPClientInfo, query: string): boolean {
   const q = query.trim().toLowerCase();

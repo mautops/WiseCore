@@ -1,7 +1,7 @@
 [project]
-name = "copaw"
+name = "wisecore"
 dynamic = ["version"]
-description = "CoPaw is a **personal assistant** that runs in your own environment. It talks to you over multiple channels (DingTalk, Feishu, QQ, Discord, iMessage, etc.) and runs scheduled tasks according to your configuration. **What it can do is driven by Skills — the possibilities are open-ended.** Built-in skills include cron, PDF/Office handling, news digest, file reading, and more; you can add custom skills. All data and tasks run on your machine; no third-party hosting."
+description = "Wisecore is a **personal assistant** that runs in your own environment. It talks to you over multiple channels (DingTalk, Feishu, QQ, Discord, iMessage, etc.) and runs scheduled tasks according to your configuration. **What it can do is driven by Skills — the possibilities are open-ended.** Built-in skills include cron, PDF/Office handling, news digest, file reading, and more; you can add custom skills. All data and tasks run on your machine; no third-party hosting."
 readme = "README.md"
 requires-python = ">=3.10,<3.14"
 dependencies = [
@@ -34,18 +34,20 @@ dependencies = [
     "tzdata>=2024.1",
     "pyyaml>=6.0",
     "json-repair>=0.30.0",
+    "PyJWT>=2.8.0",
+    "cryptography>=42.0.0",
 ]
 
 [tool.setuptools.dynamic]
-version = { attr = "copaw.__version__.__version__" }
+version = { attr = "wisecore.__version__.__version__" }
 
 [tool.setuptools]
 packages = { find = { where = ["src"] } }
 include-package-data = true
 
 [tool.setuptools.package-data]
-# Dockerfile copies console build output to src/copaw/console/ (no dist subdir).
-"copaw" = [
+# Dockerfile copies console build output to src/wisecore/console/ (no dist subdir).
+"wisecore" = [
     "console/**",
     "agents/md_files/**",
     "agents/skills/**",
@@ -60,7 +62,7 @@ requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-copaw = "copaw.cli.main:cli"
+wisecore = "wisecore.cli.main:cli"
 
 [project.optional-dependencies]
 dev = [
@@ -72,12 +74,12 @@ dev = [
     "hypothesis>=6.0.0",
 ]
 local = ["huggingface_hub>=0.20.0"]
-llamacpp = ["copaw[local]", "llama-cpp-python>=0.3.0"]
-mlx = ["copaw[local]", "mlx-lm>=0.10.0; sys_platform == 'darwin'"]
+llamacpp = ["wisecore[local]", "llama-cpp-python>=0.3.0"]
+mlx = ["wisecore[local]", "mlx-lm>=0.10.0; sys_platform == 'darwin'"]
 ollama = ["ollama>=0.6.1"]
 whisper = ["openai-whisper>=20231117"]
 full = [
-    "copaw[local,ollama,llamacpp,whisper]",
+    "wisecore[local,ollama,llamacpp,whisper]",
     "mlx-lm>=0.10.0; sys_platform == 'darwin'",
 ]
 
@@ -88,7 +90,7 @@ markers = ["slow: marks tests as slow (deselect with '-m \"not slow\"')"]
 
 [tool.ruff]
 target-version = "py310"
-line-length = 79
+line-length = 100
 extend-exclude = [
     "scripts",
     "docs",

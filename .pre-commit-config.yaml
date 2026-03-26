@@ -61,4 +61,4 @@ repos:
         additional_dependencies:
           - prettier@3.4.2
         files: \.(tsx?)$
-        exclude: "(?x)(^web/|^console/|/dist/|.*/skills/.*|^scripts/pack/)"
+        exclude: "(?x)(^web/|/dist/|.*/skills/.*|^scripts/pack/)"

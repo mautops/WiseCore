@@ -1,10 +1,10 @@
-# CoPaw
+# Wisecore
 
 个人 AI 助理. 本文仅说明 **如何构建与运行 API 容器镜像**.
 
 [English README](README.md)
 
-**架构** — API 默认监听 **8088** (`COPAW_PORT`). Web 控制台在 **`next-console/`** (端口 **3000**), 单独部署; 通过 `COPAW_API_URL` 指向 API 根地址.
+**架构** — API 默认监听 **8088** (`WISECORE_PORT`). Web 控制台在 **`next-console/`** (端口 **3000**), 单独部署; 通过 `WISECORE_API_URL` 指向 API 根地址.
 
 ---
 
@@ -21,7 +21,7 @@
 仅构建 API 镜像:
 
 ```bash
-docker build -f src/Dockerfile -t copaw:local .
+docker build -f src/Dockerfile -t wisecore:local .
 ```
 
 ---
@@ -31,22 +31,22 @@ docker build -f src/Dockerfile -t copaw:local .
 将镜像名换成你本地构建或从仓库拉取的名称:
 
 ```bash
-docker run -d --name copaw \
+docker run -d --name wisecore \
   -p 8088:8088 \
-  -v copaw-working:/app/working \
-  -v copaw-secrets:/app/working.secret \
-  copaw:local
+  -v wisecore-working:/app/working \
+  -v wisecore-secrets:/app/working.secret \
+  wisecore:local
 ```
 
-修改容器内监听端口时, 同时设置 `COPAW_PORT` 并映射对应主机端口, 例如:
+修改容器内监听端口时, 同时设置 `WISECORE_PORT` 并映射对应主机端口, 例如:
 
 ```bash
-docker run -d --name copaw \
-  -e COPAW_PORT=3000 \
+docker run -d --name wisecore \
+  -e WISECORE_PORT=3000 \
   -p 3000:3000 \
-  -v copaw-working:/app/working \
-  -v copaw-secrets:/app/working.secret \
-  copaw:local
+  -v wisecore-working:/app/working \
+  -v wisecore-secrets:/app/working.secret \
+  wisecore:local
 ```
 
 **不要**把主机目录绑定挂载到 next-console 镜像的应用目录 (镜像内为 `/srv/next`, 旧镜像为 `/app`), 否则会盖住 `server.js`.
@@ -57,9 +57,9 @@ docker run -d --name copaw \
 
 | 变量                      | 说明                                                               |
 | ------------------------- | ------------------------------------------------------------------ |
-| `COPAW_PORT`              | 容器内监听端口 (默认 `8088`).                                      |
-| `COPAW_DISABLED_CHANNELS` | 禁用的频道类型列表, 逗号分隔 (镜像默认包含对 `imessage` 等的处理). |
-| `COPAW_ENABLED_CHANNELS`  | 若设置, 仅启用列表中的频道 (白名单).                               |
+| `WISECORE_PORT`              | 容器内监听端口 (默认 `8088`).                                      |
+| `WISECORE_DISABLED_CHANNELS` | 禁用的频道类型列表, 逗号分隔 (镜像默认包含对 `imessage` 等的处理). |
+| `WISECORE_ENABLED_CHANNELS`  | 若设置, 仅启用列表中的频道 (白名单).                               |
 
 ---
 

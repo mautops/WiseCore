@@ -121,7 +121,7 @@ export function WorkflowDetailSheet({
   const runsQuery = useQuery({
     queryKey: selectedFilename
       ? qkWorkflowRuns(selectedFilename)
-      : ["copaw", "workflow", "__none__", "runs"],
+      : ["core", "workflow", "__none__", "runs"],
     queryFn: () => workflowApi.listRuns(selectedFilename!).then((r) => r.runs),
     enabled: Boolean(open && selectedFilename),
   });

@@ -1,6 +1,7 @@
 import type { DynamicToolUIPart } from "ai";
 
-const API_BASE = "/api/copaw";
+import { API_BASE } from "./api-utils";
+import { mergeAuthHeaders } from "./auth-headers";
 
 export type ChatStatus = "idle" | "running";
 
@@ -71,9 +72,12 @@ export interface StreamParams {
 }
 
 async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers = await mergeAuthHeaders();
+  headers.set("Content-Type", "application/json");
+  new Headers(init?.headers).forEach((v, k) => headers.set(k, v));
   const res = await fetch(`${API_BASE}/api${path}`, {
-    headers: { "Content-Type": "application/json" },
     ...init,
+    headers,
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json();
@@ -183,8 +187,10 @@ export const chatApi = {
   uploadFile: async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
+    const headers = await mergeAuthHeaders();
     const res = await fetch(`${API_BASE}/api/console/upload`, {
       method: "POST",
+      headers,
       body: formData,
     });
     if (!res.ok) throw new Error(`Upload failed: HTTP ${res.status}`);
@@ -210,9 +216,11 @@ export const chatApi = {
     thinking: string;
     tools: ToolCallInfo[];
   }> => {
+    const headers = await mergeAuthHeaders();
+    headers.set("Content-Type", "application/json");
     const res = await fetch(`${API_BASE}/api/console/chat`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({
         input,
         session_id,

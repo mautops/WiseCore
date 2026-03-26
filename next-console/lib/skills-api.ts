@@ -1,4 +1,4 @@
-const API_BASE = "/api/copaw";
+import { API_BASE, parseErrorMessage } from "./api-utils";
 
 export interface SkillSpec {
   name: string;
@@ -11,7 +11,8 @@ export interface SkillSpec {
   enabled: boolean;
 }
 
-async function parseErrorMessage(res: Response): Promise<string> {
+/** Extended error parser for skills API with security scan support */
+async function parseSkillErrorMessage(res: Response): Promise<string> {
   try {
     const j = (await res.json()) as {
       detail?: unknown;
@@ -20,21 +21,22 @@ async function parseErrorMessage(res: Response): Promise<string> {
     if (j?.type === "security_scan_failed" && typeof j.detail === "string") {
       return j.detail;
     }
-    const d = j?.detail;
-    if (typeof d === "string") return d;
-    if (Array.isArray(d)) return JSON.stringify(d);
   } catch {
     /* ignore */
   }
-  return `HTTP ${res.status}`;
+  return parseErrorMessage(res);
 }
 
 async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
+  const { mergeAuthHeaders } = await import("./auth-headers");
+  const headers = await mergeAuthHeaders();
+  headers.set("Content-Type", "application/json");
+  new Headers(init?.headers).forEach((v, k) => headers.set(k, v));
   const res = await fetch(`${API_BASE}/api${path}`, {
-    headers: { "Content-Type": "application/json" },
     ...init,
+    headers,
   });
-  if (!res.ok) throw new Error(await parseErrorMessage(res));
+  if (!res.ok) throw new Error(await parseSkillErrorMessage(res));
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
 }

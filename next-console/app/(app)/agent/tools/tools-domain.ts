@@ -1,6 +1,6 @@
 import type { ToolInfo } from "@/lib/tools-api";
 
-export const QK_TOOLS = ["copaw", "tools", "list"] as const;
+export const QK_TOOLS = ["core", "tools", "list"] as const;
 
 export function matchesToolFilter(tool: ToolInfo, query: string): boolean {
   const q = query.trim().toLowerCase();

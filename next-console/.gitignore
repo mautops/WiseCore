@@ -47,5 +47,5 @@ next-env.d.ts
 /docs/
 
 # External reference projects
-CoPaw/
-!app/api/copaw/
+wisecore/
+!app/api/wisecore/

@@ -190,7 +190,7 @@ export function ModelsSettingsClient() {
           ) : (
             <>
               <p className="mb-8 text-sm text-[#999] dark:text-white/35">
-                活动模型写入当前智能体配置. Provider 与密钥由 CoPaw
+                活动模型写入当前智能体配置. Provider 与密钥由 Wisecore
                 服务端持久化, 与{" "}
                 <span className="font-mono text-foreground">/agent/config</span>{" "}
                 中的运行参数相互独立.

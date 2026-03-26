@@ -10,6 +10,8 @@ import {
   BotIcon,
   BoxesIcon,
   CalendarClockIcon,
+  CheckIcon,
+  CopyIcon,
   CpuIcon,
   FolderTreeIcon,
   LogOutIcon,
@@ -29,7 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { signOut } from "@/lib/auth-client";
+import { authClient, signOut } from "@/lib/auth-client";
 
 interface UserProfileMenuProps {
   user: {
@@ -88,6 +90,8 @@ const MENU_GROUPS: {
 export function UserProfileMenu({ user }: UserProfileMenuProps) {
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
+  const [accessTokenCopying, setAccessTokenCopying] = useState(false);
+  const [accessTokenCopied, setAccessTokenCopied] = useState(false);
 
   const displayName = user.name || user.username || user.email;
   const initials = displayName
@@ -111,6 +115,22 @@ export function UserProfileMenu({ user }: UserProfileMenuProps) {
       });
     } finally {
       setSigningOut(false);
+    }
+  }
+
+  async function handleCopyAccessToken() {
+    setAccessTokenCopying(true);
+    setAccessTokenCopied(false);
+    try {
+      const { data, error } = await authClient.getAccessToken({
+        providerId: "keycloak",
+      });
+      if (error || !data?.accessToken) return;
+      await navigator.clipboard.writeText(data.accessToken);
+      setAccessTokenCopied(true);
+      window.setTimeout(() => setAccessTokenCopied(false), 2000);
+    } finally {
+      setAccessTokenCopying(false);
     }
   }
 
@@ -143,9 +163,26 @@ export function UserProfileMenu({ user }: UserProfileMenuProps) {
         sideOffset={6}
         className="min-w-52 max-w-[min(100vw-1rem,20rem)]"
       >
-        <div className="px-2 py-1.5">
-          <p className="text-sm font-medium">{displayName}</p>
-          <p className="text-xs text-muted-foreground">{user.email}</p>
+        <div className="flex items-start gap-2 px-2 py-1.5">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-medium">{displayName}</p>
+            <p className="text-xs text-muted-foreground">{user.email}</p>
+          </div>
+          <button
+            type="button"
+            disabled={accessTokenCopying}
+            onClick={() => void handleCopyAccessToken()}
+            onPointerDown={(e) => e.preventDefault()}
+            className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-50"
+            title={accessTokenCopied ? "已复制" : "复制 Access Token"}
+            aria-label={accessTokenCopied ? "已复制 Access Token" : "复制 Access Token"}
+          >
+            {accessTokenCopied ? (
+              <CheckIcon className="size-4 text-emerald-600" aria-hidden />
+            ) : (
+              <CopyIcon className="size-4" aria-hidden />
+            )}
+          </button>
         </div>
         <DropdownMenuSeparator />
         {MENU_GROUPS.map((group, gi) => (

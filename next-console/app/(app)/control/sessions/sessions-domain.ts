@@ -1,5 +1,5 @@
 import type { ChatSpec } from "@/lib/sessions-api";
-import { copawScopeUserFromSessionUser } from "@/lib/workflow-username";
+import { scopeUserFromSessionUser } from "@/lib/workflow-username";
 
 export type SessionsShellUser = {
   id: string;
@@ -14,7 +14,7 @@ export function chatRowBelongsToCurrentUser(
   user: SessionsShellUser | null | undefined,
 ): boolean {
   if (!user) return false;
-  const scope = copawScopeUserFromSessionUser(user);
+  const scope = scopeUserFromSessionUser(user);
   if (scope && row.user_id === scope) return true;
   const em = user.email?.trim();
   if (em && row.user_id === em) return true;

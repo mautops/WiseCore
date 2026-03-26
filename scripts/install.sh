@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# CoPaw Installer
+# Wisecore Installer
 # Usage: curl -fsSL <url>/install.sh | bash
 #    or: bash install.sh [--version X.Y.Z] [--from-source]
 #
-# Installs CoPaw into ~/.copaw with a uv-managed Python environment.
+# Installs Wisecore into ~/.wisecore with a uv-managed Python environment.
 # Users do NOT need Python pre-installed — uv handles everything.
 set -euo pipefail
 
@@ -18,17 +18,17 @@ else
     BOLD="" GREEN="" YELLOW="" RED="" RESET=""
 fi
 
-info()  { printf "${GREEN}[copaw]${RESET} %s\n" "$*"; }
-warn()  { printf "${YELLOW}[copaw]${RESET} %s\n" "$*"; }
-error() { printf "${RED}[copaw]${RESET} %s\n" "$*" >&2; }
+info()  { printf "${GREEN}[wisecore]${RESET} %s\n" "$*"; }
+warn()  { printf "${YELLOW}[wisecore]${RESET} %s\n" "$*"; }
+error() { printf "${RED}[wisecore]${RESET} %s\n" "$*" >&2; }
 die()   { error "$@"; exit 1; }
 
 # ── Defaults ──────────────────────────────────────────────────────────────────
-COPAW_HOME="${COPAW_HOME:-$HOME/.copaw}"
-COPAW_VENV="$COPAW_HOME/venv"
-COPAW_BIN="$COPAW_HOME/bin"
+WISECORE_HOME="${WISECORE_HOME:-$HOME/.wisecore}"
+WISECORE_VENV="$WISECORE_HOME/venv"
+WISECORE_BIN="$WISECORE_HOME/bin"
 PYTHON_VERSION="3.12"
-COPAW_REPO="https://github.com/agentscope-ai/CoPaw.git"
+WISECORE_REPO="https://github.com/agentscope-ai/Wisecore.git"
 
 # New: Intelligent selection of PyPI source (automatically using Alibaba Cloud mirror for domestic users, and official source for overseas users)
 choose_pypi_mirror() {
@@ -71,7 +71,7 @@ while [[ $# -gt 0 ]]; do
             EXTRAS="$2"; shift 2 ;;
         -h|--help)
             cat <<EOF
-CoPaw Installer
+Wisecore Installer
 
 Usage: bash install.sh [OPTIONS]
 
@@ -84,7 +84,7 @@ Options:
   -h, --help            Show this help
 
 Environment:
-  COPAW_HOME        Installation directory (default: ~/.copaw)
+  WISECORE_HOME        Installation directory (default: ~/.wisecore)
 EOF
             exit 0 ;;
         *)
@@ -99,7 +99,7 @@ case "$OS" in
     *) die "Unsupported OS: $OS. This installer supports Linux and macOS only." ;;
 esac
 
-printf "${GREEN}[copaw]${RESET} Installing CoPaw into ${BOLD}%s${RESET}\n" "$COPAW_HOME"
+printf "${GREEN}[wisecore]${RESET} Installing Wisecore into ${BOLD}%s${RESET}\n" "$WISECORE_HOME"
 
 # ── Step 1: Ensure uv is available ───────────────────────────────────────────
 ensure_uv() {
@@ -134,138 +134,65 @@ ensure_uv() {
 ensure_uv
 
 # ── Step 2: Create / update virtual environment ──────────────────────────────
-if [ -d "$COPAW_VENV" ]; then
+if [ -d "$WISECORE_VENV" ]; then
     info "Existing environment found, upgrading..."
 else
     info "Creating Python $PYTHON_VERSION environment..."
 fi
 
-uv venv "$COPAW_VENV" --python "$PYTHON_VERSION" --quiet
+uv venv "$WISECORE_VENV" --python "$PYTHON_VERSION" --quiet
 
 # Verify the venv was created
-[ -x "$COPAW_VENV/bin/python" ] || die "Failed to create virtual environment"
-info "Python environment ready ($("$COPAW_VENV/bin/python" --version))"
+[ -x "$WISECORE_VENV/bin/python" ] || die "Failed to create virtual environment"
+info "Python environment ready ($("$WISECORE_VENV/bin/python" --version))"
 
-# ── Step 3: Install CoPaw ────────────────────────────────────────────────────
+# ── Step 3: Install Wisecore ────────────────────────────────────────────────────
 # Build extras suffix: "" or "[llamacpp,mlx]"
 EXTRAS_SUFFIX=""
 if [ -n "$EXTRAS" ]; then
     EXTRAS_SUFFIX="[$EXTRAS]"
 fi
 
-## Ensure console frontend assets are in src/copaw/console/ for source installs.
-## Sets _CONSOLE_COPIED=1 if we populated the directory (so we can clean up).
-_CONSOLE_COPIED=0
-_CONSOLE_AVAILABLE=0
-prepare_console() {
-    local repo_dir="$1"
-    local console_src="$repo_dir/console/dist"
-    local console_dest="$repo_dir/src/copaw/console"
-
-    # Already populated
-    if [ -f "$console_dest/index.html" ]; then
-        _CONSOLE_AVAILABLE=1
-        return
-    fi
-
-    # Copy pre-built assets if available (e.g. developer already ran npm build)
-    if [ -d "$console_src" ] && [ -f "$console_src/index.html" ]; then
-        info "Copying console frontend assets..."
-        mkdir -p "$console_dest"
-        cp -R "$console_src/"* "$console_dest/"
-        _CONSOLE_COPIED=1
-        _CONSOLE_AVAILABLE=1
-        return
-    fi
-
-    # Try to build if npm is available
-    if [ ! -f "$repo_dir/console/package.json" ]; then
-        warn "Console source not found — the web UI won't be available."
-        return
-    fi
-
-    if ! command -v npm &>/dev/null; then
-        warn "npm not found — skipping console frontend build."
-        warn "Install Node.js from https://nodejs.org/ then re-run this installer,"
-        warn "or run 'cd console && npm ci && npm run build' manually."
-        return
-    fi
-
-    info "Building console frontend (npm ci && npm run build)..."
-    (cd "$repo_dir/console" && npm ci && npm run build)
-    if [ -f "$console_src/index.html" ]; then
-        mkdir -p "$console_dest"
-        cp -R "$console_src/"* "$console_dest/"
-        _CONSOLE_COPIED=1
-        _CONSOLE_AVAILABLE=1
-        info "Console frontend built successfully"
-        return
-    fi
-
-    warn "Console build completed but index.html not found — the web UI won't be available."
-}
-
-## Remove console assets we copied into the source tree.
-cleanup_console() {
-    local repo_dir="$1"
-    if [ "$_CONSOLE_COPIED" = 1 ]; then
-        rm -rf "$repo_dir/src/copaw/console/"*
-    fi
-}
-
 if [ "$FROM_SOURCE" = true ]; then
     if [ -n "$SOURCE_DIR" ]; then
-        info "Installing CoPaw from local source: $SOURCE_DIR"
-        prepare_console "$SOURCE_DIR"
+        info "Installing Wisecore from local source: $SOURCE_DIR"
         info "Installing package from source..."
-        uv pip install "${SOURCE_DIR}${EXTRAS_SUFFIX}" --python "$COPAW_VENV/bin/python" --prerelease=allow --index-url "$PYPI_MIRROR"
-        cleanup_console "$SOURCE_DIR"
+        uv pip install "${SOURCE_DIR}${EXTRAS_SUFFIX}" --python "$WISECORE_VENV/bin/python" --prerelease=allow --index-url "$PYPI_MIRROR"
     else
-        info "Installing CoPaw from source (GitHub)..."
+        info "Installing Wisecore from source (GitHub)..."
         CLONE_DIR="$(mktemp -d)"
         trap 'rm -rf "$CLONE_DIR"' EXIT
-        git clone --depth 1 "$COPAW_REPO" "$CLONE_DIR"
-        prepare_console "$CLONE_DIR"
+        git clone --depth 1 "$WISECORE_REPO" "$CLONE_DIR"
         info "Installing package from source..."
-        uv pip install "${CLONE_DIR}${EXTRAS_SUFFIX}" --python "$COPAW_VENV/bin/python" --prerelease=allow --index-url "$PYPI_MIRROR"
-        # CLONE_DIR is cleaned up by trap; no need for cleanup_console
+        uv pip install "${CLONE_DIR}${EXTRAS_SUFFIX}" --python "$WISECORE_VENV/bin/python" --prerelease=allow --index-url "$PYPI_MIRROR"
     fi
 else
-    PACKAGE="copaw"
+    PACKAGE="wisecore"
     if [ -n "$VERSION" ]; then
-        PACKAGE="copaw==$VERSION"
+        PACKAGE="wisecore==$VERSION"
     fi
 
     info "Installing ${PACKAGE}${EXTRAS_SUFFIX} from PyPI..."
-    uv pip install "${PACKAGE}${EXTRAS_SUFFIX}" --python "$COPAW_VENV/bin/python" --prerelease=allow --quiet --index-url "$PYPI_MIRROR" --refresh-package copaw
+    uv pip install "${PACKAGE}${EXTRAS_SUFFIX}" --python "$WISECORE_VENV/bin/python" --prerelease=allow --quiet --index-url "$PYPI_MIRROR" --refresh-package wisecore
 fi
 
 # Verify the CLI entry point exists
-[ -x "$COPAW_VENV/bin/copaw" ] || die "Installation failed: copaw CLI not found in venv"
-info "CoPaw installed successfully"
-
-# Check console availability (for PyPI installs, check the installed package)
-if [ "$_CONSOLE_AVAILABLE" = 0 ]; then
-    # Check if console assets were included in the installed package
-    CONSOLE_CHECK="$("$COPAW_VENV/bin/python" -c "import importlib.resources, copaw; p=importlib.resources.files('copaw')/'console'/'index.html'; print('yes' if p.is_file() else 'no')" 2>/dev/null || echo 'no')"
-    if [ "$CONSOLE_CHECK" = "yes" ]; then
-        _CONSOLE_AVAILABLE=1
-    fi
-fi
+[ -x "$WISECORE_VENV/bin/wisecore" ] || die "Installation failed: wisecore CLI not found in venv"
+info "Wisecore installed successfully"
 
 # ── Step 4: Create wrapper script ────────────────────────────────────────────
-mkdir -p "$COPAW_BIN"
+mkdir -p "$WISECORE_BIN"
 
-cat > "$COPAW_BIN/copaw" << 'WRAPPER'
+cat > "$WISECORE_BIN/wisecore" << 'WRAPPER'
 #!/usr/bin/env bash
-# CoPaw CLI wrapper — delegates to the uv-managed environment.
+# Wisecore CLI wrapper — delegates to the uv-managed environment.
 set -euo pipefail
 
-COPAW_HOME="${COPAW_HOME:-$HOME/.copaw}"
-REAL_BIN="$COPAW_HOME/venv/bin/copaw"
+WISECORE_HOME="${WISECORE_HOME:-$HOME/.wisecore}"
+REAL_BIN="$WISECORE_HOME/venv/bin/wisecore"
 
 if [ ! -x "$REAL_BIN" ]; then
-    echo "Error: CoPaw environment not found at $COPAW_HOME/venv" >&2
+    echo "Error: Wisecore environment not found at $WISECORE_HOME/venv" >&2
     echo "Please reinstall: curl -fsSL <install-url> | bash" >&2
     exit 1
 fi
@@ -273,19 +200,19 @@ fi
 exec "$REAL_BIN" "$@"
 WRAPPER
 
-chmod +x "$COPAW_BIN/copaw"
-info "Wrapper created at $COPAW_BIN/copaw"
+chmod +x "$WISECORE_BIN/wisecore"
+info "Wrapper created at $WISECORE_BIN/wisecore"
 
 # ── Step 5: Update PATH in shell profile ─────────────────────────────────────
-PATH_ENTRY="export PATH=\"\$HOME/.copaw/bin:\$PATH\""
+PATH_ENTRY="export PATH=\"\$HOME/.wisecore/bin:\$PATH\""
 
 add_to_profile() {
     local profile="$1"
-    if [ -f "$profile" ] && grep -qF '.copaw/bin' "$profile"; then
+    if [ -f "$profile" ] && grep -qF '.wisecore/bin' "$profile"; then
         return 0  # already present
     fi
     if [ -f "$profile" ] || [ "$2" = "create" ]; then
-        printf '\n# CoPaw\n%s\n' "$PATH_ENTRY" >> "$profile"
+        printf '\n# Wisecore\n%s\n' "$PATH_ENTRY" >> "$profile"
         info "Updated $profile"
         return 0
     fi
@@ -309,18 +236,12 @@ esac
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
-printf "${GREEN}${BOLD}CoPaw installed successfully!${RESET}\n"
+printf "${GREEN}${BOLD}Wisecore installed successfully!${RESET}\n"
 echo ""
 
 # Install summary
-printf "  Install location:  ${BOLD}%s${RESET}\n" "$COPAW_HOME"
-printf "  Python:            ${BOLD}%s${RESET}\n" "$("$COPAW_VENV/bin/python" --version 2>&1)"
-if [ "$_CONSOLE_AVAILABLE" = 1 ]; then
-    printf "  Console (web UI):  ${GREEN}available${RESET}\n"
-else
-    printf "  Console (web UI):  ${YELLOW}not available${RESET}\n"
-    echo "                     Install Node.js and re-run to enable the web UI."
-fi
+printf "  Install location:  ${BOLD}%s${RESET}\n" "$WISECORE_HOME"
+printf "  Python:            ${BOLD}%s${RESET}\n" "$("$WISECORE_VENV/bin/python" --version 2>&1)"
 echo ""
 
 if [ "$UPDATED_PROFILE" = true ]; then
@@ -332,8 +253,8 @@ fi
 
 echo "Then run:"
 echo ""
-printf "  ${BOLD}copaw init${RESET}       # first-time setup\n"
-printf "  ${BOLD}copaw app${RESET}        # start CoPaw\n"
+printf "  ${BOLD}wisecore init${RESET}       # first-time setup\n"
+printf "  ${BOLD}wisecore app${RESET}        # start Wisecore\n"
 echo ""
 printf "To upgrade later, re-run this installer.\n"
-printf "To uninstall, run: ${BOLD}copaw uninstall${RESET}\n"
+printf "To uninstall, run: ${BOLD}wisecore uninstall${RESET}\n"

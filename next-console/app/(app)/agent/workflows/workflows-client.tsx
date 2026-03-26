@@ -19,7 +19,7 @@ import {
   type WorkflowChatExecPayload,
 } from "@/lib/workflow-chat-bridge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { copawScopeUserFromSessionUser } from "@/lib/workflow-username";
+import { scopeUserFromSessionUser } from "@/lib/workflow-username";
 import { useAppShell } from "../../app-shell";
 import {
   DEFAULT_NEW_WORKFLOW_MARKDOWN,
@@ -92,7 +92,7 @@ export function WorkflowsClient() {
   });
 
   const detailQuery = useQuery({
-    queryKey: selected ? qkDetail(selected) : ["copaw", "workflow", "__none__"],
+    queryKey: selected ? qkDetail(selected) : ["core", "workflow", "__none__"],
     queryFn: () => workflowApi.get(selected!),
     enabled: Boolean(selected) && sheetOpen,
   });
@@ -207,7 +207,7 @@ export function WorkflowsClient() {
 
   const handleExecuteWorkflow = useCallback(
     async (w: WorkflowInfo) => {
-      const userId = copawScopeUserFromSessionUser(user ?? {}) ?? "default";
+      const userId = scopeUserFromSessionUser(user ?? {}) ?? "default";
       try {
         const detail = await workflowApi.get(w.filename);
         const payload: WorkflowChatExecPayload = {

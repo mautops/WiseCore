@@ -26,7 +26,7 @@ import {
   workspaceFileContentKey,
 } from "./workspace-domain";
 
-const QK_AGENTS_REGISTRY = ["copaw", "agents", "registry"] as const;
+const QK_AGENTS_REGISTRY = ["core", "agents", "registry"] as const;
 
 export function WorkspaceClient() {
   const queryClient = useQueryClient();
@@ -80,7 +80,7 @@ export function WorkspaceClient() {
     queryKey:
       selectedAgentId != null
         ? qkWorkspaceSystemPrompt(selectedAgentId)
-        : (["copaw", "workspace", "system-prompt", "none"] as const),
+        : (["core", "workspace", "system-prompt", "none"] as const),
     queryFn: () => {
       if (!selectedAgentId) throw new Error("no agent");
       return agentConfigApi.getSystemPromptFiles(selectedAgentId);
@@ -94,7 +94,7 @@ export function WorkspaceClient() {
     queryKey:
       selectedAgentId != null
         ? qkWorkspaceFiles(selectedAgentId)
-        : (["copaw", "workspace", "files", "none"] as const),
+        : (["core", "workspace", "files", "none"] as const),
     queryFn: () => {
       if (!selectedAgentId) throw new Error("no agent");
       return workspaceApi.listWorkingFiles(selectedAgentId);
@@ -119,7 +119,7 @@ export function WorkspaceClient() {
     queryKey:
       selectedAgentId != null
         ? qkWorkspaceMemoryFiles(selectedAgentId)
-        : (["copaw", "workspace", "memory", "none"] as const),
+        : (["core", "workspace", "memory", "none"] as const),
     queryFn: () => {
       if (!selectedAgentId) throw new Error("no agent");
       return workspaceApi.listMemoryFiles(selectedAgentId);
@@ -161,7 +161,7 @@ export function WorkspaceClient() {
     queryKey:
       selectedAgentId != null
         ? workspaceFileContentKey(selectedAgentId, selected)
-        : (["copaw", "workspace", "file", "none", ""] as const),
+        : (["core", "workspace", "file", "none", ""] as const),
     queryFn: async () => {
       if (!selectedAgentId || !selected) throw new Error("no file");
       if (isDailyMemoryFilename(selected)) {

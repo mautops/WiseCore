@@ -1,9 +1,9 @@
 import type { WorkflowInfo } from "@/lib/workflow-api";
 
-export const QK_LIST = ["copaw", "workflows"] as const;
-export const qkDetail = (name: string) => ["copaw", "workflow", name] as const;
+export const QK_LIST = ["core", "workflows"] as const;
+export const qkDetail = (name: string) => ["core", "workflow", name] as const;
 export const qkWorkflowRuns = (name: string) =>
-  ["copaw", "workflow", name, "runs"] as const;
+  ["core", "workflow", name, "runs"] as const;
 
 export const PAGE_SIZE = 12;
 export const TAGS_VISIBLE = 5;
