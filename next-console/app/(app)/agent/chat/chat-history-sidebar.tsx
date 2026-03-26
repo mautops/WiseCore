@@ -11,6 +11,7 @@ import {
   PencilIcon,
   CheckIcon,
   XIcon,
+  Loader2Icon,
 } from "lucide-react";
 import { ChevronRightIcon } from "lucide-react";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
@@ -86,11 +87,14 @@ interface ChatHistorySidebarProps {
   onRenameSession: (id: string, name: string) => Promise<void>;
   width?: number;
   onWidthChange?: (width: number) => void;
+  /** Check if a specific session is generating */
+  isGeneratingSession?: (chatId: string) => boolean;
 }
 
 interface SessionItemProps {
   session: ChatSpec;
   isActive: boolean;
+  isGenerating: boolean;
   onSelect: () => void;
   onDelete: () => Promise<void>;
   onRename: (name: string) => Promise<void>;
@@ -99,6 +103,7 @@ interface SessionItemProps {
 function SessionItem({
   session,
   isActive,
+  isGenerating,
   onSelect,
   onDelete,
   onRename,
@@ -193,7 +198,11 @@ function SessionItem({
           )}
         >
           <div className="flex min-w-0 items-center gap-2">
-            <MessageSquareIcon className="size-3.5 shrink-0 text-muted-foreground" />
+            {isGenerating ? (
+              <Loader2Icon className="size-3.5 shrink-0 animate-spin text-primary" />
+            ) : (
+              <MessageSquareIcon className="size-3.5 shrink-0 text-muted-foreground" />
+            )}
             <span className="flex-1 truncate">{session.name}</span>
 
             {(isHovered || isActive) && (
@@ -234,6 +243,7 @@ interface GroupSectionProps {
   onSelectSession: (id: string) => void;
   onDeleteSession: (id: string) => Promise<void>;
   onRenameSession: (id: string, name: string) => Promise<void>;
+  isGeneratingSession?: (chatId: string) => boolean;
 }
 
 function GroupSection({
@@ -242,6 +252,7 @@ function GroupSection({
   onSelectSession,
   onDeleteSession,
   onRenameSession,
+  isGeneratingSession,
 }: GroupSectionProps) {
   const collapsible = group.label !== "今天" && group.label !== "昨天";
   const [collapsed, setCollapsed] = useState(collapsible);
@@ -273,6 +284,7 @@ function GroupSection({
               key={session.id}
               session={session}
               isActive={session.id === currentSessionId}
+              isGenerating={isGeneratingSession?.(session.id) ?? false}
               onSelect={() => onSelectSession(session.id)}
               onDelete={() => onDeleteSession(session.id)}
               onRename={(name) => onRenameSession(session.id, name)}
@@ -296,6 +308,7 @@ export function ChatHistorySidebar({
   onRenameSession,
   width = SIDEBAR_DEFAULT_WIDTH,
   onWidthChange,
+  isGeneratingSession,
 }: ChatHistorySidebarProps) {
   const isDragging = useRef(false);
   const startX = useRef(0);
@@ -376,6 +389,7 @@ export function ChatHistorySidebar({
                 onSelectSession={onSelectSession}
                 onDeleteSession={onDeleteSession}
                 onRenameSession={onRenameSession}
+                isGeneratingSession={isGeneratingSession}
               />
             ))}
           </div>

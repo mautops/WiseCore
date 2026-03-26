@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
 import { chatsListQueryKey } from "./chat-query-keys";
-import { DEFAULT_CHANNEL, type LocalMessage } from "./types";
+import { DEFAULT_CHANNEL } from "./types";
 
 export function useChatSessions({
   userId,
@@ -15,7 +15,6 @@ export function useChatSessions({
 }) {
   const queryClient = useQueryClient();
   const [currentChatId, setCurrentChatId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<LocalMessage[]>([]);
 
   // ── Queries ──────────────────────────────────────────────────────────────
 
@@ -90,7 +89,6 @@ export function useChatSessions({
       );
       if (id === currentChatId) {
         setCurrentChatId(null);
-        setMessages([]);
       }
     },
   });
@@ -100,14 +98,12 @@ export function useChatSessions({
   const handleSelectSession = useCallback(
     (id: string) => {
       if (id === currentChatId) return;
-      setMessages([]);
       setCurrentChatId(id);
     },
     [currentChatId],
   );
 
   const handleNewChat = useCallback(async () => {
-    setMessages([]);
     const chatSpec = await createChat.mutateAsync({
       session_id: nanoid(),
       name: "新对话",
@@ -115,6 +111,7 @@ export function useChatSessions({
       channel: DEFAULT_CHANNEL,
     });
     setCurrentChatId(chatSpec.id);
+    return chatSpec.id;
   }, [createChat, userId]);
 
   const handleDeleteSession = useCallback(
@@ -139,8 +136,6 @@ export function useChatSessions({
     currentChatId,
     setCurrentChatId,
     chatHistory,
-    messages,
-    setMessages,
     createChat,
     queryClient,
     handleSelectSession,

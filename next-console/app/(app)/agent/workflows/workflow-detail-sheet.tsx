@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   useQuery,
   type UseMutationResult,
@@ -22,11 +22,14 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageResponse } from "@/components/ai-elements/message";
 import { cn } from "@/lib/utils";
-import { Loader2Icon, Trash2Icon } from "lucide-react";
+import {
+  Loader2Icon,
+  Trash2Icon,
+  SaveIcon,
+  RotateCcwIcon,
+} from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   formatSize,
@@ -34,8 +37,17 @@ import {
   workflowFixedMetaLine,
   workflowTags,
 } from "./workflow-domain";
+import {
+  type WorkflowData,
+  DEFAULT_WORKFLOW_DATA,
+  parseWorkflowYaml,
+  buildWorkflowYaml,
+  WorkflowMetadataEditor,
+  WorkflowStepsEditor,
+  WorkflowStepsViewer,
+} from "@/components/workflow";
 
-function WorkflowSourceEditor({
+function WorkflowEditorPanel({
   serverRaw,
   selectedFilename,
   detailOk,
@@ -50,46 +62,176 @@ function WorkflowSourceEditor({
     { filename: string; content: string }
   >;
 }) {
-  const [draft, setDraft] = useState(serverRaw);
-  const dirty = draft !== serverRaw;
+  // 从 serverRaw 派生初始数据
+  const initialData = useMemo(
+    () => parseWorkflowYaml(serverRaw),
+    [serverRaw]
+  );
+
+  // 用户编辑的数据
+  const [data, setData] = useState<WorkflowData>(initialData);
+  const [dirty, setDirty] = useState(false);
+
+  // 当 serverRaw 变化时重置编辑状态（由父组件 key 触发重新挂载）
+  // 这里使用 useMemo 派生初始值，避免在 effect 中调用 setState
+
+  const handleDataChange = useCallback((newData: WorkflowData) => {
+    setData(newData);
+    setDirty(true);
+  }, []);
+
+  const handleSave = useCallback(() => {
+    if (!selectedFilename || !detailOk) return;
+    const yaml = buildWorkflowYaml(data);
+    updateMutation.mutate(
+      { filename: selectedFilename, content: yaml },
+      { onSuccess: () => setDirty(false) }
+    );
+  }, [data, selectedFilename, detailOk, updateMutation]);
+
+  const handleReset = useCallback(() => {
+    setData(initialData);
+    setDirty(false);
+  }, [initialData]);
+
   return (
-    <div className="relative flex min-h-[min(70vh,32rem)] flex-1 flex-col rounded-lg border border-border bg-muted/20">
-      <Textarea
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        spellCheck={false}
-        className={cn(
-          "min-h-0 flex-1 resize-none rounded-lg border-0 bg-transparent px-3 py-2.5 font-mono text-sm leading-relaxed shadow-none focus-visible:ring-0 dark:bg-transparent",
-          dirty && "pb-11 pr-26",
-        )}
-        placeholder="Markdown 源码"
-      />
-      {dirty && updateMutation.isError ? (
-        <p
-          className="pointer-events-none absolute bottom-2 left-3 max-w-[calc(100%-7rem)] truncate text-xs text-destructive"
-          title={(updateMutation.error as Error).message}
-        >
+    <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-hidden">
+      {/* 工具栏 */}
+      {dirty && (
+        <div className="flex items-center justify-between rounded-lg border bg-muted/50 px-3 py-2">
+          <span className="text-muted-foreground text-sm">有未保存的修改</span>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleReset}
+              disabled={updateMutation.isPending}
+            >
+              <RotateCcwIcon className="size-4" />
+              重置
+            </Button>
+            <Button
+              size="sm"
+              onClick={handleSave}
+              disabled={!selectedFilename || updateMutation.isPending || !detailOk}
+            >
+              {updateMutation.isPending ? (
+                <Loader2Icon className="animate-spin" />
+              ) : (
+                <SaveIcon className="size-4" />
+              )}
+              保存
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {updateMutation.isError && (
+        <p className="text-destructive text-sm">
           {(updateMutation.error as Error).message}
         </p>
-      ) : null}
-      {dirty ? (
-        <Button
-          type="button"
-          className="absolute right-2 bottom-2 text-base shadow-sm"
-          disabled={!selectedFilename || updateMutation.isPending || !detailOk}
-          onClick={() =>
-            selectedFilename &&
-            updateMutation.mutate({
-              filename: selectedFilename,
-              content: draft,
-            })
-          }
-        >
-          {updateMutation.isPending && <Loader2Icon className="animate-spin" />}
-          保存
-        </Button>
-      ) : null}
+      )}
+
+      {/* 编辑区域 */}
+      <ScrollArea className="min-h-0 flex-1">
+        <div className="grid gap-4 pr-4">
+          <WorkflowMetadataEditor data={data} onChange={handleDataChange} />
+          <WorkflowStepsEditor
+            steps={data.steps}
+            onChange={(steps) => handleDataChange({ ...data, steps })}
+          />
+        </div>
+      </ScrollArea>
     </div>
+  );
+}
+
+function WorkflowPreviewPanel({
+  data,
+  raw,
+}: {
+  data: WorkflowData;
+  raw: string;
+}) {
+  return (
+    <ScrollArea className="min-h-0 flex-1">
+      <div className="grid gap-4 pr-4">
+        {/* 基本信息 */}
+        <div className="grid gap-3 rounded-lg border p-3">
+          <h3 className="font-medium">基本信息</h3>
+          <div className="grid gap-2 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground">名称：</span>
+              <span className="font-medium">{data.name || "未命名工作流"}</span>
+            </div>
+            {data.description && (
+              <div className="flex items-start gap-2">
+                <span className="text-muted-foreground shrink-0">描述：</span>
+                <span>{data.description}</span>
+              </div>
+            )}
+            <div className="flex flex-wrap gap-4">
+              {data.catalog && (
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">目录：</span>
+                  <Badge variant="secondary">{data.catalog}</Badge>
+                </div>
+              )}
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">版本：</span>
+                <span>{data.version || "1.0"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground">状态：</span>
+                <Badge
+                  variant={
+                    data.status === "active"
+                      ? "default"
+                      : data.status === "deprecated"
+                        ? "destructive"
+                        : "secondary"
+                  }
+                >
+                  {data.status === "active"
+                    ? "启用"
+                    : data.status === "deprecated"
+                      ? "已废弃"
+                      : "草稿"}
+                </Badge>
+              </div>
+            </div>
+            {data.tags.length > 0 && (
+              <div className="flex items-start gap-2">
+                <span className="text-muted-foreground shrink-0">标签：</span>
+                <div className="flex flex-wrap gap-1">
+                  {data.tags.map((tag) => (
+                    <Badge key={tag} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 执行步骤 */}
+        <div className="grid gap-2">
+          <h3 className="font-medium">执行步骤</h3>
+          <WorkflowStepsViewer steps={data.steps} />
+        </div>
+
+        {/* YAML 源码 */}
+        <details className="group">
+          <summary className="cursor-pointer text-muted-foreground text-sm hover:text-foreground">
+            查看 YAML 源码
+          </summary>
+          <pre className="mt-2 overflow-x-auto rounded-lg bg-muted p-3 font-mono text-xs">
+            {raw}
+          </pre>
+        </details>
+      </div>
+    </ScrollArea>
   );
 }
 
@@ -115,8 +257,10 @@ export function WorkflowDetailSheet({
   onRequestDelete: () => void;
 }) {
   const router = useRouter();
-  const sourceSyncKey = `${selectedFilename ?? ""}-${detailQuery.dataUpdatedAt}`;
   const serverRaw = detailQuery.data?.raw ?? "";
+
+  // 解析 YAML 数据用于预览
+  const workflowData = parseWorkflowYaml(serverRaw);
 
   const runsQuery = useQuery({
     queryKey: selectedFilename
@@ -134,7 +278,7 @@ export function WorkflowDetailSheet({
       >
         <SheetHeader className="gap-2">
           <SheetDescription className="sr-only">
-            工作流 Markdown 预览与源码, 可删除当前文件
+            工作流预览与编辑
           </SheetDescription>
           <div className="flex min-w-0 items-start justify-between gap-2 pr-8">
             <div className="min-w-0 flex-1">
@@ -209,8 +353,8 @@ export function WorkflowDetailSheet({
                 <TabsTrigger value="preview" className="min-w-0">
                   预览
                 </TabsTrigger>
-                <TabsTrigger value="source" className="min-w-0">
-                  源码
+                <TabsTrigger value="edit" className="min-w-0">
+                  编辑
                 </TabsTrigger>
                 <TabsTrigger value="runs" className="min-w-0">
                   执行记录
@@ -218,18 +362,16 @@ export function WorkflowDetailSheet({
               </TabsList>
               <TabsContent
                 value="preview"
-                className="min-h-0 flex-1 overflow-y-auto pr-1 data-[state=inactive]:hidden"
+                className="min-h-0 flex-1 overflow-hidden data-[state=inactive]:hidden"
               >
-                <MessageResponse mode="static" parseIncompleteMarkdown={false}>
-                  {detailQuery.data.content}
-                </MessageResponse>
+                <WorkflowPreviewPanel data={workflowData} raw={serverRaw} />
               </TabsContent>
               <TabsContent
-                value="source"
+                value="edit"
                 className="flex min-h-0 flex-1 flex-col overflow-hidden data-[state=inactive]:hidden"
               >
-                <WorkflowSourceEditor
-                  key={sourceSyncKey}
+                <WorkflowEditorPanel
+                  key={`${selectedFilename ?? ""}-${detailQuery.dataUpdatedAt}`}
                   serverRaw={serverRaw}
                   selectedFilename={selectedFilename}
                   detailOk={detailQuery.isSuccess}

@@ -59,8 +59,6 @@ function ChatPageInner() {
     currentChatId,
     setCurrentChatId,
     chatHistory,
-    messages,
-    setMessages,
     createChat,
     queryClient,
     handleSelectSession,
@@ -70,6 +68,7 @@ function ChatPageInner() {
   } = useChatSessions({ userId, skipInitialAutoSelect });
 
   const pendingOpenSessionRef = useRef<string | null>(null);
+  const reconnectAttemptedRef = useRef(false);
 
   const {
     status,
@@ -78,20 +77,41 @@ function ChatPageInner() {
     isThinkingStreaming,
     streamingTools,
     isGenerating,
+    messages,
     handleSubmit,
     handleStop,
+    handleReconnect,
     resetStreaming,
+    clearSession,
+    isGeneratingSession,
+    getRunningSessionsInfo,
   } = useChatStream({
     userId,
     sessions,
     currentChatId,
     setCurrentChatId,
-    messages,
-    setMessages,
     createChat,
     queryClient,
     chatHistory,
   });
+
+  // Reconnect to running sessions on page load
+  useEffect(() => {
+    if (sessionsPending || reconnectAttemptedRef.current) return;
+    reconnectAttemptedRef.current = true;
+
+    const runningSessions = getRunningSessionsInfo();
+    if (runningSessions.length === 0) return;
+
+    // Reconnect to all running sessions in background
+    for (const info of runningSessions) {
+      // Only reconnect if the session still exists
+      const sessionExists = sessions.some((s) => s.id === info.chatId);
+      if (sessionExists) {
+        void handleReconnect(info.chatId);
+      }
+    }
+  }, [sessionsPending, sessions, getRunningSessionsInfo, handleReconnect]);
 
   useEffect(() => {
     const v = searchParams.get("openSession")?.trim();
@@ -107,7 +127,6 @@ function ChatPageInner() {
     pendingOpenSessionRef.current = null;
     router.replace(pathname);
     if (!found) return;
-    resetStreaming();
     handleSelectSession(found.id);
     void queryClient.refetchQueries({ queryKey: ["chat", found.id] });
   }, [
@@ -115,13 +134,18 @@ function ChatPageInner() {
     sessionsPending,
     pathname,
     router,
-    resetStreaming,
     handleSelectSession,
     queryClient,
   ]);
 
+  // Use ref to ensure workflow executes exactly once, regardless of handleSubmit recreating
+  const workflowExecutedRef = useRef(false);
+
   useEffect(() => {
     if (searchParams.get("execWorkflow") !== "1") return;
+    if (workflowExecutedRef.current) return;
+    workflowExecutedRef.current = true;
+
     const raw = sessionStorage.getItem(WORKFLOW_CHAT_EXEC_STORAGE_KEY);
     router.replace(pathname);
     if (!raw) return;
@@ -133,34 +157,67 @@ function ChatPageInner() {
       return;
     }
     if (!payload.markdown?.trim()) return;
+
+    // Clear current session view and create a new one for workflow
     resetStreaming();
-    setMessages([]);
-    void handleSubmit({
-      text: payload.markdown,
-      files: [],
-      forceNewChat: true,
-      chatName: payload.sessionTitle,
-      workflowExecContext:
-        payload.workflowFilename && payload.userId
-          ? {
-              filename: payload.workflowFilename,
-              userId: payload.userId,
-            }
-          : undefined,
-    });
+    setCurrentChatId(null);
+
+    // Use setTimeout to ensure state updates are processed before handleSubmit
+    setTimeout(() => {
+      void handleSubmit({
+        text: payload.markdown,
+        files: [],
+        forceNewChat: true,
+        chatName: payload.sessionTitle,
+        workflowExecContext:
+          payload.workflowFilename && payload.userId
+            ? {
+                filename: payload.workflowFilename,
+                userId: payload.userId,
+              }
+            : undefined,
+      });
+    }, 0);
   }, [
     searchParams,
     router,
     pathname,
     resetStreaming,
-    setMessages,
+    setCurrentChatId,
     handleSubmit,
   ]);
 
   const onNewChat = useCallback(async () => {
-    resetStreaming();
     await handleNewChat();
-  }, [resetStreaming, handleNewChat]);
+  }, [handleNewChat]);
+
+  // Simply switch view - no need to stop other sessions' streaming
+  const onSelectSession = useCallback(
+    (id: string) => {
+      handleSelectSession(id);
+    },
+    [handleSelectSession],
+  );
+
+  // Stop current session's streaming
+  const onStopCurrent = useCallback(() => {
+    if (currentChatId) {
+      handleStop(currentChatId);
+    }
+  }, [currentChatId, handleStop]);
+
+  // Wrap delete to also clear session stream state
+  const onDeleteSessionWithCleanup = useCallback(
+    async (id: string) => {
+      // Stop streaming if this session is generating
+      handleStop(id);
+      // Clear session state
+      clearSession(id);
+      // Delete from backend
+      await handleDeleteSession(id);
+    },
+    [handleStop, clearSession, handleDeleteSession],
+  );
 
   const handleSuggestion = useCallback(
     (text: string) => {
@@ -186,7 +243,7 @@ function ChatPageInner() {
         open={searchOpen}
         onOpenChange={setSearchOpen}
         sessions={sessions}
-        onSelect={handleSelectSession}
+        onSelect={onSelectSession}
       />
 
       <div className="flex min-h-0 flex-1 overflow-hidden">
@@ -253,7 +310,7 @@ function ChatPageInner() {
           <ChatInput
             status={status}
             onSubmit={handleSubmit}
-            onStop={handleStop}
+            onStop={onStopCurrent}
             showFollowUpSuggestions={messages.length > 0}
             onSuggestionClick={handleSuggestion}
           />
@@ -266,12 +323,13 @@ function ChatPageInner() {
           <ChatHistorySidebar
             sessions={sessions}
             currentSessionId={currentChatId}
-            onSelectSession={handleSelectSession}
+            onSelectSession={onSelectSession}
             onNewChat={onNewChat}
-            onDeleteSession={handleDeleteSession}
+            onDeleteSession={onDeleteSessionWithCleanup}
             onRenameSession={handleRenameSession}
             width={rightSidebarWidth}
             onWidthChange={setRightSidebarWidth}
+            isGeneratingSession={isGeneratingSession}
           />
         </div>
       </div>

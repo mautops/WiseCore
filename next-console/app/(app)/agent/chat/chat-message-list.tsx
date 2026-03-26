@@ -30,7 +30,7 @@ import type { ToolCallInfo } from "@/lib/chat-api";
 import type { ChatStatus, DynamicToolUIPart } from "ai";
 import { AssistantPlanOrText } from "./chat-assistant-plan";
 import { BotIcon } from "lucide-react";
-import { useEffect, useRef, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { LocalMessage } from "./types";
 
 // ── Avatar helpers ───────────────────────────────────────────────────────────
@@ -172,19 +172,9 @@ export function ChatMessageList({
   userName,
   userInitials,
 }: ChatMessageListProps) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  // Auto-scroll to bottom when new messages arrive or streaming updates
-  useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-    }
-  }, [
-    messages.length,
-    streamingContent,
-    streamingThinking,
-    streamingTools.length,
-  ]);
+  // Note: Auto-scroll is handled by use-stick-to-bottom in Conversation component
+  // which only scrolls when user is already at the bottom, allowing users to
+  // scroll up and view history without being interrupted
 
   return (
     <div className="mx-auto flex w-full max-w-5xl min-w-0 flex-col px-6">
@@ -275,7 +265,6 @@ export function ChatMessageList({
           streamingTools={streamingTools}
         />
       )}
-      <div ref={scrollRef} />
     </div>
   );
 }

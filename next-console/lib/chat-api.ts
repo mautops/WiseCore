@@ -71,6 +71,20 @@ export interface StreamParams {
   onToolUpdate?: (tool: ToolCallInfo) => void;
 }
 
+/** Parameters for reconnecting to an existing stream */
+export interface ReconnectParams {
+  session_id: string;
+  user_id: string;
+  channel: string;
+  signal?: AbortSignal;
+  onChunk: (text: string) => void;
+  onThinkingChunk?: (text: string) => void;
+  onThinkingStart?: () => void;
+  onThinkingEnd?: () => void;
+  onToolStart?: (tool: ToolCallInfo) => void;
+  onToolUpdate?: (tool: ToolCallInfo) => void;
+}
+
 async function apiRequest<T>(path: string, init?: RequestInit): Promise<T> {
   const headers = await mergeAuthHeaders();
   headers.set("Content-Type", "application/json");
@@ -133,6 +147,197 @@ function assertNotAborted(signal: AbortSignal | undefined): void {
   if (signal?.aborted) {
     throw new DOMException("Aborted", "AbortError");
   }
+}
+
+/** Process SSE stream response - shared between streamChat and reconnectStream */
+async function processStreamResponse(
+  res: Response,
+  signal: AbortSignal | undefined,
+  onChunk: (text: string) => void,
+  onThinkingChunk?: (text: string) => void,
+  onThinkingStart?: () => void,
+  onThinkingEnd?: () => void,
+  onToolStart?: (tool: ToolCallInfo) => void,
+  onToolUpdate?: (tool: ToolCallInfo) => void,
+): Promise<{ content: string; thinking: string; tools: ToolCallInfo[] }> {
+  if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
+
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  let fullContent = "";
+  let fullThinking = "";
+  let hasTextDelta = false;
+
+  // "text" | "reasoning" | "tool_call" | "tool_output" | null
+  type MsgSubType = "text" | "reasoning" | "tool_call" | "tool_output" | null;
+  let subType: MsgSubType = null;
+
+  // Tool calls tracked by callId
+  const toolsMap = new Map<string, ToolCallInfo>();
+  const toolsOrder: string[] = [];
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed === "[DONE]") continue;
+        const jsonStr = trimmed.startsWith("data: ")
+          ? trimmed.slice(6)
+          : trimmed;
+        try {
+          const msg = JSON.parse(jsonStr) as Record<string, unknown>;
+
+          // ── Message phase start ──────────────────────────────────────
+          if (msg.object === "message" && isLiveMessageStatus(msg.status)) {
+            const msgType: string = (msg.type as string) ?? "";
+            if (msgType === "reasoning") {
+              subType = "reasoning";
+              onThinkingStart?.();
+            } else if (TOOL_CALL_TYPES.has(msgType)) {
+              subType = "tool_call";
+            } else if (TOOL_OUTPUT_TYPES.has(msgType)) {
+              subType = "tool_output";
+            } else {
+              subType = "text";
+            }
+            continue;
+          }
+
+          // ── Streaming text delta ─────────────────────────────────────
+          if (isStreamingTextDelta(msg)) {
+            const piece = msg.text as string;
+            if (subType === "reasoning") {
+              fullThinking += piece;
+              onThinkingChunk?.(fullThinking);
+              assertNotAborted(signal);
+              await deferToMain();
+            } else if (subType === "text" || subType === null) {
+              if (subType === null) subType = "text";
+              hasTextDelta = true;
+              fullContent += piece;
+              onChunk(fullContent);
+              assertNotAborted(signal);
+              await deferToMain();
+            }
+            continue;
+          }
+
+          // ── Tool data content (call details or output) ───────────────
+          if (msg.object === "content" && msg.type === "data" && msg.data) {
+            const data = msg.data as {
+              call_id?: string;
+              name?: string;
+              arguments?: string;
+              output?: string;
+              guard_approval?: string;
+            };
+            if (subType === "tool_call" && data.call_id) {
+              const isNew = !toolsMap.has(data.call_id);
+              const tool: ToolCallInfo = toolsMap.get(data.call_id) ?? {
+                callId: data.call_id,
+                name: data.name ?? "tool",
+                input: null,
+                state: "running",
+              };
+              if (data.name) tool.name = data.name;
+              if (data.arguments !== undefined) {
+                try {
+                  tool.input = JSON.parse(data.arguments);
+                } catch {
+                  tool.input = data.arguments;
+                }
+              }
+              if (data.guard_approval === "requested") {
+                tool.hitlApproval = { id: data.call_id };
+                tool.toolUiState = "approval-requested";
+              }
+              toolsMap.set(data.call_id, tool);
+              if (isNew) {
+                toolsOrder.push(data.call_id);
+                onToolStart?.({ ...tool });
+              }
+            } else if (subType === "tool_output" && data.call_id) {
+              const tool = toolsMap.get(data.call_id);
+              if (tool) {
+                tool.output = data.output ?? "";
+                tool.state = "done";
+                if (
+                  tool.hitlApproval &&
+                  tool.hitlApproval.approved === undefined
+                ) {
+                  tool.hitlApproval = {
+                    ...tool.hitlApproval,
+                    approved: true,
+                  };
+                }
+                onToolUpdate?.({ ...tool });
+              }
+            }
+            continue;
+          }
+
+          // ── Message phase end ────────────────────────────────────────
+          if (msg.object === "message" && isCompletedStatus(msg.status)) {
+            if (subType === "reasoning") {
+              onThinkingEnd?.();
+            } else if (
+              subType === "text" &&
+              !hasTextDelta &&
+              Array.isArray(msg.content)
+            ) {
+              const parts = msg.content as Array<{
+                type?: string;
+                text?: string;
+                delta?: boolean;
+              }>;
+              for (const part of parts) {
+                if (
+                  part.type !== "text" ||
+                  typeof part.text !== "string" ||
+                  !part.text ||
+                  part.delta === true
+                ) {
+                  continue;
+                }
+                const fragment = part.text;
+                const step =
+                  fragment.length <= 80
+                    ? fragment.length
+                    : Math.max(6, Math.ceil(fragment.length / 36));
+                for (let i = 0; i < fragment.length; i += step) {
+                  fullContent += fragment.slice(i, i + step);
+                  onChunk(fullContent);
+                  assertNotAborted(signal);
+                  await deferToMain();
+                }
+              }
+            }
+            subType = null;
+            continue;
+          }
+        } catch (e) {
+          if (e instanceof DOMException && e.name === "AbortError") throw e;
+          /* ignore unparseable lines */
+        }
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
+
+  return {
+    content: fullContent,
+    thinking: fullThinking,
+    tools: toolsOrder.map((id) => toolsMap.get(id)!),
+  };
 }
 
 /** Treat as stream delta unless explicitly ``delta: false`` (snapshots use that). */
@@ -231,183 +436,47 @@ export const chatApi = {
       signal,
     });
 
-    if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
+    return processStreamResponse(res, signal, onChunk, onThinkingChunk, onThinkingStart, onThinkingEnd, onToolStart, onToolUpdate);
+  },
 
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-    let fullContent = "";
-    let fullThinking = "";
-    let hasTextDelta = false;
+  /** Reconnect to an existing streaming session (e.g., after page navigation). */
+  reconnectStream: async ({
+    session_id,
+    user_id,
+    channel,
+    signal,
+    onChunk,
+    onThinkingChunk,
+    onThinkingStart,
+    onThinkingEnd,
+    onToolStart,
+    onToolUpdate,
+  }: ReconnectParams): Promise<{
+    content: string;
+    thinking: string;
+    tools: ToolCallInfo[];
+    reconnected: boolean;
+  }> => {
+    const headers = await mergeAuthHeaders();
+    headers.set("Content-Type", "application/json");
+    const res = await fetch(`${API_BASE}/api/console/chat`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        session_id,
+        user_id,
+        channel,
+        reconnect: true,
+      }),
+      signal,
+    });
 
-    // "text" | "reasoning" | "tool_call" | "tool_output" | null
-    type MsgSubType = "text" | "reasoning" | "tool_call" | "tool_output" | null;
-    let subType: MsgSubType = null;
-
-    // Tool calls tracked by callId
-    const toolsMap = new Map<string, ToolCallInfo>();
-    const toolsOrder: string[] = [];
-
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed || trimmed === "[DONE]") continue;
-          const jsonStr = trimmed.startsWith("data: ")
-            ? trimmed.slice(6)
-            : trimmed;
-          try {
-            const msg = JSON.parse(jsonStr) as Record<string, unknown>;
-
-            // ── Message phase start ──────────────────────────────────────
-            if (msg.object === "message" && isLiveMessageStatus(msg.status)) {
-              const msgType: string = (msg.type as string) ?? "";
-              if (msgType === "reasoning") {
-                subType = "reasoning";
-                onThinkingStart?.();
-              } else if (TOOL_CALL_TYPES.has(msgType)) {
-                subType = "tool_call";
-              } else if (TOOL_OUTPUT_TYPES.has(msgType)) {
-                subType = "tool_output";
-              } else {
-                subType = "text";
-              }
-              continue;
-            }
-
-            // ── Streaming text delta ─────────────────────────────────────
-            if (isStreamingTextDelta(msg)) {
-              const piece = msg.text as string;
-              if (subType === "reasoning") {
-                fullThinking += piece;
-                onThinkingChunk?.(fullThinking);
-                assertNotAborted(signal);
-                await deferToMain();
-              } else if (subType === "text" || subType === null) {
-                if (subType === null) subType = "text";
-                hasTextDelta = true;
-                fullContent += piece;
-                onChunk(fullContent);
-                assertNotAborted(signal);
-                await deferToMain();
-              }
-              continue;
-            }
-
-            // ── Tool data content (call details or output) ───────────────
-            if (msg.object === "content" && msg.type === "data" && msg.data) {
-              const data = msg.data as {
-                call_id?: string;
-                name?: string;
-                arguments?: string;
-                output?: string;
-                guard_approval?: string;
-              };
-              if (subType === "tool_call" && data.call_id) {
-                const isNew = !toolsMap.has(data.call_id);
-                const tool: ToolCallInfo = toolsMap.get(data.call_id) ?? {
-                  callId: data.call_id,
-                  name: data.name ?? "tool",
-                  input: null,
-                  state: "running",
-                };
-                if (data.name) tool.name = data.name;
-                if (data.arguments !== undefined) {
-                  try {
-                    tool.input = JSON.parse(data.arguments);
-                  } catch {
-                    tool.input = data.arguments;
-                  }
-                }
-                if (data.guard_approval === "requested") {
-                  tool.hitlApproval = { id: data.call_id };
-                  tool.toolUiState = "approval-requested";
-                }
-                toolsMap.set(data.call_id, tool);
-                if (isNew) {
-                  toolsOrder.push(data.call_id);
-                  onToolStart?.({ ...tool });
-                }
-              } else if (subType === "tool_output" && data.call_id) {
-                const tool = toolsMap.get(data.call_id);
-                if (tool) {
-                  tool.output = data.output ?? "";
-                  tool.state = "done";
-                  if (
-                    tool.hitlApproval &&
-                    tool.hitlApproval.approved === undefined
-                  ) {
-                    tool.hitlApproval = {
-                      ...tool.hitlApproval,
-                      approved: true,
-                    };
-                  }
-                  onToolUpdate?.({ ...tool });
-                }
-              }
-              continue;
-            }
-
-            // ── Message phase end ────────────────────────────────────────
-            if (msg.object === "message" && isCompletedStatus(msg.status)) {
-              if (subType === "reasoning") {
-                onThinkingEnd?.();
-              } else if (
-                subType === "text" &&
-                !hasTextDelta &&
-                Array.isArray(msg.content)
-              ) {
-                const parts = msg.content as Array<{
-                  type?: string;
-                  text?: string;
-                  delta?: boolean;
-                }>;
-                for (const part of parts) {
-                  if (
-                    part.type !== "text" ||
-                    typeof part.text !== "string" ||
-                    !part.text ||
-                    part.delta === true
-                  ) {
-                    continue;
-                  }
-                  const fragment = part.text;
-                  const step =
-                    fragment.length <= 80
-                      ? fragment.length
-                      : Math.max(6, Math.ceil(fragment.length / 36));
-                  for (let i = 0; i < fragment.length; i += step) {
-                    fullContent += fragment.slice(i, i + step);
-                    onChunk(fullContent);
-                    assertNotAborted(signal);
-                    await deferToMain();
-                  }
-                }
-              }
-              subType = null;
-              continue;
-            }
-          } catch (e) {
-            if (e instanceof DOMException && e.name === "AbortError") throw e;
-            /* ignore unparseable lines */
-          }
-        }
-      }
-    } finally {
-      reader.releaseLock();
+    // 404 means no running chat for this session
+    if (res.status === 404) {
+      return { content: "", thinking: "", tools: [], reconnected: false };
     }
 
-    return {
-      content: fullContent,
-      thinking: fullThinking,
-      tools: toolsOrder.map((id) => toolsMap.get(id)!),
-    };
+    const result = await processStreamResponse(res, signal, onChunk, onThinkingChunk, onThinkingStart, onThinkingEnd, onToolStart, onToolUpdate);
+    return { ...result, reconnected: true };
   },
 };

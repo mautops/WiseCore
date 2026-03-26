@@ -1,5 +1,6 @@
 import type { ToolCallInfo } from "@/lib/chat-api";
 import type { BackendMessage } from "@/lib/chat-api";
+import type { ChatStatus } from "ai";
 import { nanoid } from "nanoid";
 
 // ── Constants ────────────────────────────────────────────────────────────────
@@ -29,6 +30,17 @@ export interface LocalMessage {
   createdAt: number;
   type: LocalMessageType;
   tool?: ToolCallInfo;
+}
+
+/** Streaming state for a single session - supports parallel multi-session output */
+export interface SessionStreamState {
+  messages: LocalMessage[];
+  streamingContent: string;
+  streamingThinking: string;
+  isThinkingStreaming: boolean;
+  streamingTools: ToolCallInfo[];
+  status: ChatStatus;
+  abortController: AbortController | null;
 }
 
 // ── Content extraction ───────────────────────────────────────────────────────

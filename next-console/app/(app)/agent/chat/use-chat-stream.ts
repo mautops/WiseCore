@@ -6,12 +6,13 @@ import { qkWorkflowRuns } from "@/app/(app)/agent/workflows/workflow-domain";
 import type { ChatStatus, FileUIPart } from "ai";
 import type { QueryClient } from "@tanstack/react-query";
 import { nanoid } from "nanoid";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import {
   expandChatReferenceText,
   uniqueWorkflowFilenames,
 } from "./chat-expand-refs";
 import { chatsListQueryKey } from "./chat-query-keys";
+import { useSessionStreams } from "./use-session-streams";
 import {
   DEFAULT_CHANNEL,
   type LocalMessage,
@@ -25,8 +26,6 @@ interface UseChatStreamOptions {
   sessions: ChatSpec[];
   currentChatId: string | null;
   setCurrentChatId: (id: string) => void;
-  messages: LocalMessage[];
-  setMessages: React.Dispatch<React.SetStateAction<LocalMessage[]>>;
   createChat: {
     mutateAsync: (
       data: Parameters<typeof chatApi.createChat>[0],
@@ -41,52 +40,55 @@ export function useChatStream({
   sessions,
   currentChatId,
   setCurrentChatId,
-  messages,
-  setMessages,
   createChat,
   queryClient,
   chatHistory,
 }: UseChatStreamOptions) {
-  const [streamingContent, setStreamingContent] = useState("");
-  const [streamingThinking, setStreamingThinking] = useState("");
-  const [isThinkingStreaming, setIsThinkingStreaming] = useState(false);
-  const [streamingTools, setStreamingTools] = useState<ToolCallInfo[]>([]);
-  const [status, setStatus] = useState<ChatStatus>("ready");
-  const abortRef = useRef<AbortController | null>(null);
+  const {
+    getSessionState,
+    setSessionMessages,
+    setStreamingContent,
+    setStreamingThinking,
+    setIsThinkingStreaming,
+    addOrUpdateTool,
+    updateTool,
+    setStatus,
+    setAbortController,
+    resetStreamingState,
+    clearSession,
+    isGenerating,
+    markSessionRunning,
+    markSessionStopped,
+    getRunningSessionsInfo,
+  } = useSessionStreams();
+
   const currentChatIdRef = useRef<string | null>(null);
   currentChatIdRef.current = currentChatId;
-  // Track current messages in a ref so handleSubmit can read without stale closure
-  const messagesRef = useRef(messages);
-  messagesRef.current = messages;
 
-  // Load messages from history (currentChatId ensures re-run after deep-link refetch, etc.)
+  // Load messages from history when currentChatId changes
   useEffect(() => {
     if (!currentChatId || !chatHistory) return;
+    const state = getSessionState(currentChatId);
+    // Don't overwrite if already has local messages (optimistic updates)
+    if (state.messages.length > 0) return;
+
     const parsed = parseHistory(
       chatHistory.messages as Parameters<typeof parseHistory>[0],
     );
-    // New chat + workflow handoff: optimistic user message exists before getChat lists it.
-    // Empty history refetch must not wipe local rows.
-    if (parsed.length === 0 && messagesRef.current.length > 0) {
-      return;
+    if (parsed.length > 0) {
+      setSessionMessages(currentChatId, parsed);
     }
-    setMessages(parsed);
-  }, [currentChatId, chatHistory, setMessages]);
+  }, [currentChatId, chatHistory, getSessionState, setSessionMessages]);
 
-  const resetStreaming = useCallback(() => {
-    setStreamingContent("");
-    setStreamingThinking("");
-    setIsThinkingStreaming(false);
-    setStreamingTools([]);
-    setStatus("ready");
-  }, []);
-
-  const handleStop = useCallback(() => {
-    abortRef.current?.abort();
-    if (currentChatIdRef.current) {
-      chatApi.stopChat(currentChatIdRef.current).catch(() => {});
-    }
-  }, []);
+  const handleStop = useCallback(
+    (chatId: string) => {
+      const state = getSessionState(chatId);
+      state.abortController?.abort();
+      markSessionStopped(chatId);
+      chatApi.stopChat(chatId).catch(() => {});
+    },
+    [getSessionState, markSessionStopped],
+  );
 
   const handleSubmit = useCallback(
     async ({
@@ -95,6 +97,7 @@ export function useChatStream({
       forceNewChat,
       chatName,
       workflowExecContext,
+      targetChatId,
     }: {
       text: string;
       files: FileUIPart[];
@@ -104,9 +107,16 @@ export function useChatStream({
       chatName?: string;
       /** When set with forceNewChat, append workflow run with real session_id after chat is created. */
       workflowExecContext?: { filename: string; userId: string };
+      /** Target chat ID to send message to (defaults to current chat) */
+      targetChatId?: string;
     }) => {
-      if (!text.trim() || status === "streaming" || status === "submitted")
-        return;
+      if (!text.trim()) return;
+
+      // Determine which chat to use
+      let chatId = targetChatId ?? (forceNewChat ? null : currentChatIdRef.current);
+
+      // Check if this specific chat is already generating
+      if (chatId && isGenerating(chatId)) return;
 
       let hasActiveLlm = false;
       try {
@@ -130,9 +140,27 @@ export function useChatStream({
         /* 展开失败时仍发送原文 */
       }
 
-      // Capture before state changes to detect first message in this session
-      const isFirstMessage = messagesRef.current.length === 0;
+      // Create chat if needed
+      if (!chatId) {
+        const titleForChat = chatName?.trim() || truncateTitle(text);
+        const chatSpec = await createChat.mutateAsync({
+          session_id: nanoid(),
+          name: titleForChat,
+          user_id: userId,
+          channel: DEFAULT_CHANNEL,
+        });
+        chatId = chatSpec.id;
+        setCurrentChatId(chatId);
+      }
 
+      // Now we have a valid chatId
+      const resolvedChatId = chatId;
+
+      // Get current state for this session
+      const currentState = getSessionState(resolvedChatId);
+      const isFirstMessage = currentState.messages.length === 0;
+
+      // Add user message
       const userMsg: LocalMessage = {
         id: nanoid(),
         role: "user",
@@ -140,47 +168,28 @@ export function useChatStream({
         createdAt: Date.now(),
         type: "text",
       };
-      setMessages((prev) => [...prev, userMsg]);
+      setSessionMessages(resolvedChatId, (prev) => [...prev, userMsg]);
 
+      // Setup abort controller
       const abort = new AbortController();
-      abortRef.current = abort;
-      setStatus("submitted");
-      setStreamingContent("");
-      setStreamingTools([]);
+      setAbortController(resolvedChatId, abort);
+      setStatus(resolvedChatId, "submitted");
+      setStreamingContent(resolvedChatId, "");
 
       let finalContent = "";
       let finalThinking = "";
       let finalTools: ToolCallInfo[] = [];
-      let finalChatId: string | null = null;
 
       const titleForChat = chatName?.trim() || truncateTitle(text);
 
       try {
-        let chatId = forceNewChat ? null : currentChatIdRef.current;
-        let sessionId: string;
-        let resolvedUserId: string;
-        let channel: string;
+        const currentSpec = sessions.find((s) => s.id === resolvedChatId);
+        const sessionId = currentSpec?.session_id ?? resolvedChatId;
+        const resolvedUserId = currentSpec?.user_id ?? userId;
+        const channel = currentSpec?.channel ?? DEFAULT_CHANNEL;
 
-        if (!chatId) {
-          const chatSpec = await createChat.mutateAsync({
-            session_id: nanoid(),
-            name: titleForChat,
-            user_id: userId,
-            channel: DEFAULT_CHANNEL,
-          });
-          chatId = chatSpec.id;
-          sessionId = chatSpec.session_id;
-          resolvedUserId = chatSpec.user_id;
-          channel = chatSpec.channel;
-          setCurrentChatId(chatId);
-        } else {
-          const currentSpec = sessions.find((s) => s.id === chatId);
-          sessionId = currentSpec?.session_id ?? chatId;
-          resolvedUserId = currentSpec?.user_id ?? userId;
-          channel = currentSpec?.channel ?? DEFAULT_CHANNEL;
-        }
-
-        finalChatId = chatId;
+        // Mark session as running for reconnect support
+        markSessionRunning(resolvedChatId, sessionId, resolvedUserId, channel);
 
         if (workflowExecContext && forceNewChat) {
           try {
@@ -254,7 +263,7 @@ export function useChatStream({
           },
         ];
 
-        setStatus("streaming");
+        setStatus(resolvedChatId, "streaming");
 
         const result = await chatApi.streamChat({
           input,
@@ -262,31 +271,25 @@ export function useChatStream({
           user_id: resolvedUserId,
           channel,
           signal: abort.signal,
-          onChunk: setStreamingContent,
-          onThinkingChunk: setStreamingThinking,
-          onThinkingStart: () => setIsThinkingStreaming(true),
-          onThinkingEnd: () => setIsThinkingStreaming(false),
-          onToolStart: (tool) =>
-            setStreamingTools((prev) => {
-              const idx = prev.findIndex((t) => t.callId === tool.callId);
-              return idx >= 0
-                ? prev.map((t, i) => (i === idx ? tool : t))
-                : [...prev, tool];
-            }),
-          onToolUpdate: (tool) =>
-            setStreamingTools((prev) =>
-              prev.map((t) => (t.callId === tool.callId ? tool : t)),
-            ),
+          onChunk: (content) => setStreamingContent(resolvedChatId, content),
+          onThinkingChunk: (thinking) =>
+            setStreamingThinking(resolvedChatId, thinking),
+          onThinkingStart: () => setIsThinkingStreaming(resolvedChatId, true),
+          onThinkingEnd: () => setIsThinkingStreaming(resolvedChatId, false),
+          onToolStart: (tool) => addOrUpdateTool(resolvedChatId, tool),
+          onToolUpdate: (tool) => updateTool(resolvedChatId, tool),
         });
         finalContent = result.content;
         finalThinking = result.thinking;
         finalTools = result.tools;
       } catch (err) {
         if (err instanceof Error && err.name !== "AbortError") {
-          setStatus("error");
+          setStatus(resolvedChatId, "error");
+          markSessionStopped(resolvedChatId);
           return;
         }
       } finally {
+        // Append final messages
         const newMessages: LocalMessage[] = [];
         if (finalThinking) {
           newMessages.push({
@@ -317,65 +320,197 @@ export function useChatStream({
           });
         }
         if (newMessages.length > 0) {
-          setMessages((prev) => [...prev, ...newMessages]);
+          setSessionMessages(resolvedChatId, (prev) => [...prev, ...newMessages]);
         }
-        resetStreaming();
+        resetStreamingState(resolvedChatId);
+        markSessionStopped(resolvedChatId);
 
-        if (finalChatId) {
-          const updatedAt = new Date().toISOString();
-          // Rename session on first message (was created with placeholder name)
-          if (isFirstMessage) {
-            const currentSpec = sessions.find((s) => s.id === finalChatId);
-            if (currentSpec) {
-              const newName = titleForChat;
-              chatApi
-                .updateChat(finalChatId, { ...currentSpec, name: newName })
-                .then((updated) => {
-                  queryClient.setQueryData<ChatSpec[]>(
-                    chatsListQueryKey(userId),
-                    (prev = []) =>
-                      prev.map((s) => (s.id === finalChatId ? updated : s)),
-                  );
-                })
-                .catch(() => {});
-            }
-          } else {
-            queryClient.setQueryData<ChatSpec[]>(
-              chatsListQueryKey(userId),
-              (prev = []) =>
-                prev.map((s) =>
-                  s.id === finalChatId
-                    ? { ...s, updated_at: updatedAt, status: "idle" }
-                    : s,
-                ),
-            );
+        // Update session metadata
+        const updatedAt = new Date().toISOString();
+        if (isFirstMessage) {
+          const currentSpec = sessions.find((s) => s.id === resolvedChatId);
+          if (currentSpec) {
+            const newName = titleForChat;
+            chatApi
+              .updateChat(resolvedChatId, { ...currentSpec, name: newName })
+              .then((updated) => {
+                queryClient.setQueryData<ChatSpec[]>(
+                  chatsListQueryKey(userId),
+                  (prev = []) =>
+                    prev.map((s) => (s.id === resolvedChatId ? updated : s)),
+                );
+              })
+              .catch(() => {});
           }
+        } else {
+          queryClient.setQueryData<ChatSpec[]>(
+            chatsListQueryKey(userId),
+            (prev = []) =>
+              prev.map((s) =>
+                s.id === resolvedChatId
+                  ? { ...s, updated_at: updatedAt, status: "idle" }
+                  : s,
+              ),
+          );
         }
       }
     },
     [
       sessions,
-      status,
       userId,
       createChat,
       queryClient,
-      setMessages,
+      getSessionState,
+      setSessionMessages,
+      setStreamingContent,
+      setStreamingThinking,
+      setIsThinkingStreaming,
+      addOrUpdateTool,
+      updateTool,
+      setStatus,
+      setAbortController,
+      resetStreamingState,
+      isGenerating,
       setCurrentChatId,
-      resetStreaming,
+      markSessionRunning,
+      markSessionStopped,
     ],
   );
 
-  const isGenerating = status === "submitted" || status === "streaming";
+  /** Reconnect to a running session's stream */
+  const handleReconnect = useCallback(
+    async (chatId: string) => {
+      const currentSpec = sessions.find((s) => s.id === chatId);
+      if (!currentSpec) return false;
+
+      const sessionId = currentSpec.session_id;
+      const resolvedUserId = currentSpec.user_id ?? userId;
+      const channel = currentSpec.channel ?? DEFAULT_CHANNEL;
+
+      // Setup abort controller
+      const abort = new AbortController();
+      setAbortController(chatId, abort);
+      setStatus(chatId, "streaming");
+
+      // Mark as running again
+      markSessionRunning(chatId, sessionId, resolvedUserId, channel);
+
+      try {
+        const result = await chatApi.reconnectStream({
+          session_id: sessionId,
+          user_id: resolvedUserId,
+          channel,
+          signal: abort.signal,
+          onChunk: (content) => setStreamingContent(chatId, content),
+          onThinkingChunk: (thinking) => setStreamingThinking(chatId, thinking),
+          onThinkingStart: () => setIsThinkingStreaming(chatId, true),
+          onThinkingEnd: () => setIsThinkingStreaming(chatId, false),
+          onToolStart: (tool) => addOrUpdateTool(chatId, tool),
+          onToolUpdate: (tool) => updateTool(chatId, tool),
+        });
+
+        if (!result.reconnected) {
+          // No running session, just reset
+          resetStreamingState(chatId);
+          markSessionStopped(chatId);
+          return false;
+        }
+
+        // Append final messages
+        const newMessages: LocalMessage[] = [];
+        if (result.thinking) {
+          newMessages.push({
+            id: nanoid(),
+            role: "assistant",
+            content: result.thinking,
+            createdAt: Date.now(),
+            type: "thinking",
+          });
+        }
+        for (const tool of result.tools) {
+          newMessages.push({
+            id: nanoid(),
+            role: "assistant",
+            content: "",
+            createdAt: Date.now(),
+            type: "tool",
+            tool,
+          });
+        }
+        if (result.content) {
+          newMessages.push({
+            id: nanoid(),
+            role: "assistant",
+            content: result.content,
+            createdAt: Date.now(),
+            type: "text",
+          });
+        }
+        if (newMessages.length > 0) {
+          setSessionMessages(chatId, (prev) => [...prev, ...newMessages]);
+        }
+
+        resetStreamingState(chatId);
+        markSessionStopped(chatId);
+        return true;
+      } catch (err) {
+        if (err instanceof Error && err.name !== "AbortError") {
+          setStatus(chatId, "error");
+          markSessionStopped(chatId);
+        }
+        return false;
+      }
+    },
+    [
+      sessions,
+      userId,
+      setStreamingContent,
+      setStreamingThinking,
+      setIsThinkingStreaming,
+      addOrUpdateTool,
+      updateTool,
+      setStatus,
+      setAbortController,
+      resetStreamingState,
+      setSessionMessages,
+      markSessionRunning,
+      markSessionStopped,
+    ],
+  );
+
+  // Return current session's state for UI binding
+  const currentSessionState = currentChatId
+    ? getSessionState(currentChatId)
+    : {
+        messages: [],
+        streamingContent: "",
+        streamingThinking: "",
+        isThinkingStreaming: false,
+        streamingTools: [],
+        status: "ready" as ChatStatus,
+      };
+
+  const currentIsGenerating = currentChatId ? isGenerating(currentChatId) : false;
 
   return {
-    status,
-    streamingContent,
-    streamingThinking,
-    isThinkingStreaming,
-    streamingTools,
-    isGenerating,
+    // Current session state for UI
+    status: currentSessionState.status,
+    streamingContent: currentSessionState.streamingContent,
+    streamingThinking: currentSessionState.streamingThinking,
+    isThinkingStreaming: currentSessionState.isThinkingStreaming,
+    streamingTools: currentSessionState.streamingTools,
+    isGenerating: currentIsGenerating,
+    messages: currentSessionState.messages,
+    // Actions
     handleSubmit,
     handleStop,
-    resetStreaming,
+    handleReconnect,
+    resetStreaming: () => currentChatId && resetStreamingState(currentChatId),
+    // Expose for advanced use
+    getSessionState,
+    setSessionMessages,
+    clearSession,
+    isGeneratingSession: isGenerating,
+    getRunningSessionsInfo,
   };
 }

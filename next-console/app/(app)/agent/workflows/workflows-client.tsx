@@ -4,13 +4,13 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  ensureWorkflowMarkdownFilename,
   workflowApi,
   type WorkflowInfo,
 } from "@/lib/workflow-api";
@@ -21,10 +21,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { scopeUserFromSessionUser } from "@/lib/workflow-username";
 import { useAppShell } from "../../app-shell";
-import {
-  DEFAULT_NEW_WORKFLOW_MARKDOWN,
-  WorkflowCreateDialog,
-} from "./workflow-create-dialog";
 import { WorkflowDeleteDialog } from "./workflow-delete-dialog";
 import { WorkflowDetailSheet } from "./workflow-detail-sheet";
 import {
@@ -47,15 +43,13 @@ function readModifierKeyPrefix(): string {
 
 export function WorkflowsClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const { showLeftSidebar, toggleLeftSidebar, user } = useAppShell();
 
   const [selected, setSelected] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [createOpen, setCreateOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [newName, setNewName] = useState("");
-  const [newContent, setNewContent] = useState(DEFAULT_NEW_WORKFLOW_MARKDOWN);
   const [page, setPage] = useState(1);
   const [filterQuery, setFilterQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -101,6 +95,26 @@ export function WorkflowsClient() {
     const rows = listQuery.data ?? [];
     return [...rows].sort((a, b) => a.filename.localeCompare(b.filename));
   }, [listQuery.data]);
+
+  // 处理从新建页面跳转回来的高亮（只执行一次）
+  const highlightProcessed = useRef(false);
+  const highlight = searchParams.get("highlight");
+
+  useEffect(() => {
+    if (highlight && listQuery.isSuccess && !highlightProcessed.current) {
+      highlightProcessed.current = true;
+      const exists = sorted.some((w) => w.filename === highlight);
+      if (exists) {
+        // 使用 setTimeout 避免在 effect 中直接 setState
+        setTimeout(() => {
+          setSelected(highlight);
+          setSheetOpen(true);
+        }, 0);
+      }
+      // 清除 URL 参数
+      router.replace("/agent/workflows");
+    }
+  }, [highlight, listQuery.isSuccess, sorted, router]);
 
   const filtered = useMemo(
     () => sorted.filter((w) => matchesWorkflowFilter(w, filterQuery)),
@@ -162,25 +176,6 @@ export function WorkflowsClient() {
     void queryClient.invalidateQueries({ queryKey: QK_LIST });
   }, [queryClient]);
 
-  const createMutation = useMutation({
-    mutationFn: (body: { filename: string; content: string }) => {
-      const normalizedFilename = ensureWorkflowMarkdownFilename(body.filename);
-      return workflowApi.create({
-        ...body,
-        filename: normalizedFilename,
-      });
-    },
-    onSuccess: async (data) => {
-      setCreateOpen(false);
-      setNewName("");
-      setNewContent(DEFAULT_NEW_WORKFLOW_MARKDOWN);
-      await invalidateList();
-      // Use the normalized filename from server response
-      setSelected(data.filename);
-      setSheetOpen(true);
-    },
-  });
-
   const deleteMutation = useMutation({
     mutationFn: () => workflowApi.delete(selected!),
     onSuccess: async () => {
@@ -231,12 +226,14 @@ export function WorkflowsClient() {
     [router, user],
   );
 
+  const handleCreateClick = useCallback(() => {
+    router.push("/agent/workflows/new");
+  }, [router]);
+
   const onSheetOpenChange = (open: boolean) => {
     setSheetOpen(open);
     if (!open) setSelected(null);
   };
-
-  const canCreate = newName.trim().length > 0;
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col bg-background text-base">
@@ -257,11 +254,7 @@ export function WorkflowsClient() {
             onToggleLeftSidebar={toggleLeftSidebar}
             filterQuery={filterQuery}
             onOpenSearch={() => setSearchOpen(true)}
-            onCreateClick={() => {
-              setNewName("");
-              setNewContent(DEFAULT_NEW_WORKFLOW_MARKDOWN);
-              setCreateOpen(true);
-            }}
+            onCreateClick={handleCreateClick}
             modifierKeyPrefix={modifierKeyPrefix}
           />
           <WorkflowListContent
@@ -295,23 +288,6 @@ export function WorkflowsClient() {
         detailQuery={detailQuery}
         updateMutation={updateMutation}
         onRequestDelete={() => setDeleteOpen(true)}
-      />
-
-      <WorkflowCreateDialog
-        open={createOpen}
-        onOpenChange={(open) => {
-          setCreateOpen(open);
-          if (open) {
-            setNewName("");
-            setNewContent(DEFAULT_NEW_WORKFLOW_MARKDOWN);
-          }
-        }}
-        newName={newName}
-        onNewNameChange={setNewName}
-        newContent={newContent}
-        onNewContentChange={setNewContent}
-        canCreate={canCreate}
-        createMutation={createMutation}
       />
 
       <WorkflowDeleteDialog
