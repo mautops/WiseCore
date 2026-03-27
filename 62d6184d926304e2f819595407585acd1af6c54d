@@ -1,0 +1,31 @@
+src/wisecore/app/workspace/workspace.py
+  efc371f90911bdd3 54,173-175,300
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.21",
+  "base_commit_sha": "62d6184d926304e2f819595407585acd1af6c54d",
+  "prompts": {
+    "efc371f90911bdd3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ca1d54a0-dccd-4c2b-91cb-010917f99fdc",
+        "model": "glm-5"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 8,
+      "total_deletions": 5,
+      "accepted_lines": 8,
+      "overriden_lines": 0,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/740129a3a3b9821a99e246e43f9d081bc8eaac3c8b8710999455029937c210d4",
+      "token_usage": {
+        "input_tokens": 8448330,
+        "output_tokens": 20517,
+        "cache_read_tokens": 9936491,
+        "cache_creation_tokens": 0,
+        "total_cost": null
+      }
+    }
+  }
+}
