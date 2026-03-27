@@ -1,0 +1,107 @@
+src/wisecore/agents/utils/token_counter.py
+  efc371f90911bdd3 8,158-239,241-243,249-250,261-264,267,270-271,273-277,280-283,285-301
+src/wisecore/agents/skills/browser_cdp/SKILL.md
+  efc371f90911bdd3 1-185
+src/wisecore/agents/memory/__init__.py
+  efc371f90911bdd3 5-6,10-11
+src/wisecore/app/channels/feishu/constants.py
+  efc371f90911bdd3 21-28
+src/wisecore/providers/rate_limiter.py
+  efc371f90911bdd3 1-278
+next-console/lib/agent-config-api.ts
+  efc371f90911bdd3 54-62
+src/wisecore/__version__.py
+  efc371f90911bdd3 2
+src/wisecore/providers/retry_chat_model.py
+  efc371f90911bdd3 6-23,36-46,66-86,90,93,106,109,134-157,178-189,208-210,217,222-224,232-264,271-277,285-290,292-304,308-311,318,320,325-327,330,333-334,342-345,349,357,359-360,362,364-369,371-385,387,389-390,392-404,406,408-440,443-444,446-449,452,455,462-465
+src/wisecore/config/config.py
+  efc371f90911bdd3 15,18,20-22,66,183-198,217,253,285-421,464-509,528-529,531,534-536,539-541,544-546,554-559,565-567,572-574,1095
+src/wisecore/agents/skills/himalaya/SKILL.md
+  efc371f90911bdd3 7,35-36
+src/wisecore/app/workspace/workspace.py
+  efc371f90911bdd3 7,34,39-45
+src/wisecore/app/channels/weixin/channel.py
+  efc371f90911bdd3 1-896
+src/wisecore/agents/skills/multi_agent_collaboration/SKILL.md
+  efc371f90911bdd3 4,11,44,53,55-71,73-84,97-117,123-124,133-142,271,276-279,290-327,329-462,473
+src/wisecore/app/channels/feishu/channel.py
+  efc371f90911bdd3 22,52-55,547-561,1779-1784,1786-1803,1806-1813,1815-1846,1848-1861,1863-1935,1938,1940-1947,1949-1952,1954-1955,1957-1974,1976-1977
+src/wisecore/agents/memory/reme_light_memory_manager.py
+  efc371f90911bdd3 1-362
+src/wisecore/app/routers/files.py
+  efc371f90911bdd3 18-20
+src/wisecore/app/channels/weixin/client.py
+  efc371f90911bdd3 1-318
+pyproject.toml
+  efc371f90911bdd3 9,39
+src/wisecore/app/channels/console/channel.py
+  efc371f90911bdd3 23-27,44,278-308,360-373,386-389
+src/wisecore/app/channels/registry.py
+  efc371f90911bdd3 34
+src/wisecore/agents/model_factory.py
+  efc371f90911bdd3 34-38,315,326-331,370
+src/wisecore/app/_app.py
+  efc371f90911bdd3 153,155-157
+src/wisecore/security/tool_guard/rules/dangerous_shell_commands.yaml
+  efc371f90911bdd3 120-183
+src/wisecore/cli/app_cmd.py
+  efc371f90911bdd3 79-85,91,96-108,140
+src/wisecore/app/channels/weixin/__init__.py
+  efc371f90911bdd3 1-6
+src/wisecore/agents/tools/browser_control.py
+  efc371f90911bdd3 116-117,171-172,286,303-306,491-503,512-513,630,648-662,680-699,705,726-729,785-792,794,819-856,905,2677-2951,2994-2998,3003-3006,3014-3015,3118-3132,3160,3163-3166,3435-3436
+src/wisecore/app/runner/utils.py
+  efc371f90911bdd3 131-292,444-451
+src/wisecore/app/routers/config.py
+  efc371f90911bdd3 36,57,157-267
+src/wisecore/app/routers/agents.py
+  efc371f90911bdd3 14,69-79
+src/wisecore/app/channels/weixin/utils.py
+  efc371f90911bdd3 1-118
+src/wisecore/app/channels/discord_/channel.py
+  efc371f90911bdd3 64,83,111-116,147-165,302-306,335
+src/wisecore/constant.py
+  efc371f90911bdd3 217-261
+next-console/lib/chat-api.ts
+  efc371f90911bdd3 8-15
+src/wisecore/agents/memory/base_memory_manager.py
+  efc371f90911bdd3 1-223
+next-console/app/(app)/agent/config/config-domain.ts
+  efc371f90911bdd3 38-46,135-168
+src/wisecore/agents/tools/shell.py
+  efc371f90911bdd3 195,197,204
+next-console/app/(app)/agent/config/config-client.tsx
+  efc371f90911bdd3 567-650
+src/wisecore/cli/agents_cmd.py
+  efc371f90911bdd3 3,185-373,435-436,440-442,446-447,477-492,513-515,519-520,532-543,579-584,586-590,602-618,620-623,652,655-663
+src/wisecore/providers/capability_baseline.py
+  efc371f90911bdd3 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.21",
+  "base_commit_sha": "f6404d41310809f67dbd1ea73cc636d0dcd3fa92",
+  "prompts": {
+    "efc371f90911bdd3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ca1d54a0-dccd-4c2b-91cb-010917f99fdc",
+        "model": "glm-5"
+      },
+      "human_author": "BigFei <364950776@qq.com>",
+      "messages": [],
+      "total_additions": 5182,
+      "total_deletions": 311,
+      "accepted_lines": 4893,
+      "overriden_lines": 0,
+      "messages_url": "https://gitai.gz.cvte.cn/cas/d9071de56780e66a7d0976937622f6bb3c908de396672ae27d8d49da8db20e3f",
+      "token_usage": {
+        "input_tokens": 7852645,
+        "output_tokens": 20185,
+        "cache_read_tokens": 9239025,
+        "cache_creation_tokens": 0,
+        "total_cost": null
+      }
+    }
+  }
+}
