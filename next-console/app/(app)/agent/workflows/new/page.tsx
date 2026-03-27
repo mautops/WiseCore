@@ -27,6 +27,7 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -82,8 +83,9 @@ function SortableStepCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group relative rounded-xl border bg-card transition-all",
-        isDragging && "shadow-lg ring-2 ring-primary/50"
+        "group relative rounded-xl border border-border/50 bg-card shadow-sm transition-all duration-200",
+        isDragging && "shadow-lg ring-2 ring-primary/50",
+        !isDragging && "hover:shadow-md hover:border-primary/20"
       )}
     >
       {/* 步骤头部 */}
@@ -123,7 +125,7 @@ function SortableStepCard({
         <button
           type="button"
           onClick={onRemove}
-          className="rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
+          className="rounded p-1 text-muted-foreground opacity-0 transition-all duration-150 hover:bg-destructive/10 hover:text-destructive active:scale-90 group-hover:opacity-100"
         >
           <Trash2Icon className="size-4" />
         </button>
@@ -255,17 +257,18 @@ export default function NewWorkflowPage() {
   return (
     <div className="flex h-full flex-col bg-gradient-to-b from-background to-muted/20">
       {/* Header */}
-      <header className="flex items-center gap-4 border-b bg-background/80 px-6 py-4 backdrop-blur-sm">
+      <header className="flex items-center gap-4 border-b border-border/50 bg-background/80 px-6 py-4 backdrop-blur-sm">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => router.push("/agent/workflows")}
+          className="transition-all duration-150 hover:bg-accent active:scale-95"
         >
           <ArrowLeftIcon className="size-4" />
           返回
         </Button>
         <div className="flex-1">
-          <h1 className="text-lg font-semibold">新建工作流</h1>
+          <h1 className="text-lg font-semibold text-foreground">新建工作流</h1>
           <p className="text-sm text-muted-foreground">
             创建包含多个执行步骤的自动化工作流
           </p>
@@ -283,16 +286,16 @@ export default function NewWorkflowPage() {
                 onClick={() => idx < currentStep && setCurrentStep(idx)}
                 disabled={idx > currentStep}
                 className={cn(
-                  "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-all",
+                  "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-all duration-200",
                   idx === currentStep
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-primary text-primary-foreground shadow-sm"
                     : idx < currentStep
-                      ? "bg-primary/10 text-primary cursor-pointer hover:bg-primary/20"
-                      : "bg-muted text-muted-foreground"
+                      ? "bg-primary/10 text-primary cursor-pointer hover:bg-primary/20 active:scale-95"
+                      : "bg-muted text-muted-foreground cursor-not-allowed"
                 )}
               >
                 {idx < currentStep ? (
-                  <span className="size-4 rounded-full bg-primary text-[10px] text-primary-foreground">✓</span>
+                  <span className="size-4 rounded-full bg-primary text-[10px] text-primary-foreground flex items-center justify-center">✓</span>
                 ) : (
                   <span className="flex size-4 items-center justify-center rounded-full bg-background/50 text-xs">
                     {idx + 1}
@@ -307,140 +310,148 @@ export default function NewWorkflowPage() {
       </header>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-8">
-        <div className="mx-auto max-w-4xl">
+      <div className="flex flex-1 items-start justify-center overflow-y-auto p-8">
+        <div className="w-full max-w-3xl">
           {/* Step 1: Metadata */}
           {currentStep === 0 && (
-            <div className="space-y-6">
-              {/* 文件名和显示名称 */}
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">
-                    文件名 <span className="text-destructive">*</span>
-                  </label>
-                  <Input
-                    placeholder="my-workflow"
-                    value={filename}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilename(e.target.value)}
-                    className="h-10"
-                  />
-                  <p className="text-xs text-muted-foreground">
-                    无需后缀，将自动添加 .md
-                  </p>
+            <Card className="border-border/50 shadow-sm transition-all duration-200 hover:shadow-md">
+              <CardHeader className="border-b border-border/50 pb-4">
+                <CardTitle className="text-lg font-semibold text-foreground">基本信息</CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  设置工作流的基本属性和元数据
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-6 pt-6">
+                {/* 文件名和显示名称 */}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">
+                      文件名 <span className="text-destructive">*</span>
+                    </label>
+                    <Input
+                      placeholder="my-workflow"
+                      value={filename}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilename(e.target.value)}
+                      className="h-10 transition-all duration-150 focus:border-primary/50 focus:ring-primary/30"
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      无需后缀，将自动添加 .md
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">
+                      显示名称 <span className="text-destructive">*</span>
+                    </label>
+                    <Input
+                      placeholder="我的工作流"
+                      value={data.name}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData((p) => ({ ...p, name: e.target.value }))}
+                      className="h-10 transition-all duration-150 focus:border-primary/50 focus:ring-primary/30"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">
-                    显示名称 <span className="text-destructive">*</span>
-                  </label>
-                  <Input
-                    placeholder="我的工作流"
-                    value={data.name}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData((p) => ({ ...p, name: e.target.value }))}
-                    className="h-10"
-                  />
-                </div>
-              </div>
 
-              {/* 描述 */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">描述</label>
-                <Input
-                  placeholder="简短说明工作流用途..."
-                  value={data.description}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData((p) => ({ ...p, description: e.target.value }))}
-                  className="h-10"
-                />
-              </div>
-
-              {/* 目录、版本、状态 */}
-              <div className="grid gap-4 sm:grid-cols-3">
+                {/* 描述 */}
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">目录</label>
+                  <label className="text-sm font-medium text-foreground">描述</label>
                   <Input
-                    placeholder="运维工具"
-                    value={data.catalog}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData((p) => ({ ...p, catalog: e.target.value }))}
-                    className="h-10"
+                    placeholder="简短说明工作流用途..."
+                    value={data.description}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData((p) => ({ ...p, description: e.target.value }))}
+                    className="h-10 transition-all duration-150 focus:border-primary/50 focus:ring-primary/30"
                   />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">版本</label>
-                  <Input
-                    placeholder="1.0"
-                    value={data.version}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData((p) => ({ ...p, version: e.target.value }))}
-                    className="h-10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">状态</label>
-                  <Select
-                    value={data.status}
-                    onValueChange={(v) => setData((p) => ({ ...p, status: v }))}
-                  >
-                    <SelectTrigger className="h-10">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {WORKFLOW_STATUS_OPTIONS.map((opt) => (
-                        <SelectItem key={opt.value} value={opt.value}>
-                          {opt.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
 
-              {/* 标签 */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">标签</label>
-                <div className="flex flex-wrap gap-1.5">
-                  {data.tags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="gap-1 pr-1"
+                {/* 目录、版本、状态 */}
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">目录</label>
+                    <Input
+                      placeholder="运维工具"
+                      value={data.catalog}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData((p) => ({ ...p, catalog: e.target.value }))}
+                      className="h-10 transition-all duration-150 focus:border-primary/50 focus:ring-primary/30"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">版本</label>
+                    <Input
+                      placeholder="1.0"
+                      value={data.version}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData((p) => ({ ...p, version: e.target.value }))}
+                      className="h-10 transition-all duration-150 focus:border-primary/50 focus:ring-primary/30"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">状态</label>
+                    <Select
+                      value={data.status}
+                      onValueChange={(v) => setData((p) => ({ ...p, status: v }))}
                     >
-                      {tag}
-                      <button
-                        type="button"
-                        onClick={() => removeTag(tag)}
-                        className="ml-1 rounded-full p-0.5 hover:bg-foreground/10"
+                      <SelectTrigger className="h-10 transition-all duration-150 focus:ring-primary/30">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {WORKFLOW_STATUS_OPTIONS.map((opt) => (
+                          <SelectItem key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* 标签 */}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">标签</label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {data.tags.map((tag) => (
+                      <Badge
+                        key={tag}
+                        variant="secondary"
+                        className="gap-1 pr-1"
                       >
-                        ×
+                        {tag}
+                        <button
+                          type="button"
+                          onClick={() => removeTag(tag)}
+                          className="ml-1 rounded-full p-0.5 transition-all duration-150 hover:bg-foreground/10 active:scale-90"
+                        >
+                          ×
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="输入标签后按 Enter..."
+                      value={tagInput}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTagInput(e.target.value)}
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                        if (e.key === "Enter" && tagInput.trim()) {
+                          e.preventDefault();
+                          addTag(tagInput);
+                        }
+                      }}
+                      className="h-9 flex-1 transition-all duration-150 focus:border-primary/50 focus:ring-primary/30"
+                    />
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {WORKFLOW_SUGGESTED_TAGS.filter((t) => !data.tags.includes(t)).map((tag) => (
+                      <button
+                        key={tag}
+                        type="button"
+                        onClick={() => addTag(tag)}
+                        className="rounded-full border border-border/50 px-2.5 py-0.5 text-xs text-muted-foreground transition-all duration-150 hover:border-primary hover:bg-primary/5 hover:text-primary active:scale-95"
+                      >
+                        + {tag}
                       </button>
-                    </Badge>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="输入标签后按 Enter..."
-                    value={tagInput}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTagInput(e.target.value)}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                      if (e.key === "Enter" && tagInput.trim()) {
-                        e.preventDefault();
-                        addTag(tagInput);
-                      }
-                    }}
-                    className="h-9 flex-1"
-                  />
-                </div>
-                <div className="flex flex-wrap gap-1">
-                  {WORKFLOW_SUGGESTED_TAGS.filter((t) => !data.tags.includes(t)).map((tag) => (
-                    <button
-                      key={tag}
-                      type="button"
-                      onClick={() => addTag(tag)}
-                      className="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-primary"
-                    >
-                      + {tag}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           )}
 
           {/* Step 2: Steps */}
@@ -448,29 +459,32 @@ export default function NewWorkflowPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-lg font-semibold">执行步骤</h2>
+                  <h2 className="text-lg font-semibold text-foreground">执行步骤</h2>
                   <p className="text-sm text-muted-foreground">
                     拖拽卡片调整执行顺序，每个步骤可包含代码或命令
                   </p>
                 </div>
-                <Button variant="outline" onClick={addStep} className="gap-1.5">
+                <Button variant="outline" onClick={addStep} className="gap-1.5 transition-all duration-150 hover:bg-primary/10 hover:text-primary active:scale-95">
                   <PlusIcon className="size-4" />
                   添加步骤
                 </Button>
               </div>
 
               {data.steps.length === 0 ? (
-                <div className="flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed py-16">
-                  <div className="rounded-full bg-muted p-4">
+                <div className="flex flex-col items-center justify-center gap-4 rounded-xl border-2 border-dashed border-border/50 bg-muted/10 py-16">
+                  <div className="rounded-full bg-muted/80 p-4">
                     <PlusIcon className="size-8 text-muted-foreground" />
                   </div>
                   <div className="text-center">
-                    <p className="font-medium">暂无执行步骤</p>
+                    <p className="font-medium text-foreground">暂无执行步骤</p>
                     <p className="text-sm text-muted-foreground">
                       点击下方按钮添加第一个步骤
                     </p>
                   </div>
-                  <Button onClick={addStep}>添加步骤</Button>
+                  <Button onClick={addStep} className="gap-1.5 bg-primary text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95">
+                    <PlusIcon className="size-4" />
+                    添加步骤
+                  </Button>
                 </div>
               ) : (
                 <DndContext
@@ -501,7 +515,7 @@ export default function NewWorkflowPage() {
                 <Button
                   variant="outline"
                   onClick={addStep}
-                  className="w-full gap-1.5 border-dashed"
+                  className="w-full gap-1.5 border-dashed border-border/60 transition-all duration-150 hover:border-primary/50 hover:bg-primary/5 active:scale-[0.99]"
                 >
                   <PlusIcon className="size-4" />
                   添加更多步骤
@@ -512,8 +526,8 @@ export default function NewWorkflowPage() {
 
           {/* Error */}
           {createMutation.isError && (
-            <div className="mt-6 rounded-lg border border-destructive/50 bg-destructive/10 p-4">
-              <p className="text-sm text-destructive">
+            <div className="mt-6 rounded-lg border border-destructive/50 bg-destructive/10 p-4 shadow-sm">
+              <p className="text-sm font-medium text-destructive">
                 {(createMutation.error as Error).message}
               </p>
             </div>
@@ -522,8 +536,8 @@ export default function NewWorkflowPage() {
       </div>
 
       {/* Footer Actions */}
-      <footer className="border-t bg-background px-8 py-4">
-        <div className="mx-auto flex max-w-4xl items-center justify-between">
+      <footer className="border-t border-border/50 bg-background/80 backdrop-blur-sm px-8 py-4">
+        <div className="mx-auto flex w-full max-w-3xl items-center justify-between">
           <Button
             variant="outline"
             onClick={() =>
@@ -532,6 +546,7 @@ export default function NewWorkflowPage() {
                 : setCurrentStep(0)
             }
             disabled={createMutation.isPending}
+            className="transition-all duration-150 hover:bg-accent active:scale-95"
           >
             {currentStep === 0 ? "取消" : "上一步"}
           </Button>
@@ -541,6 +556,7 @@ export default function NewWorkflowPage() {
               <Button
                 onClick={() => setCurrentStep(1)}
                 disabled={!canProceedFromMetadata}
+                className="bg-primary text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
               >
                 下一步
               </Button>
@@ -548,9 +564,10 @@ export default function NewWorkflowPage() {
               <Button
                 onClick={handleCreate}
                 disabled={createMutation.isPending}
+                className="gap-1.5 bg-primary text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
               >
                 {createMutation.isPending && (
-                  <Loader2Icon className="animate-spin" />
+                  <Loader2Icon className="size-4 animate-spin" />
                 )}
                 创建工作流
               </Button>

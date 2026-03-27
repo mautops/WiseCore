@@ -45,11 +45,11 @@ export function WorkflowListCard({
           onOpen(w);
         }
       }}
-      className="cursor-pointer text-base shadow-none transition-[background-color,box-shadow] hover:bg-muted/35 hover:ring-foreground/12 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="group cursor-pointer text-base shadow-sm ring-1 ring-border/40 transition-all duration-200 hover:scale-[1.01] hover:shadow-md hover:ring-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.99]"
     >
-      <CardHeader className="gap-0 border-b border-border/60 pb-3">
-        <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-x-2 gap-y-1">
-          <CardTitle className="col-start-1 row-start-1 block min-w-0 max-w-full text-lg font-semibold leading-snug">
+      <CardHeader className="gap-2 border-b border-border/40 pb-4">
+        <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-2">
+          <CardTitle className="col-start-1 row-start-1 block min-w-0 max-w-full text-lg font-semibold leading-snug tracking-tight text-foreground">
             <span className="inline-flex min-w-0 max-w-full items-center gap-2">
               <span className="min-w-0 truncate">
                 {workflowDisplayTitle(w)}
@@ -73,7 +73,7 @@ export function WorkflowListCard({
               <Badge
                 variant="outline"
                 className={cn(
-                  "shrink-0 px-2 py-0.5 text-sm font-normal tabular-nums",
+                  "shrink-0 border px-2.5 py-0.5 text-xs font-medium tracking-wide transition-colors",
                   WORKFLOW_STATUS_BADGE[statusTone],
                 )}
               >
@@ -95,19 +95,21 @@ export function WorkflowListCard({
           </div>
         </div>
       </CardHeader>
-      {w.description?.trim() ? (
-        <CardContent className="min-w-0 max-w-full overflow-hidden pb-0">
-          <p
-            className="line-clamp-2 max-h-11 min-w-0 overflow-hidden wrap-break-word text-base leading-snug text-muted-foreground"
-            title={w.description.trim()}
-          >
-            {w.description.trim()}
-          </p>
-        </CardContent>
-      ) : null}
-      {(Boolean(w.category?.trim()) || tags.length > 0 || onExecute) && (
-        <CardFooter className="flex flex-wrap items-center justify-between gap-2 border-t border-border/60 pt-3">
-          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-muted-foreground">
+      <div className="flex min-h-0 flex-1 flex-col">
+        {w.description?.trim() ? (
+          <CardContent className="min-w-0 max-w-full overflow-hidden pb-4">
+            <p
+              className="line-clamp-2 max-h-12 min-w-0 overflow-hidden text-sm leading-relaxed text-muted-foreground/90"
+              title={w.description.trim()}
+            >
+              {w.description.trim()}
+            </p>
+          </CardContent>
+        ) : (
+          <div className="flex-1" />
+        )}
+        <CardFooter className="flex flex-wrap items-center justify-between gap-3 border-t border-border/40 pt-4 mt-auto">
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-2.5 gap-y-2 text-sm text-muted-foreground">
             {w.category?.trim() ? (
               <div className="flex min-w-0 max-w-full items-center gap-1.5">
                 <LayoutGridIcon
@@ -116,7 +118,7 @@ export function WorkflowListCard({
                 />
                 <Badge
                   variant="secondary"
-                  className="max-w-[min(10rem,100%)] truncate px-2 py-0.5 text-sm font-normal"
+                  className="max-w-[min(10rem,100%)] truncate border border-border/50 bg-secondary/50 px-2.5 py-0.5 text-xs font-medium transition-colors group-hover:border-primary/20"
                 >
                   {w.category.trim()}
                 </Badge>
@@ -135,7 +137,7 @@ export function WorkflowListCard({
                   <Badge
                     key={t}
                     variant="outline"
-                    className="max-w-28 truncate px-2 py-0.5 text-sm font-normal leading-snug"
+                    className="max-w-28 truncate border-border/50 px-2 py-0.5 text-xs font-medium transition-colors group-hover:border-primary/20 group-hover:bg-primary/5"
                   >
                     {t}
                   </Badge>
@@ -151,8 +153,9 @@ export function WorkflowListCard({
           {onExecute ? (
             <Button
               type="button"
-              variant="secondary"
-              className="pointer-events-auto shrink-0 text-base"
+              variant="default"
+              size="sm"
+              className="pointer-events-auto shrink-0 gap-1.5 bg-primary px-4 text-sm font-medium shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:scale-95"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -163,7 +166,7 @@ export function WorkflowListCard({
             </Button>
           ) : null}
         </CardFooter>
-      )}
+      </div>
     </Card>
   );
 }

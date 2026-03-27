@@ -31,7 +31,7 @@ export function ContentTopbar({
   endSlot,
 }: ContentTopbarProps) {
   return (
-    <header className="absolute inset-x-0 top-0 z-20 flex h-[52px] items-center border-b border-border bg-muted/90 backdrop-blur-md backdrop-saturate-150 supports-backdrop-filter:bg-muted/75">
+    <header className="absolute inset-x-0 top-0 z-20 flex h-14 items-center border-b border-border/50 bg-background/95 backdrop-blur-lg backdrop-saturate-150 supports-backdrop-filter:bg-background/80">
       {/* Left: toggle left sidebar */}
       <div className="flex shrink-0 items-center px-3">
         <Button
@@ -39,6 +39,7 @@ export function ContentTopbar({
           variant="ghost"
           onClick={onToggleLeftSidebar}
           title={showLeftSidebar ? "收起侧边栏" : "展开侧边栏"}
+          className="transition-all duration-200 hover:bg-accent/80 active:scale-95"
         >
           {showLeftSidebar ? (
             <PanelLeftCloseIcon className="size-4" />
@@ -53,13 +54,13 @@ export function ContentTopbar({
         <button
           type="button"
           onClick={onSearchOpen}
-          className="pointer-events-auto flex h-9 w-full max-w-md items-center gap-2 rounded-lg border border-border/60 bg-background/50 px-3 text-base text-muted-foreground transition-colors hover:bg-background/80"
+          className="pointer-events-auto flex h-10 w-full max-w-md items-center gap-2.5 rounded-lg border border-border/60 bg-muted/30 px-3.5 text-sm text-muted-foreground shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-muted/50 hover:shadow"
         >
-          <SearchIcon className="size-4 shrink-0 opacity-60" />
+          <SearchIcon className="size-4 shrink-0 opacity-70" />
           <span className="min-w-0 flex-1 truncate text-left">
             {searchPlaceholder}
           </span>
-          <kbd className="pointer-events-none hidden h-5 shrink-0 select-none items-center gap-0.5 rounded border border-border/60 bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground sm:inline-flex">
+          <kbd className="pointer-events-none hidden h-6 select-none items-center gap-0.5 rounded border border-border/60 bg-muted/50 px-2 font-mono text-[11px] font-medium text-muted-foreground shadow-sm sm:inline-flex">
             ⌘K
           </kbd>
         </button>
@@ -73,6 +74,7 @@ export function ContentTopbar({
           variant="ghost"
           onClick={onToggleRightSidebar}
           title={showRightSidebar ? "收起历史" : "展开历史"}
+          className="transition-all duration-200 hover:bg-accent/80 active:scale-95"
         >
           {showRightSidebar ? (
             <PanelRightCloseIcon className="size-4" />
@@ -83,7 +85,7 @@ export function ContentTopbar({
       </div>
 
       {/* Fade gradient below header */}
-      <div className="pointer-events-none absolute inset-x-0 top-full h-8 bg-linear-to-b from-muted/20 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-full h-8 bg-linear-to-b from-background/30 to-transparent" />
     </header>
   );
 }

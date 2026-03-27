@@ -11,14 +11,13 @@ import { useAppShell } from "../../app-shell";
 import { ToolCard } from "./tool-card";
 import { matchesToolFilter, QK_TOOLS } from "./tools-domain";
 import { ToolsToolbar } from "./tools-toolbar";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, WrenchIcon } from "lucide-react";
 
 export function ToolsClient() {
   const queryClient = useQueryClient();
   const { showLeftSidebar, toggleLeftSidebar } = useAppShell();
   const [filterQuery, setFilterQuery] = useState("");
   const [toggleName, setToggleName] = useState<string | null>(null);
-  const [hoverKey, setHoverKey] = useState<string | null>(null);
 
   const listQuery = useQuery({
     queryKey: QK_TOOLS,
@@ -36,8 +35,8 @@ export function ToolsClient() {
     [sorted, filterQuery],
   );
 
-  const hasDisabled = sorted.some((t) => !t.enabled);
-  const hasEnabled = sorted.some((t) => t.enabled);
+  const enabledCount = sorted.filter((t) => t.enabled).length;
+  const totalCount = sorted.length;
 
   const invalidate = useCallback(() => {
     void queryClient.invalidateQueries({ queryKey: QK_TOOLS });
@@ -69,6 +68,8 @@ export function ToolsClient() {
   };
 
   const batchBusy = batchMutation.isPending || listQuery.isLoading;
+  const allEnabled = totalCount > 0 && enabledCount === totalCount;
+  const allDisabled = enabledCount === 0;
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col bg-background text-base">
@@ -83,83 +84,100 @@ export function ToolsClient() {
         <ConsoleMirrorScrollPadding className="space-y-4">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">
-              <h1 className="mb-1 text-2xl font-semibold tracking-tight text-[#1a1a1a] dark:text-white/90">
+              <h1 className="mb-1 text-2xl font-semibold tracking-tight text-foreground">
                 内置工具
               </h1>
-              <p className="m-0 text-sm leading-relaxed text-[#999] dark:text-white/40">
+              <p className="m-0 text-sm leading-relaxed text-muted-foreground">
                 内置工具开关由当前活动智能体配置保存. 工具调用拦截与文件防护见{" "}
                 <Link
                   href="/settings/security"
-                  className="font-medium text-[#615ced] underline underline-offset-2 hover:underline dark:text-[#8b84f5]"
+                  className="font-medium text-primary underline-offset-2 hover:underline"
                 >
                   安全
-                </Link>
+                </Link>{" "}
                 页.
               </p>
+              {totalCount > 0 && (
+                <p className="mt-2 text-xs text-muted-foreground">
+                  已启用 {enabledCount}/{totalCount} 个工具
+                </p>
+              )}
             </div>
             <div
-              className="flex shrink-0 gap-1 self-center rounded-[10px] bg-black/4 p-1 dark:bg-white/6"
+              className="flex shrink-0 gap-1 self-center rounded-lg bg-muted/60 p-1"
               role="group"
               aria-label="批量开关"
             >
               <button
                 type="button"
-                disabled={batchBusy || !hasDisabled}
+                disabled={batchBusy || allEnabled}
                 onClick={() => batchMutation.mutate("enable")}
                 className={cn(
-                  "rounded-[7px] border-none px-3.5 py-1.5 text-[13px] transition-colors",
-                  !hasDisabled
-                    ? "cursor-not-allowed bg-white text-[#615ced] shadow-[0_1px_4px_rgba(0,0,0,0.1)] hover:bg-white hover:text-[#615ced] dark:bg-card dark:hover:bg-card"
-                    : "cursor-pointer bg-transparent text-[#999] hover:bg-black/4 hover:text-[#666] disabled:cursor-not-allowed disabled:opacity-60 dark:text-white/45 dark:hover:bg-white/8 dark:hover:text-white/70",
+                  "flex items-center gap-1.5 rounded-md border-none px-3.5 py-1.5 text-sm font-medium transition-all",
+                  allEnabled
+                    ? "cursor-not-allowed bg-primary text-primary-foreground shadow-sm"
+                    : batchBusy
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer bg-transparent text-muted-foreground hover:bg-background hover:text-foreground hover:shadow-sm active:scale-95",
                 )}
               >
+                {batchMutation.isPending && batchMutation.variables === "enable" && (
+                  <Loader2Icon className="size-3.5 animate-spin" />
+                )}
                 全部启用
               </button>
               <button
                 type="button"
-                disabled={batchBusy || !hasEnabled}
+                disabled={batchBusy || allDisabled}
                 onClick={() => batchMutation.mutate("disable")}
                 className={cn(
-                  "rounded-[7px] border-none px-3.5 py-1.5 text-[13px] transition-colors",
-                  !hasEnabled
-                    ? "cursor-not-allowed bg-white text-[#615ced] shadow-[0_1px_4px_rgba(0,0,0,0.1)] hover:bg-white hover:text-[#615ced] dark:bg-card dark:hover:bg-card"
-                    : "cursor-pointer bg-transparent text-[#999] hover:bg-black/4 hover:text-[#666] disabled:cursor-not-allowed disabled:opacity-60 dark:text-white/45 dark:hover:bg-white/8 dark:hover:text-white/70",
+                  "flex items-center gap-1.5 rounded-md border-none px-3.5 py-1.5 text-sm font-medium transition-all",
+                  allDisabled
+                    ? "cursor-not-allowed bg-primary text-primary-foreground shadow-sm"
+                    : batchBusy
+                      ? "cursor-not-allowed opacity-50"
+                      : "cursor-pointer bg-transparent text-muted-foreground hover:bg-background hover:text-foreground hover:shadow-sm active:scale-95",
                 )}
               >
+                {batchMutation.isPending && batchMutation.variables === "disable" && (
+                  <Loader2Icon className="size-3.5 animate-spin" />
+                )}
                 全部关闭
               </button>
             </div>
           </div>
 
           {listQuery.isError && (
-            <p className="text-destructive">
+            <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
               {(listQuery.error as Error).message}
-            </p>
+            </div>
           )}
           {listQuery.isLoading && (
-            <div className="py-16 text-center text-sm text-[#999] dark:text-white/35">
-              <Loader2Icon className="mx-auto mb-3 size-8 animate-spin" />
-              <p className="m-0">加载中</p>
+            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
+              <Loader2Icon className="mb-3 size-8 animate-spin" />
+              <p className="m-0 text-sm">加载中...</p>
             </div>
           )}
           {!listQuery.isLoading &&
             !listQuery.isError &&
             sorted.length === 0 && (
-              <p className="py-12 text-center text-sm text-[#999] dark:text-white/35">
-                暂无内置工具配置, 请检查服务端 agent 配置.
-              </p>
+              <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
+                <WrenchIcon className="mb-3 size-10 opacity-40" />
+                <p className="m-0 text-sm">暂无内置工具配置, 请检查服务端 agent 配置.</p>
+              </div>
             )}
           {!listQuery.isLoading &&
             sorted.length > 0 &&
             filtered.length === 0 && (
-              <p className="py-12 text-center text-sm text-[#999] dark:text-white/35">
-                无匹配项, 调整搜索条件.
-              </p>
+              <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
+                <WrenchIcon className="mb-3 size-10 opacity-40" />
+                <p className="m-0 text-sm">无匹配项, 调整搜索条件.</p>
+              </div>
             )}
           {!listQuery.isLoading &&
             !listQuery.isError &&
             filtered.length > 0 && (
-              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-6">
+              <div className="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-5">
                 {filtered.map((tool) => (
                   <ToolCard
                     key={tool.name}
@@ -167,8 +185,6 @@ export function ToolsClient() {
                     toggling={
                       toggleMutation.isPending && toggleName === tool.name
                     }
-                    isHover={hoverKey === tool.name}
-                    onHoverChange={(h) => setHoverKey(h ? tool.name : null)}
                     onToggle={() => handleToggle(tool)}
                   />
                 ))}

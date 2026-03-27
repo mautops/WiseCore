@@ -11,8 +11,9 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import type { SkillSpec } from "@/lib/skills-api";
-import { Loader2Icon } from "lucide-react";
+import { Loader2Icon, InfoIcon } from "lucide-react";
 import { sourceLabel } from "./skills-domain";
+import { cn } from "@/lib/utils";
 
 export function SkillDetailSheet({
   open,
@@ -43,68 +44,76 @@ export function SkillDetailSheet({
         aria-describedby={undefined}
         className="flex w-full flex-col gap-0 p-0 sm:max-w-[520px]"
       >
-        <SheetHeader className="border-b border-[#f1f2f6] px-6 py-4 text-left dark:border-white/8">
-          <SheetTitle className="pr-8 text-lg font-semibold text-[#1a1a1a] dark:text-white/90">
+        <SheetHeader className="border-b border-border/60 px-6 py-4 text-left">
+          <SheetTitle className="pr-8 text-lg font-semibold">
             {skill?.name ?? "—"}
           </SheetTitle>
           {skill ? (
-            <p className="mt-2 flex items-center gap-1.5 text-xs text-[#999] dark:text-white/35">
+            <p className="mt-1.5 flex items-center gap-2 text-xs text-muted-foreground">
               <span
-                className={
+                className={cn(
+                  "size-1.5 rounded-full",
                   skill.enabled
-                    ? "size-1.5 rounded-full bg-[#52c41a]"
-                    : "size-1.5 rounded-full bg-[#d9d9d9] dark:bg-white/20"
-                }
+                    ? "animate-pulse bg-emerald-500"
+                    : "bg-muted-foreground/40"
+                )}
               />
               {skill.enabled ? "已启用" : "未启用"}
             </p>
           ) : null}
         </SheetHeader>
+
         {skill && (
-          <div className="flex min-h-0 flex-1 flex-col gap-3 p-4">
-            <div className="grid gap-2 text-sm">
-              <div>
-                <div className="text-xs text-[#999] dark:text-white/30">来源</div>
-                <div className="mt-1">
-                  <span
-                    className={
-                      customized
-                        ? "inline-block rounded px-1.5 py-px text-xs whitespace-nowrap bg-[rgba(250,140,22,0.1)] text-[#fa8c16]"
-                        : "inline-block rounded px-1.5 py-px text-xs whitespace-nowrap bg-[rgba(97,92,237,0.1)] text-[#615ced]"
-                    }
-                  >
-                    {sourceLabel(skill.source)}
-                  </span>
-                </div>
+          <div className="flex min-h-0 flex-1 flex-col gap-4 p-4">
+            {/* Meta Info */}
+            <div className="grid gap-3 text-sm">
+              <div className="flex items-center gap-3">
+                <span className="text-muted-foreground/70">来源</span>
+                <span
+                  className={cn(
+                    "rounded px-2 py-0.5 text-xs font-medium",
+                    customized
+                      ? "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400"
+                      : "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400"
+                  )}
+                >
+                  {sourceLabel(skill.source)}
+                </span>
               </div>
-              <div>
-                <div className="text-xs text-[#999] dark:text-white/30">路径</div>
+              <div className="flex items-start gap-3">
+                <span className="shrink-0 text-muted-foreground/70">路径</span>
                 <div
-                  className="mt-1 break-all rounded-lg border border-[#eceff6] bg-[#f5f6fa] px-2.5 py-2 text-xs text-[#525866] dark:border-white/8 dark:bg-white/5 dark:text-white/65"
+                  className="flex-1 break-all rounded-md bg-muted/40 px-2.5 py-1.5 font-mono text-xs text-muted-foreground"
                   title={skill.path}
                 >
                   {skill.path}
                 </div>
               </div>
             </div>
+
+            {/* Description */}
             {skill.description ? (
-              <div>
-                <div className="text-xs text-[#999] dark:text-white/30">描述</div>
-                <p className="mt-1 text-sm leading-relaxed text-[#525866] dark:text-white/65">
+              <div className="text-sm">
+                <div className="mb-1 text-xs text-muted-foreground/70">描述</div>
+                <p className="leading-relaxed text-muted-foreground">
                   {skill.description}
                 </p>
               </div>
             ) : null}
-            <ScrollArea className="min-h-0 flex-1 rounded-md border border-[#d9d9d9] bg-background dark:border-white/10">
+
+            {/* Editor */}
+            <ScrollArea className="min-h-0 flex-1 rounded-lg border border-border/60 bg-muted/20">
               <Textarea
                 value={editContent}
                 onChange={(e) => onEditContentChange(e.target.value)}
                 readOnly={!customized}
                 disabled={!customized}
                 spellCheck={false}
-                className="min-h-[min(60vh,300px)] resize-none border-0 bg-transparent font-mono text-sm focus-visible:ring-0 dark:bg-transparent"
+                className="min-h-[min(60vh,300px)] resize-none border-0 bg-transparent font-mono text-sm focus-visible:ring-0"
               />
             </ScrollArea>
+
+            {/* Actions */}
             {customized && (
               <div className="flex flex-col gap-2">
                 {saveMutation.isError && (
@@ -113,7 +122,7 @@ export function SkillDetailSheet({
                   </p>
                 )}
                 <Button
-                  className="self-end bg-[#615ced] text-white hover:bg-[#615ced]/90"
+                  className="self-end"
                   disabled={!dirty || saveMutation.isPending}
                   onClick={() =>
                     saveMutation.mutate({
@@ -129,10 +138,13 @@ export function SkillDetailSheet({
                 </Button>
               </div>
             )}
+
+            {/* Read-only Notice */}
             {!customized && (
-              <div className="rounded border border-[#ffe58f] bg-[#fffbe6] px-3 py-3 dark:border-[#665500]/40 dark:bg-[#3d3500]/40">
-                <p className="m-0 text-xs text-[#8c8c8c] dark:text-white/50">
-                  内置 Skill 无法在此直接保存. 若需修改请复制为自定义 skill 或使用新建.
+              <div className="flex items-start gap-2 rounded-lg border border-amber-200/60 bg-amber-50/50 px-3 py-2.5 dark:border-amber-500/20 dark:bg-amber-500/10">
+                <InfoIcon className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" />
+                <p className="text-xs leading-relaxed text-amber-700 dark:text-amber-300">
+                  内置 Skill 无法直接保存。如需修改，请新建自定义 skill 或复制此内容。
                 </p>
               </div>
             )}

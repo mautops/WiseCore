@@ -37,7 +37,8 @@ class ServiceDescriptor:
 
     Attributes:
         name: Unique service identifier (e.g., 'memory_manager')
-        service_class: Class to instantiate (e.g., MemoryManager)
+        service_class: Class to instantiate (e.g., MemoryManager) or
+            callable that returns a class given the workspace
         init_args: Callable that returns init kwargs for the service
         post_init: Optional hook called after creation (for setup logic)
         start_method: Name of method to call after creation (e.g., 'start')
@@ -50,7 +51,7 @@ class ServiceDescriptor:
     """
 
     name: str
-    service_class: Optional[type] = None
+    service_class: Optional[Union[type, Callable[["Workspace"], type]]] = None
     init_args: Optional[Callable[[Workspace], dict]] = None
     post_init: Optional[
         Union[
@@ -249,13 +250,19 @@ class ServiceManager:
         if not descriptor.service_class:
             return None
 
+        # service_class may be a callable that resolves to the actual class
+        if not isinstance(descriptor.service_class, type):
+            service_cls = descriptor.service_class(self.workspace)
+        else:
+            service_cls = descriptor.service_class
+
         # Get init args from callable
         init_kwargs = {}
         if descriptor.init_args:
             init_kwargs = descriptor.init_args(self.workspace)
 
         # Instantiate service
-        service = descriptor.service_class(**init_kwargs)
+        service = service_cls(**init_kwargs)
         self.services[descriptor.name] = service
         return service
 

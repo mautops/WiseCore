@@ -322,14 +322,14 @@ export function SecurityClient() {
         <ScrollArea className="min-h-0 flex-1">
           <ConsoleMirrorScrollPadding className="space-y-0">
             <header className="mb-5">
-              <h1 className="text-[22px] font-bold tracking-tight text-[#1a1a1a] dark:text-white/90">
+              <h1 className="text-[22px] font-bold tracking-tight text-foreground">
                 安全
               </h1>
-              <p className="mt-1.5 text-sm leading-relaxed text-[#999] dark:text-white/45">
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                 Tool Guard, File Guard 与 Skill 扫描与{" "}
                 <Link
                   href="/agent/tools"
-                  className="font-medium text-[#615ced] underline underline-offset-2 hover:underline dark:text-[#8b84f5]"
+                  className="font-medium text-primary underline underline-offset-2 hover:text-primary/80"
                 >
                   内置工具
                 </Link>{" "}
@@ -340,25 +340,25 @@ export function SecurityClient() {
             <Tabs defaultValue="tool-guard" className="w-full">
               <TabsList
                 variant="line"
-                className="mb-5 h-auto min-h-10 w-full flex-wrap justify-start gap-6 rounded-none border-0 border-b border-[#f0f0f0] bg-transparent p-0 dark:border-white/10"
+                className="mb-5 h-auto min-h-10 w-full flex-wrap justify-start gap-6 rounded-none border-0 border-b border-border/50 bg-transparent p-0"
               >
                 <TabsTrigger
                   value="tool-guard"
-                  className="relative flex-none gap-1.5 rounded-none border-0 bg-transparent px-1 py-2.5 text-sm font-medium text-[#666] shadow-none hover:text-[#615ced] data-[state=active]:font-semibold data-[state=active]:text-[#615ced] data-[state=active]:shadow-none data-[state=active]:after:bg-[#615ced] dark:text-white/70 dark:data-[state=active]:text-[#8b87f5] dark:data-[state=active]:after:bg-[#8b87f5] [&_svg]:size-4"
+                  className="relative flex-none gap-1.5 rounded-none border-0 bg-transparent px-1 py-2.5 text-sm font-medium text-muted-foreground shadow-none transition-colors duration-150 hover:text-foreground data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:after:bg-primary [&_svg]:size-4"
                 >
                   <ShieldIcon className="size-4" />
                   Tool Guard
                 </TabsTrigger>
                 <TabsTrigger
                   value="file-guard"
-                  className="relative flex-none gap-1.5 rounded-none border-0 bg-transparent px-1 py-2.5 text-sm font-medium text-[#666] shadow-none hover:text-[#615ced] data-[state=active]:font-semibold data-[state=active]:text-[#615ced] data-[state=active]:shadow-none data-[state=active]:after:bg-[#615ced] dark:text-white/70 dark:data-[state=active]:text-[#8b87f5] dark:data-[state=active]:after:bg-[#8b87f5] [&_svg]:size-4"
+                  className="relative flex-none gap-1.5 rounded-none border-0 bg-transparent px-1 py-2.5 text-sm font-medium text-muted-foreground shadow-none transition-colors duration-150 hover:text-foreground data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:after:bg-primary [&_svg]:size-4"
                 >
                   <FileLock2Icon className="size-4" />
                   文件防护
                 </TabsTrigger>
                 <TabsTrigger
                   value="skill-scanner"
-                  className="relative flex-none gap-1.5 rounded-none border-0 bg-transparent px-1 py-2.5 text-sm font-medium text-[#666] shadow-none hover:text-[#615ced] data-[state=active]:font-semibold data-[state=active]:text-[#615ced] data-[state=active]:shadow-none data-[state=active]:after:bg-[#615ced] dark:text-white/70 dark:data-[state=active]:text-[#8b87f5] dark:data-[state=active]:after:bg-[#8b87f5] [&_svg]:size-4"
+                  className="relative flex-none gap-1.5 rounded-none border-0 bg-transparent px-1 py-2.5 text-sm font-medium text-muted-foreground shadow-none transition-colors duration-150 hover:text-foreground data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none data-[state=active]:after:bg-primary [&_svg]:size-4"
                 >
                   <ScanLineIcon className="size-4" />
                   Skill 扫描
@@ -366,7 +366,7 @@ export function SecurityClient() {
               </TabsList>
 
               <TabsContent value="tool-guard" className="mt-0 space-y-0">
-                <p className="mb-5 text-sm leading-relaxed text-[#888] dark:text-white/45">
+                <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
                   配置需拦截的高风险工具调用与自定义规则.
                   内置规则与自定义规则合并展示, 可通过开关单独禁用某条规则.
                 </p>
@@ -401,7 +401,7 @@ export function SecurityClient() {
                   ) : (
                     <>
                       <div className="flex items-center justify-between gap-4">
-                        <span className="text-sm font-medium text-[#333] dark:text-white/85">
+                        <span className="text-sm font-medium text-foreground">
                           启用 Tool Guard
                         </span>
                         <Switch
@@ -409,10 +409,11 @@ export function SecurityClient() {
                           onCheckedChange={(v) =>
                             setTgDraft({ ...tgDraft, enabled: v })
                           }
+                          className="transition-all duration-200"
                         />
                       </div>
                       <div className="space-y-2">
-                        <span className="text-sm font-medium text-[#333] dark:text-white/85">
+                        <span className="text-sm font-medium text-foreground">
                           保护范围
                         </span>
                         <Select
@@ -451,7 +452,7 @@ export function SecurityClient() {
                         ) : null}
                       </div>
                       <div className="space-y-2">
-                        <span className="text-sm font-medium text-[#333] dark:text-white/85">
+                        <span className="text-sm font-medium text-foreground">
                           全局拒绝的工具名 (每行)
                         </span>
                         <Textarea
@@ -471,12 +472,12 @@ export function SecurityClient() {
                 </ConsoleMirrorPanel>
 
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                  <h2 className="text-base font-semibold text-[#1a1a1a] dark:text-white/90">
+                  <h2 className="text-base font-semibold text-foreground">
                     规则列表
                   </h2>
                   <Button
                     size="sm"
-                    className={consolePrimaryButtonClass("gap-1.5")}
+                    className="gap-1.5 bg-primary px-4 text-sm font-medium shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95"
                     onClick={openNewRule}
                     disabled={!tgDraft?.enabled}
                   >
@@ -485,7 +486,7 @@ export function SecurityClient() {
                   </Button>
                 </div>
 
-                <ConsoleMirrorPanel className="p-0">
+                <ConsoleMirrorPanel className="overflow-hidden rounded-lg border border-border/50 p-0 shadow-sm">
                   {toolGuardQuery.isLoading ||
                   builtinQuery.isLoading ||
                   !tgDraft ? (
@@ -496,21 +497,21 @@ export function SecurityClient() {
                   ) : (
                     <div className="overflow-x-auto">
                       <table className="w-full min-w-[720px] text-left text-sm">
-                        <thead className="border-b border-[#f0f0f0] bg-[#fafafa] dark:border-white/10 dark:bg-white/[0.04]">
+                        <thead className="border-b border-border/50 bg-muted/30">
                           <tr>
-                            <th className="px-4 py-3 font-semibold text-[#333] dark:text-white/80">
+                            <th className="px-4 py-3 text-sm font-semibold text-foreground">
                               规则 ID
                             </th>
-                            <th className="px-4 py-3 font-semibold text-[#333] dark:text-white/80">
+                            <th className="px-4 py-3 text-sm font-semibold text-foreground">
                               严重级别
                             </th>
-                            <th className="px-4 py-3 font-semibold text-[#333] dark:text-white/80">
+                            <th className="px-4 py-3 text-sm font-semibold text-foreground">
                               描述
                             </th>
-                            <th className="px-4 py-3 font-semibold text-[#333] dark:text-white/80">
+                            <th className="px-4 py-3 text-sm font-semibold text-foreground">
                               来源
                             </th>
-                            <th className="px-4 py-3 text-right font-semibold text-[#333] dark:text-white/80">
+                            <th className="px-4 py-3 text-right text-sm font-semibold text-foreground">
                               操作
                             </th>
                           </tr>
@@ -519,7 +520,7 @@ export function SecurityClient() {
                           {mergedRules.map((r) => (
                             <tr
                               key={`${r.source}-${r.id}`}
-                              className={`border-b border-[#f0f0f0] last:border-0 dark:border-white/8 ${r.disabled ? "opacity-40" : ""}`}
+                              className={`group border-b border-border/50 last:border-0 transition-colors duration-150 hover:bg-accent/50 ${r.disabled ? "opacity-40" : ""}`}
                             >
                               <td className="max-w-[220px] truncate px-4 py-3 font-mono text-xs">
                                 {r.id}
@@ -543,8 +544,8 @@ export function SecurityClient() {
                                   variant="outline"
                                   className={
                                     r.source === "builtin"
-                                      ? "border-blue-500/30 text-blue-700 dark:text-blue-300"
-                                      : "border-emerald-500/30 text-emerald-700 dark:text-emerald-300"
+                                      ? "border-blue-500/50 bg-blue-500/15 text-blue-700 dark:text-blue-300"
+                                      : "border-emerald-500/50 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300"
                                   }
                                 >
                                   {r.source === "builtin" ? "内置" : "自定义"}
@@ -561,6 +562,7 @@ export function SecurityClient() {
                                           onCheckedChange={() =>
                                             toggleMergedRule(r.id, r.disabled)
                                           }
+                                          className="transition-all duration-200"
                                         />
                                       </span>
                                     </TooltipTrigger>
@@ -573,7 +575,7 @@ export function SecurityClient() {
                                       type="button"
                                       variant="ghost"
                                       size="sm"
-                                      className="h-8 gap-1 px-2"
+                                      className="h-8 gap-1 px-2 text-sm transition-all duration-150 hover:bg-muted active:scale-95"
                                       disabled={!tgDraft.enabled}
                                       onClick={() => setPreviewRule(r)}
                                     >
@@ -586,7 +588,7 @@ export function SecurityClient() {
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="size-8"
+                                        className="size-8 transition-all duration-150 hover:bg-primary/10 hover:text-primary active:scale-90"
                                         disabled={!tgDraft.enabled}
                                         onClick={() => openEditMergedRule(r)}
                                       >
@@ -596,7 +598,7 @@ export function SecurityClient() {
                                         type="button"
                                         variant="ghost"
                                         size="icon"
-                                        className="size-8 text-destructive hover:text-destructive"
+                                        className="size-8 text-destructive transition-all duration-150 hover:bg-destructive/10 active:scale-90"
                                         disabled={!tgDraft.enabled}
                                         onClick={() =>
                                           deleteCustomRuleById(r.id)
@@ -627,7 +629,7 @@ export function SecurityClient() {
                   </Alert>
                 ) : null}
 
-                <div className="mt-2 flex justify-end gap-2 border-t border-[#f0f0f0] pt-4 dark:border-white/10">
+                <div className="mt-2 flex justify-end gap-2 border-t border-border/50 pt-4">
                   <Button
                     variant="outline"
                     disabled={putTg.isPending}
@@ -649,25 +651,29 @@ export function SecurityClient() {
               </TabsContent>
 
               <TabsContent value="file-guard" className="mt-0">
-                <p className="mb-5 text-sm leading-relaxed text-[#888] dark:text-white/45">
+                <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
                   限制智能体可读取或修改的文件路径, 降低敏感文件泄露风险.
                 </p>
                 <ConsoleMirrorPanel className="space-y-4">
                   {fileGuardQuery.isLoading ? (
-                    <Loader2Icon className="size-4 animate-spin" />
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Loader2Icon className="size-4 animate-spin" />
+                      加载中
+                    </div>
                   ) : (
                     <>
                       <div className="flex items-center justify-between gap-4">
-                        <span className="text-sm font-medium text-[#333] dark:text-white/85">
+                        <span className="text-sm font-medium text-foreground">
                           启用路径保护
                         </span>
                         <Switch
                           checked={fgEnabled}
                           onCheckedChange={setFgEnabled}
+                          className="transition-all duration-200"
                         />
                       </div>
                       <div className="space-y-2">
-                        <span className="text-sm font-medium text-[#333] dark:text-white/85">
+                        <span className="text-sm font-medium text-foreground">
                           敏感路径 (每行)
                         </span>
                         <Textarea
@@ -702,18 +708,21 @@ export function SecurityClient() {
               </TabsContent>
 
               <TabsContent value="skill-scanner" className="mt-0">
-                <p className="mb-5 text-sm leading-relaxed text-[#888] dark:text-white/45">
+                <p className="mb-5 text-sm leading-relaxed text-muted-foreground">
                   扫描工作区自定义 Skill 的静态风险 (例如可疑外部调用),
                   可配置拦截, 警告或关闭, 并维护白名单与扫描记录.
                 </p>
                 <ConsoleMirrorPanel className="space-y-4">
                   {skillScannerQuery.isLoading || !scDraft ? (
-                    <Loader2Icon className="size-4 animate-spin" />
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Loader2Icon className="size-4 animate-spin" />
+                      加载中
+                    </div>
                   ) : (
                     <>
                       <div className="flex flex-wrap items-end gap-4">
                         <div className="space-y-2">
-                          <span className="text-sm font-medium leading-none">
+                          <span className="text-sm font-medium leading-none text-foreground">
                             模式
                           </span>
                           <Select
@@ -736,7 +745,7 @@ export function SecurityClient() {
                           </Select>
                         </div>
                         <div className="space-y-2">
-                          <span className="text-sm font-medium leading-none">
+                          <span className="text-sm font-medium leading-none text-foreground">
                             超时 (秒)
                           </span>
                           <Input
@@ -756,12 +765,13 @@ export function SecurityClient() {
                       </div>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-sm font-medium leading-none">
+                          <span className="text-sm font-medium leading-none text-foreground">
                             白名单
                           </span>
                           <Button
                             size="sm"
                             variant="outline"
+                            className="transition-all duration-150 hover:bg-accent active:scale-95"
                             onClick={() => setWlOpen(true)}
                           >
                             添加技能
@@ -772,18 +782,19 @@ export function SecurityClient() {
                             暂无白名单
                           </p>
                         ) : (
-                          <div className="space-y-2 rounded-md border border-border p-2">
+                          <div className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-2">
                             {scDraft.whitelist.map((w) => (
                               <div
                                 key={w.skill_name}
-                                className="flex items-center justify-between gap-2 text-sm"
+                                className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-sm transition-colors duration-150 hover:bg-accent/50"
                               >
-                                <span className="truncate font-mono">
+                                <span className="truncate font-mono text-foreground">
                                   {w.skill_name}
                                 </span>
                                 <Button
                                   size="sm"
                                   variant="ghost"
+                                  className="h-7 px-2 text-xs text-muted-foreground transition-all duration-150 hover:bg-destructive/10 hover:text-destructive active:scale-95"
                                   disabled={removeWl.isPending}
                                   onClick={() => removeWl.mutate(w.skill_name)}
                                 >
@@ -818,12 +829,13 @@ export function SecurityClient() {
 
                       <div className="space-y-2">
                         <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="text-sm font-medium leading-none">
+                          <span className="text-sm font-medium leading-none text-foreground">
                             拦截 / 警告记录
                           </span>
                           <Button
                             size="sm"
                             variant="outline"
+                            className="transition-all duration-150 hover:bg-destructive/10 hover:text-destructive active:scale-95"
                             disabled={
                               clearHistory.isPending ||
                               (blockedQuery.data?.length ?? 0) === 0
@@ -834,7 +846,10 @@ export function SecurityClient() {
                           </Button>
                         </div>
                         {blockedQuery.isLoading ? (
-                          <Loader2Icon className="size-4 animate-spin" />
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Loader2Icon className="size-4 animate-spin" />
+                            加载中
+                          </div>
                         ) : blockedQuery.isError ? (
                           <Alert variant="destructive">
                             <AlertDescription>
@@ -848,14 +863,14 @@ export function SecurityClient() {
                             暂无记录
                           </p>
                         ) : (
-                          <div className="space-y-2 rounded-md border border-border p-2">
+                          <div className="space-y-1.5 rounded-lg border border-border/50 bg-muted/20 p-2">
                             {(blockedQuery.data ?? []).map((rec, i) => (
                               <div
                                 key={`${rec.skill_name}-${rec.blocked_at}-${i}`}
-                                className="flex flex-wrap items-end justify-between gap-2 border-b border-border/60 pb-2 text-sm last:border-0"
+                                className="flex flex-wrap items-end justify-between gap-2 border-b border-border/50 px-2 py-2 text-sm last:border-0 transition-colors duration-150 hover:bg-accent/50"
                               >
                                 <div className="min-w-0">
-                                  <p className="font-mono font-medium">
+                                  <p className="font-mono font-medium text-foreground">
                                     {rec.skill_name}
                                   </p>
                                   <p className="text-xs text-muted-foreground">
@@ -866,6 +881,7 @@ export function SecurityClient() {
                                 <Button
                                   size="sm"
                                   variant="ghost"
+                                  className="h-7 px-2 text-xs text-muted-foreground transition-all duration-150 hover:bg-destructive/10 hover:text-destructive active:scale-95"
                                   disabled={removeBlocked.isPending}
                                   onClick={() => removeBlocked.mutate(i)}
                                 >
@@ -897,7 +913,7 @@ export function SecurityClient() {
             {ruleEdit ? (
               <div className="space-y-3">
                 <div className="space-y-1">
-                  <span className="text-sm font-medium">id</span>
+                  <span className="text-sm font-medium text-foreground">id</span>
                   <Input
                     value={ruleEdit.id}
                     onChange={(e) =>
@@ -907,7 +923,7 @@ export function SecurityClient() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium">tools (每行)</span>
+                  <span className="text-sm font-medium text-foreground">tools (每行)</span>
                   <Textarea
                     rows={2}
                     value={linesFromList(ruleEdit.tools)}
@@ -921,7 +937,7 @@ export function SecurityClient() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium">params (每行)</span>
+                  <span className="text-sm font-medium text-foreground">params (每行)</span>
                   <Textarea
                     rows={2}
                     value={linesFromList(ruleEdit.params)}
@@ -936,7 +952,7 @@ export function SecurityClient() {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div className="space-y-1">
-                    <span className="text-sm font-medium">category</span>
+                    <span className="text-sm font-medium text-foreground">category</span>
                     <Input
                       value={ruleEdit.category}
                       onChange={(e) =>
@@ -945,7 +961,7 @@ export function SecurityClient() {
                     />
                   </div>
                   <div className="space-y-1">
-                    <span className="text-sm font-medium">severity</span>
+                    <span className="text-sm font-medium text-foreground">severity</span>
                     <Input
                       value={ruleEdit.severity}
                       onChange={(e) =>
@@ -955,7 +971,7 @@ export function SecurityClient() {
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium">patterns (每行)</span>
+                  <span className="text-sm font-medium text-foreground">patterns (每行)</span>
                   <Textarea
                     rows={4}
                     value={linesFromList(ruleEdit.patterns)}
@@ -969,7 +985,7 @@ export function SecurityClient() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium">
+                  <span className="text-sm font-medium text-foreground">
                     exclude_patterns (每行)
                   </span>
                   <Textarea
@@ -985,7 +1001,7 @@ export function SecurityClient() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium">description</span>
+                  <span className="text-sm font-medium text-foreground">description</span>
                   <Textarea
                     rows={2}
                     value={ruleEdit.description}
@@ -995,7 +1011,7 @@ export function SecurityClient() {
                   />
                 </div>
                 <div className="space-y-1">
-                  <span className="text-sm font-medium">remediation</span>
+                  <span className="text-sm font-medium text-foreground">remediation</span>
                   <Textarea
                     rows={2}
                     value={ruleEdit.remediation}
@@ -1007,10 +1023,10 @@ export function SecurityClient() {
               </div>
             ) : null}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setRuleOpen(false)}>
+              <Button variant="outline" className="transition-all duration-150 hover:bg-accent active:scale-95" onClick={() => setRuleOpen(false)}>
                 取消
               </Button>
-              <Button onClick={saveRule}>确定</Button>
+              <Button className="bg-primary text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95" onClick={saveRule}>确定</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -1026,7 +1042,7 @@ export function SecurityClient() {
             </DialogHeader>
             <div className="space-y-3">
               <div className="space-y-1">
-                <span className="text-sm font-medium">skill_name</span>
+                <span className="text-sm font-medium text-foreground">skill_name</span>
                 <Input
                   value={wlName}
                   onChange={(e) => setWlName(e.target.value)}
@@ -1034,7 +1050,7 @@ export function SecurityClient() {
                 />
               </div>
               <div className="space-y-1">
-                <span className="text-sm font-medium">content_hash (可选)</span>
+                <span className="text-sm font-medium text-foreground">content_hash (可选)</span>
                 <Input
                   value={wlHash}
                   onChange={(e) => setWlHash(e.target.value)}
@@ -1052,10 +1068,11 @@ export function SecurityClient() {
               ) : null}
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setWlOpen(false)}>
+              <Button variant="outline" className="transition-all duration-150 hover:bg-accent active:scale-95" onClick={() => setWlOpen(false)}>
                 取消
               </Button>
               <Button
+                className="bg-primary text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
                 disabled={!wlName.trim() || addWl.isPending}
                 onClick={() => addWl.mutate()}
               >
@@ -1128,7 +1145,7 @@ export function SecurityClient() {
               </div>
             ) : null}
             <DialogFooter>
-              <Button variant="outline" onClick={() => setPreviewRule(null)}>
+              <Button variant="outline" className="transition-all duration-150 hover:bg-accent active:scale-95" onClick={() => setPreviewRule(null)}>
                 关闭
               </Button>
             </DialogFooter>

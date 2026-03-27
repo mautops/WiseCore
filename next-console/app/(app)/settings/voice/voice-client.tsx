@@ -129,16 +129,19 @@ export function VoiceClient() {
             </Alert>
           ) : null}
 
-          <Card>
+          <Card className="transition-all duration-200 hover:shadow-md">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">转写后端</CardTitle>
+              <CardTitle className="text-base font-semibold text-foreground">转写后端</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {typeQuery.isLoading ? (
-                <Loader2Icon className="size-4 animate-spin" />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2Icon className="size-4 animate-spin" />
+                  加载中...
+                </div>
               ) : (
                 <>
-                  <span className="text-sm font-medium leading-none">
+                  <span className="text-sm font-medium leading-none text-foreground">
                     transcription_provider_type
                   </span>
                   <Select
@@ -148,7 +151,7 @@ export function VoiceClient() {
                       putType.mutate(v as TranscriptionProviderType)
                     }
                   >
-                    <SelectTrigger className="max-w-md">
+                    <SelectTrigger className="max-w-md transition-all duration-150 hover:border-primary/50 focus:ring-primary/30">
                       <SelectValue placeholder="选择" />
                     </SelectTrigger>
                     <SelectContent>
@@ -173,13 +176,16 @@ export function VoiceClient() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="transition-all duration-200 hover:shadow-md">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">音频消息模式</CardTitle>
+              <CardTitle className="text-base font-semibold text-foreground">音频消息模式</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {audioQuery.isLoading ? (
-                <Loader2Icon className="size-4 animate-spin" />
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2Icon className="size-4 animate-spin" />
+                  加载中...
+                </div>
               ) : (
                 <>
                   <p className="text-xs text-muted-foreground">
@@ -190,7 +196,7 @@ export function VoiceClient() {
                     disabled={putAudio.isPending}
                     onValueChange={(v) => putAudio.mutate(v as AudioMode)}
                   >
-                    <SelectTrigger className="max-w-md">
+                    <SelectTrigger className="max-w-md transition-all duration-150 hover:border-primary/50 focus:ring-primary/30">
                       <SelectValue placeholder="选择" />
                     </SelectTrigger>
                     <SelectContent>
@@ -213,15 +219,18 @@ export function VoiceClient() {
           </Card>
 
           {providerType === "whisper_api" ? (
-            <Card>
+            <Card className="transition-all duration-200 hover:shadow-md">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">
+                <CardTitle className="text-base font-semibold text-foreground">
                   Whisper API Provider
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {providersQuery.isLoading ? (
-                  <Loader2Icon className="size-4 animate-spin" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2Icon className="size-4 animate-spin" />
+                    加载中...
+                  </div>
                 ) : providers.length === 0 ? (
                   <Alert>
                     <AlertTitle>无可用 Provider</AlertTitle>
@@ -232,7 +241,7 @@ export function VoiceClient() {
                   </Alert>
                 ) : (
                   <>
-                    <span className="text-sm font-medium leading-none">
+                    <span className="text-sm font-medium leading-none text-foreground">
                       transcription_provider_id
                     </span>
                     <Select
@@ -242,7 +251,7 @@ export function VoiceClient() {
                         putProvider.mutate(v === "__unset__" ? "" : v)
                       }
                     >
-                      <SelectTrigger className="max-w-md">
+                      <SelectTrigger className="max-w-md transition-all duration-150 hover:border-primary/50 focus:ring-primary/30">
                         <SelectValue placeholder="未设置" />
                       </SelectTrigger>
                       <SelectContent>
@@ -270,13 +279,16 @@ export function VoiceClient() {
           ) : null}
 
           {providerType === "local_whisper" ? (
-            <Card>
+            <Card className="transition-all duration-200 hover:shadow-md">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">本机 Whisper 环境</CardTitle>
+                <CardTitle className="text-base font-semibold text-foreground">本机 Whisper 环境</CardTitle>
               </CardHeader>
               <CardContent>
                 {localQuery.isLoading ? (
-                  <Loader2Icon className="size-4 animate-spin" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2Icon className="size-4 animate-spin" />
+                    检测中...
+                  </div>
                 ) : localQuery.isError ? (
                   <Alert variant="destructive">
                     <AlertDescription>
@@ -286,24 +298,28 @@ export function VoiceClient() {
                     </AlertDescription>
                   </Alert>
                 ) : (
-                  <ul className="space-y-1 text-sm">
-                    <li>
-                      可用:{" "}
+                  <ul className="space-y-1.5 text-sm">
+                    <li className="flex items-center gap-2">
+                      <span className="text-muted-foreground">可用:</span>
                       {localQuery.data?.available ? (
-                        <span className="text-green-600 dark:text-green-400">
+                        <span className="font-medium text-emerald-600 dark:text-emerald-400">
                           是
                         </span>
                       ) : (
-                        <span className="text-amber-600">否</span>
+                        <span className="font-medium text-amber-600 dark:text-amber-400">否</span>
                       )}
                     </li>
-                    <li>
-                      ffmpeg:{" "}
-                      {localQuery.data?.ffmpeg_installed ? "已安装" : "未安装"}
+                    <li className="flex items-center gap-2">
+                      <span className="text-muted-foreground">ffmpeg:</span>
+                      <span className={localQuery.data?.ffmpeg_installed ? "text-foreground" : "text-muted-foreground"}>
+                        {localQuery.data?.ffmpeg_installed ? "已安装" : "未安装"}
+                      </span>
                     </li>
-                    <li>
-                      openai-whisper:{" "}
-                      {localQuery.data?.whisper_installed ? "已安装" : "未安装"}
+                    <li className="flex items-center gap-2">
+                      <span className="text-muted-foreground">openai-whisper:</span>
+                      <span className={localQuery.data?.whisper_installed ? "text-foreground" : "text-muted-foreground"}>
+                        {localQuery.data?.whisper_installed ? "已安装" : "未安装"}
+                      </span>
                     </li>
                   </ul>
                 )}

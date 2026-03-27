@@ -4,71 +4,83 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import type { ToolInfo } from "@/lib/tools-api";
+import { Loader2Icon } from "lucide-react";
 
 export function ToolCard({
   tool,
   toggling,
-  isHover,
-  onHoverChange,
   onToggle,
 }: {
   tool: ToolInfo;
   toggling: boolean;
-  isHover: boolean;
-  onHoverChange: (hover: boolean) => void;
   onToggle: () => void;
 }) {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      if (!toggling) onToggle();
+    }
+  };
+
   return (
     <Card
+      role="button"
+      tabIndex={0}
+      onClick={() => !toggling && onToggle()}
+      onKeyDown={handleKeyDown}
       className={cn(
-        "cursor-default gap-0 rounded-2xl py-0 shadow-none ring-0 transition-all duration-200",
+        "group cursor-pointer text-base shadow-sm ring-1 transition-all duration-200",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "active:scale-[0.99]",
         tool.enabled
-          ? "border-2 border-[#615ced] shadow-[0_8px_24px_rgba(97,92,237,0.2)] dark:shadow-[0_8px_24px_rgba(97,92,237,0.25)]"
-          : isHover
-            ? "border border-[#615ced] shadow-[0_12px_32px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_32px_rgba(0,0,0,0.4)]"
-            : "border border-black/4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] dark:border-white/8 dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)]",
+          ? "ring-primary/40 bg-primary/5 hover:shadow-md hover:ring-primary/60"
+          : "ring-border/40 hover:shadow-md hover:ring-border/60",
       )}
-      onMouseEnter={() => onHoverChange(true)}
-      onMouseLeave={() => onHoverChange(false)}
     >
-      <CardContent className="space-y-0 px-4 pt-4 pb-0">
-        <div className="mb-2 flex items-start justify-between gap-2">
-          <h3 className="m-0 min-w-0 flex-1 font-mono text-base leading-snug font-semibold text-[#1a1a1a] dark:text-white/90">
+      <CardContent className="space-y-3 px-5 pt-5 pb-0">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="min-w-0 flex-1 truncate font-mono text-base font-semibold leading-snug text-foreground">
             {tool.name}
           </h3>
-          <div className="flex shrink-0 items-center gap-1.5">
+          <div className="flex shrink-0 items-center gap-2">
             <span
               className={cn(
-                "size-1.5 rounded-full",
-                tool.enabled ? "bg-[#52c41a]" : "bg-[#d9d9d9] dark:bg-white/20",
+                "size-2 shrink-0 rounded-full transition-colors",
+                tool.enabled ? "bg-emerald-500" : "bg-muted-foreground/30",
               )}
             />
             <span
               className={cn(
-                "text-xs",
+                "whitespace-nowrap text-xs font-medium",
                 tool.enabled
-                  ? "text-[#52c41a]"
-                  : "text-[#999] dark:text-white/30",
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-muted-foreground",
               )}
             >
-              {tool.enabled ? "已启用" : "未启用"}
+              {toggling ? "切换中..." : tool.enabled ? "已启用" : "未启用"}
             </span>
           </div>
         </div>
         <p
-          className={cn(
-            "m-0 mb-4 line-clamp-2 min-h-10 text-[13px] leading-relaxed text-[#666] dark:text-white/55",
-          )}
+          className="mb-5 line-clamp-2 min-h-10 text-sm leading-relaxed text-muted-foreground"
+          title={tool.description || undefined}
         >
           {tool.description || "—"}
         </p>
       </CardContent>
-      <CardFooter className="justify-end border-t border-[#f0f0f0] bg-transparent px-4 pt-3 pb-4 dark:border-white/8">
-        <Switch
-          checked={tool.enabled}
-          disabled={toggling}
-          onCheckedChange={() => onToggle()}
-        />
+      <CardFooter className="justify-end border-t border-border/40 bg-transparent px-5 pt-4 pb-5">
+        <div className="relative">
+          <Switch
+            checked={tool.enabled}
+            disabled={toggling}
+            onCheckedChange={() => onToggle()}
+            aria-label={`切换 ${tool.name}`}
+            className="data-[state=checked]:bg-primary"
+          />
+          {toggling && (
+            <Loader2Icon className="absolute -left-1 -top-1 size-6 animate-spin text-primary" />
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

@@ -169,20 +169,23 @@ export function EnvironmentsClient() {
           ) : null}
 
           {listQuery.isLoading ? (
-            <p className="text-sm text-muted-foreground">加载中...</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2Icon className="size-4 animate-spin" />
+              加载中...
+            </div>
           ) : null}
 
           {!listQuery.isLoading && !listQuery.isError && rows.length === 0 && (
             <p className="text-sm text-muted-foreground">无匹配项.</p>
           )}
 
-          <div className="overflow-x-auto rounded-lg border border-border">
+          <div className="overflow-x-auto rounded-lg border border-border/50 shadow-sm">
             <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="border-b border-border bg-muted/50">
+              <thead className="border-b border-border/50 bg-muted/30">
                 <tr>
-                  <th className="px-3 py-2 font-medium">键名</th>
-                  <th className="px-3 py-2 font-medium">值</th>
-                  <th className="px-3 py-2 text-right font-medium">操作</th>
+                  <th className="px-3 py-2.5 text-sm font-semibold text-foreground">键名</th>
+                  <th className="px-3 py-2.5 text-sm font-semibold text-foreground">值</th>
+                  <th className="px-3 py-2.5 text-right text-sm font-semibold text-foreground">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -192,15 +195,15 @@ export function EnvironmentsClient() {
                   return (
                     <tr
                       key={row.key}
-                      className="border-b border-border last:border-0 hover:bg-muted/30"
+                      className="group border-b border-border/50 last:border-0 transition-colors duration-150 hover:bg-accent/50"
                     >
-                      <td className="px-3 py-2 font-mono text-xs font-medium">
+                      <td className="px-3 py-2.5 font-mono text-xs font-medium text-foreground">
                         {row.key}
                       </td>
-                      <td className="max-w-[360px] px-3 py-2">
+                      <td className="max-w-[360px] px-3 py-2.5">
                         <div className="flex items-start gap-2">
                           <span
-                            className="min-w-0 flex-1 wrap-break-word font-mono text-xs"
+                            className="min-w-0 flex-1 wrap-break-word font-mono text-xs text-muted-foreground"
                             title={show ? row.value : undefined}
                           >
                             {show
@@ -212,7 +215,7 @@ export function EnvironmentsClient() {
                               type="button"
                               size="icon"
                               variant="ghost"
-                              className="size-8 shrink-0"
+                              className="size-8 shrink-0 transition-all duration-150 hover:bg-primary/10 hover:text-primary active:scale-90"
                               title={revealed[row.key] ? "隐藏" : "显示"}
                               onClick={() => toggleReveal(row.key)}
                             >
@@ -225,12 +228,12 @@ export function EnvironmentsClient() {
                           ) : null}
                         </div>
                       </td>
-                      <td className="px-3 py-2 text-right">
+                      <td className="px-3 py-2.5 text-right">
                         <div className="flex justify-end gap-1">
                           <Button
                             size="sm"
                             variant="outline"
-                            className="text-base"
+                            className="text-base transition-all duration-150 hover:bg-primary/10 hover:text-primary active:scale-95"
                             onClick={() => openEdit(row)}
                           >
                             <PencilIcon className="size-4" />
@@ -238,7 +241,7 @@ export function EnvironmentsClient() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="text-destructive text-base"
+                            className="text-base text-destructive transition-all duration-150 hover:bg-destructive/10 active:scale-95"
                             onClick={() => setDeleteKey(row.key)}
                           >
                             <Trash2Icon className="size-4" />
@@ -279,14 +282,14 @@ export function EnvironmentsClient() {
             <p className="text-sm text-destructive">键名已存在</p>
           ) : null}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setAddOpen(false)}>
+            <Button variant="outline" className="transition-all duration-150 hover:bg-accent active:scale-95" onClick={() => setAddOpen(false)}>
               取消
             </Button>
             <Button
               disabled={
                 putAllMutation.isPending || !addKey.trim() || duplicateAddKey
               }
-              className="inline-flex gap-2"
+              className="inline-flex gap-2 bg-primary text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
               onClick={() => void saveAdd()}
             >
               {putAllMutation.isPending ? (
@@ -314,12 +317,12 @@ export function EnvironmentsClient() {
             onChange={(e) => setEditValue(e.target.value)}
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditOpen(false)}>
+            <Button variant="outline" className="transition-all duration-150 hover:bg-accent active:scale-95" onClick={() => setEditOpen(false)}>
               取消
             </Button>
             <Button
               disabled={putAllMutation.isPending}
-              className="inline-flex gap-2"
+              className="inline-flex gap-2 bg-primary text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 active:scale-95"
               onClick={() => void saveEdit()}
             >
               {putAllMutation.isPending ? (
@@ -337,21 +340,21 @@ export function EnvironmentsClient() {
             <DialogTitle>删除环境变量</DialogTitle>
             <DialogDescription>
               确定删除{" "}
-              <span className="font-mono text-foreground">{deleteKey}</span>?
+              <span className="font-mono font-medium text-foreground">{deleteKey}</span>?
             </DialogDescription>
           </DialogHeader>
           {deleteMutation.isError ? (
-            <p className="text-destructive">
+            <p className="text-sm text-destructive">
               {(deleteMutation.error as Error).message}
             </p>
           ) : null}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteKey(null)}>
+            <Button variant="outline" className="transition-all duration-150 hover:bg-accent active:scale-95" onClick={() => setDeleteKey(null)}>
               取消
             </Button>
             <Button
               variant="destructive"
-              className="inline-flex gap-2"
+              className="inline-flex gap-2 shadow-sm transition-all duration-200 hover:bg-destructive/90 active:scale-95"
               disabled={deleteMutation.isPending || !deleteKey}
               onClick={() => deleteKey && deleteMutation.mutate(deleteKey)}
             >

@@ -114,14 +114,14 @@ export function workflowStatusTone(
 }
 
 export const WORKFLOW_STATUS_BADGE: Record<WorkflowStatusTone, string> = {
-  live: "border-chart-2/45 bg-chart-2/12 text-chart-2 dark:border-chart-2/35 dark:bg-chart-2/18",
+  live: "border-emerald-500/50 bg-emerald-500/10 text-emerald-700 dark:border-emerald-400/40 dark:bg-emerald-400/15 dark:text-emerald-300",
   draft:
-    "border-chart-4/45 bg-chart-4/12 text-chart-4 dark:border-chart-4/35 dark:bg-chart-4/18",
+    "border-amber-500/50 bg-amber-500/10 text-amber-700 dark:border-amber-400/40 dark:bg-amber-400/15 dark:text-amber-300",
   review:
-    "border-chart-1/45 bg-chart-1/12 text-chart-1 dark:border-chart-1/35 dark:bg-chart-1/18",
+    "border-blue-500/50 bg-blue-500/10 text-blue-700 dark:border-blue-400/40 dark:bg-blue-400/15 dark:text-blue-300",
   deprecated:
-    "border-destructive/45 bg-destructive/10 text-destructive dark:border-destructive/40 dark:bg-destructive/15",
-  neutral: "border-muted-foreground/30 bg-muted/70 text-muted-foreground",
+    "border-rose-500/50 bg-rose-500/10 text-rose-700 dark:border-rose-400/40 dark:bg-rose-400/15 dark:text-rose-300",
+  neutral: "border-slate-400/50 bg-slate-100 text-slate-600 dark:border-slate-500/40 dark:bg-slate-800/50 dark:text-slate-400",
 };
 
 export function workflowsForCatalogTab(

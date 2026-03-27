@@ -94,7 +94,7 @@ export function WorkflowListContent({
                     当前目录下暂无文档, 请切换其他分类
                   </p>
                 ) : (
-                  <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                  <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                     {slice.map((w) => (
                       <WorkflowListCard
                         key={w.filename}

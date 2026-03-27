@@ -260,7 +260,7 @@ function ChatPageInner() {
 
           <Conversation className="min-h-0 flex-1">
             <ConversationContent
-              className="px-0 pt-15 pb-[max(18rem,calc(11rem+28vh))]"
+              className="px-0 pt-16 pb-[max(18rem,calc(11rem+28vh))]"
               scrollClassName="scroll-pb-[max(18rem,calc(11rem+28vh))]"
             >
               {messages.length === 0 && !isGenerating ? (
@@ -317,7 +317,7 @@ function ChatPageInner() {
         </div>
 
         <div
-          className="h-full shrink-0 overflow-hidden transition-[width] duration-300 ease-in-out"
+          className="h-full shrink-0 overflow-hidden transition-[width] duration-300 ease-out"
           style={{ width: showRightSidebar ? rightSidebarWidth : 0 }}
         >
           <ChatHistorySidebar

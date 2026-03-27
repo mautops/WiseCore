@@ -5,7 +5,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ConsoleMirrorScrollPadding,
   ConsoleMirrorSectionHeader,
-  consolePrimaryButtonClass,
 } from "@/components/console-mirror";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import type { TokenUsageQuery } from "@/lib/token-usage-api";
 import { tokenUsageApi } from "@/lib/token-usage-api";
+import { Loader2Icon } from "lucide-react";
 import { useAppShell } from "../../app-shell";
 import { TokenUsageToolbar } from "./token-usage-toolbar";
 import {
@@ -86,7 +86,7 @@ export function TokenUsageClient() {
             description="数据来自 Wisecore 本地聚合; 默认最近 30 天. 可按模型名或 Provider ID 过滤."
           />
 
-          <div className="flex flex-col gap-3 rounded-lg border border-border bg-card p-4 sm:flex-row sm:flex-wrap sm:items-end">
+          <div className="flex flex-col gap-3 rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-all duration-200 hover:border-primary/20 sm:flex-row sm:flex-wrap sm:items-end">
             <div className="space-y-1.5">
               <div className="text-xs font-medium text-muted-foreground">
                 开始日期
@@ -132,7 +132,7 @@ export function TokenUsageClient() {
               />
             </div>
             <Button
-              className={consolePrimaryButtonClass("text-base")}
+              className="gap-1.5 bg-primary px-5 text-base font-medium text-primary-foreground shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95"
               onClick={applyFilters}
             >
               查询
@@ -147,7 +147,10 @@ export function TokenUsageClient() {
           ) : null}
 
           {summaryQuery.isLoading ? (
-            <p className="text-sm text-muted-foreground">加载中...</p>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2Icon className="size-4 animate-spin" />
+              加载中...
+            </div>
           ) : null}
 
           {data && !summaryQuery.isLoading ? (
@@ -162,33 +165,33 @@ export function TokenUsageClient() {
               ) : null}
 
               <div className="grid gap-3 sm:grid-cols-3">
-                <Card>
+                <Card className="transition-all duration-200 hover:shadow-md">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       Prompt tokens
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-2xl font-semibold tabular-nums">
+                  <CardContent className="text-2xl font-semibold tabular-nums text-foreground">
                     {formatTokens(data.total_prompt_tokens)}
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="transition-all duration-200 hover:shadow-md">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       Completion tokens
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-2xl font-semibold tabular-nums">
+                  <CardContent className="text-2xl font-semibold tabular-nums text-foreground">
                     {formatTokens(data.total_completion_tokens)}
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="transition-all duration-200 hover:shadow-md">
                   <CardHeader className="pb-2">
                     <CardTitle className="text-sm font-medium text-muted-foreground">
                       调用次数
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-2xl font-semibold tabular-nums">
+                  <CardContent className="text-2xl font-semibold tabular-nums text-foreground">
                     {formatTokens(data.total_calls)}
                   </CardContent>
                 </Card>
@@ -197,15 +200,15 @@ export function TokenUsageClient() {
               <Separator className="my-2" />
 
               <div className="space-y-2">
-                <h2 className="text-sm font-medium">按日</h2>
-                <div className="overflow-x-auto rounded-md border border-border">
+                <h2 className="text-sm font-semibold text-foreground">按日</h2>
+                <div className="overflow-x-auto rounded-lg border border-border/50 shadow-sm">
                   <table className="w-full min-w-[480px] text-left text-sm">
-                    <thead className="border-b border-border bg-muted/50">
+                    <thead className="border-b border-border/50 bg-muted/30">
                       <tr>
-                        <th className="px-3 py-2 font-medium">日期</th>
-                        <th className="px-3 py-2 font-medium">Prompt</th>
-                        <th className="px-3 py-2 font-medium">Completion</th>
-                        <th className="px-3 py-2 font-medium">次数</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">日期</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">Prompt</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">Completion</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">次数</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -213,7 +216,7 @@ export function TokenUsageClient() {
                         <tr>
                           <td
                             colSpan={4}
-                            className="px-3 py-2 text-muted-foreground"
+                            className="px-3 py-2.5 text-sm text-muted-foreground"
                           >
                             无按日数据
                           </td>
@@ -225,18 +228,18 @@ export function TokenUsageClient() {
                           return (
                             <tr
                               key={d}
-                              className="border-b border-border last:border-0"
+                              className="border-b border-border/50 last:border-0 transition-colors duration-150 hover:bg-accent/50"
                             >
-                              <td className="px-3 py-2 font-mono text-xs">
+                              <td className="px-3 py-2.5 font-mono text-xs font-medium text-foreground">
                                 {d}
                               </td>
-                              <td className="px-3 py-2 tabular-nums">
+                              <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                                 {formatTokens(s.prompt_tokens)}
                               </td>
-                              <td className="px-3 py-2 tabular-nums">
+                              <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                                 {formatTokens(s.completion_tokens)}
                               </td>
-                              <td className="px-3 py-2 tabular-nums">
+                              <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                                 {formatTokens(s.call_count)}
                               </td>
                             </tr>
@@ -249,15 +252,15 @@ export function TokenUsageClient() {
               </div>
 
               <div className="space-y-2">
-                <h2 className="text-sm font-medium">按 Provider</h2>
-                <div className="overflow-x-auto rounded-md border border-border">
+                <h2 className="text-sm font-semibold text-foreground">按 Provider</h2>
+                <div className="overflow-x-auto rounded-lg border border-border/50 shadow-sm">
                   <table className="w-full min-w-[480px] text-left text-sm">
-                    <thead className="border-b border-border bg-muted/50">
+                    <thead className="border-b border-border/50 bg-muted/30">
                       <tr>
-                        <th className="px-3 py-2 font-medium">Provider</th>
-                        <th className="px-3 py-2 font-medium">Prompt</th>
-                        <th className="px-3 py-2 font-medium">Completion</th>
-                        <th className="px-3 py-2 font-medium">次数</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">Provider</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">Prompt</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">Completion</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">次数</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -265,7 +268,7 @@ export function TokenUsageClient() {
                         <tr>
                           <td
                             colSpan={4}
-                            className="px-3 py-2 text-muted-foreground"
+                            className="px-3 py-2.5 text-sm text-muted-foreground"
                           >
                             无
                           </td>
@@ -274,18 +277,18 @@ export function TokenUsageClient() {
                         Object.entries(data.by_provider).map(([pid, s]) => (
                           <tr
                             key={pid}
-                            className="border-b border-border last:border-0"
+                            className="border-b border-border/50 last:border-0 transition-colors duration-150 hover:bg-accent/50"
                           >
-                            <td className="px-3 py-2 font-mono text-xs">
+                            <td className="px-3 py-2.5 font-mono text-xs font-medium text-foreground">
                               {pid || "(空)"}
                             </td>
-                            <td className="px-3 py-2 tabular-nums">
+                            <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                               {formatTokens(s.prompt_tokens)}
                             </td>
-                            <td className="px-3 py-2 tabular-nums">
+                            <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                               {formatTokens(s.completion_tokens)}
                             </td>
-                            <td className="px-3 py-2 tabular-nums">
+                            <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                               {formatTokens(s.call_count)}
                             </td>
                           </tr>
@@ -297,17 +300,17 @@ export function TokenUsageClient() {
               </div>
 
               <div className="space-y-2">
-                <h2 className="text-sm font-medium">按模型</h2>
-                <div className="overflow-x-auto rounded-md border border-border">
+                <h2 className="text-sm font-semibold text-foreground">按模型</h2>
+                <div className="overflow-x-auto rounded-lg border border-border/50 shadow-sm">
                   <table className="w-full min-w-[560px] text-left text-sm">
-                    <thead className="border-b border-border bg-muted/50">
+                    <thead className="border-b border-border/50 bg-muted/30">
                       <tr>
-                        <th className="px-3 py-2 font-medium">键</th>
-                        <th className="px-3 py-2 font-medium">Provider</th>
-                        <th className="px-3 py-2 font-medium">模型</th>
-                        <th className="px-3 py-2 font-medium">Prompt</th>
-                        <th className="px-3 py-2 font-medium">Completion</th>
-                        <th className="px-3 py-2 font-medium">次数</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">键</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">Provider</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">模型</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">Prompt</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">Completion</th>
+                        <th className="px-3 py-2.5 text-sm font-semibold text-foreground">次数</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -315,7 +318,7 @@ export function TokenUsageClient() {
                         <tr>
                           <td
                             colSpan={6}
-                            className="px-3 py-2 text-muted-foreground"
+                            className="px-3 py-2.5 text-sm text-muted-foreground"
                           >
                             无
                           </td>
@@ -324,24 +327,24 @@ export function TokenUsageClient() {
                         Object.entries(data.by_model).map(([k, m]) => (
                           <tr
                             key={k}
-                            className="border-b border-border last:border-0"
+                            className="border-b border-border/50 last:border-0 transition-colors duration-150 hover:bg-accent/50"
                           >
-                            <td className="max-w-[140px] truncate px-3 py-2 font-mono text-xs">
+                            <td className="max-w-[140px] truncate px-3 py-2.5 font-mono text-xs font-medium text-foreground">
                               {k}
                             </td>
-                            <td className="px-3 py-2 font-mono text-xs">
+                            <td className="px-3 py-2.5 font-mono text-xs text-muted-foreground">
                               {m.provider_id || "—"}
                             </td>
-                            <td className="max-w-[160px] truncate px-3 py-2 text-xs">
+                            <td className="max-w-[160px] truncate px-3 py-2.5 text-xs text-muted-foreground">
                               {m.model}
                             </td>
-                            <td className="px-3 py-2 tabular-nums">
+                            <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                               {formatTokens(m.prompt_tokens)}
                             </td>
-                            <td className="px-3 py-2 tabular-nums">
+                            <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                               {formatTokens(m.completion_tokens)}
                             </td>
-                            <td className="px-3 py-2 tabular-nums">
+                            <td className="px-3 py-2.5 tabular-nums text-muted-foreground">
                               {formatTokens(m.call_count)}
                             </td>
                           </tr>

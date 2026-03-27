@@ -218,17 +218,17 @@ export function AgentsSettingsClient() {
         <ConsoleMirrorScrollPadding className="space-y-4">
           <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
-              <h1 className="mb-1 text-2xl font-semibold tracking-tight text-[#1a1a1a] dark:text-white/90">
+              <h1 className="mb-1 text-2xl font-semibold tracking-tight text-foreground">
                 智能体注册
               </h1>
-              <p className="m-0 text-sm text-[#999] dark:text-white/40">
+              <p className="m-0 text-sm text-muted-foreground">
                 此处管理根配置中的智能体注册表.
                 控制台当前会话使用哪一智能体由网关 / JWT / 请求头决定,
                 与下表无直接绑定.
               </p>
             </div>
             <Button
-              className={consolePrimaryButtonClass("shrink-0 text-base")}
+              className="shrink-0 gap-2 bg-primary px-5 text-sm font-medium shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95"
               onClick={() => {
                 setCName("");
                 setCDesc("");
@@ -250,7 +250,7 @@ export function AgentsSettingsClient() {
           ) : null}
 
           {listQuery.isLoading ? (
-            <div className="py-16 text-center text-sm text-[#999] dark:text-white/35">
+            <div className="py-16 text-center text-sm text-muted-foreground">
               <Loader2Icon className="mx-auto mb-3 size-8 animate-spin" />
               <p className="m-0">加载中</p>
             </div>
@@ -259,7 +259,7 @@ export function AgentsSettingsClient() {
           {!listQuery.isLoading &&
             !listQuery.isError &&
             (listQuery.data?.length ?? 0) === 0 && (
-              <p className="py-12 text-center text-sm text-[#999] dark:text-white/35">
+              <p className="py-12 text-center text-sm text-muted-foreground">
                 暂无智能体, 点击「新建智能体」添加.
               </p>
             )}
@@ -268,30 +268,30 @@ export function AgentsSettingsClient() {
             !listQuery.isError &&
             (listQuery.data?.length ?? 0) > 0 &&
             rows.length === 0 && (
-              <p className="py-12 text-center text-sm text-[#999] dark:text-white/35">
+              <p className="py-12 text-center text-sm text-muted-foreground">
                 无匹配项, 调整筛选条件.
               </p>
             )}
 
           {!listQuery.isLoading && !listQuery.isError && rows.length > 0 && (
-            <ConsoleMirrorPanel className="mb-0 p-0 hover:border-[#e8e8e8] hover:shadow-[0_2px_8px_rgba(0,0,0,0.04)] dark:hover:border-white/8">
+            <ConsoleMirrorPanel className="mb-0 overflow-hidden rounded-lg border border-border/50 p-0 shadow-sm transition-all duration-200 hover:border-border hover:shadow-md">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[800px] text-left text-sm">
-                  <thead className="border-b border-[#f0f0f0] bg-[#fafafa] dark:border-white/8 dark:bg-white/5">
+                  <thead className="border-b border-border/50 bg-muted/30">
                     <tr>
-                      <th className="px-4 py-3 font-medium text-[#1a1a1a] dark:text-white/90">
+                      <th className="px-4 py-3 text-sm font-semibold text-foreground">
                         名称
                       </th>
-                      <th className="px-4 py-3 font-medium text-[#1a1a1a] dark:text-white/90">
+                      <th className="px-4 py-3 text-sm font-semibold text-foreground">
                         ID
                       </th>
-                      <th className="px-4 py-3 font-medium text-[#1a1a1a] dark:text-white/90">
+                      <th className="px-4 py-3 text-sm font-semibold text-foreground">
                         描述
                       </th>
-                      <th className="px-4 py-3 font-medium text-[#1a1a1a] dark:text-white/90">
+                      <th className="px-4 py-3 text-sm font-semibold text-foreground">
                         工作区
                       </th>
-                      <th className="px-4 py-3 text-right font-medium text-[#1a1a1a] dark:text-white/90">
+                      <th className="px-4 py-3 text-right text-sm font-semibold text-foreground">
                         操作
                       </th>
                     </tr>
@@ -300,12 +300,12 @@ export function AgentsSettingsClient() {
                     {pagedRows.map((row, rowIndex) => (
                       <tr
                         key={`${row.id}:${rowIndex}`}
-                        className={`border-b border-[#f0f0f0] last:border-0 hover:bg-black/2 dark:border-white/8 dark:hover:bg-white/5 ${!row.enabled ? "opacity-60" : ""}`}
+                        className={`group border-b border-border/50 last:border-0 transition-colors duration-150 hover:bg-accent/50 ${!row.enabled ? "opacity-50" : ""}`}
                       >
                         <td className="px-4 py-3">
                           <div className="flex min-w-0 flex-wrap items-center gap-2">
                             <BotIcon
-                              className="size-4 shrink-0 text-[#1890ff]"
+                              className="size-4 shrink-0 text-primary"
                               aria-hidden
                             />
                             <span className="truncate font-medium text-foreground">
@@ -314,7 +314,7 @@ export function AgentsSettingsClient() {
                             {row.is_builtin ? (
                               <Badge
                                 variant="secondary"
-                                className="shrink-0 text-xs font-normal"
+                                className="shrink-0 border border-border/50 bg-secondary/50 text-xs font-medium"
                               >
                                 内置 QA
                               </Badge>
@@ -322,7 +322,7 @@ export function AgentsSettingsClient() {
                             {!row.enabled ? (
                               <Badge
                                 variant="outline"
-                                className="shrink-0 border-[#d9d9d9] text-xs font-normal text-[#999] dark:border-white/20 dark:text-white/50"
+                                className="shrink-0 border-slate-400/50 bg-slate-100 text-xs font-medium text-slate-600 dark:border-slate-600/50 dark:bg-slate-800/50 dark:text-slate-400"
                               >
                                 已禁用
                               </Badge>
@@ -332,11 +332,11 @@ export function AgentsSettingsClient() {
                         <td className="px-4 py-3 font-mono text-xs font-medium text-foreground">
                           {row.id}
                         </td>
-                        <td className="max-w-[220px] truncate px-4 py-3 text-[#666] dark:text-white/55">
+                        <td className="max-w-[220px] truncate px-4 py-3 text-muted-foreground">
                           {row.description || "—"}
                         </td>
                         <td
-                          className="max-w-[240px] truncate px-4 py-3 font-mono text-xs text-[#666] dark:text-white/55"
+                          className="max-w-[240px] truncate px-4 py-3 font-mono text-xs text-muted-foreground"
                           title={row.workspace_dir}
                         >
                           {row.workspace_dir}
@@ -344,7 +344,7 @@ export function AgentsSettingsClient() {
                         <td className="px-4 py-3 text-right">
                           <div className="flex flex-wrap items-center justify-end gap-1">
                             <Button
-                              variant="link"
+                              variant="ghost"
                               size="sm"
                               disabled={row.id === "default"}
                               title={
@@ -352,13 +352,13 @@ export function AgentsSettingsClient() {
                                   ? "不能编辑 default"
                                   : undefined
                               }
-                              className="h-auto px-2 text-[#615ced] hover:text-[#615ced]/90 disabled:opacity-100 dark:text-[#8b87f0] dark:hover:text-[#a5a2f5]"
+                              className="h-8 px-3 text-sm font-medium text-primary transition-all duration-150 hover:bg-primary/10 active:scale-95 disabled:opacity-50"
                               onClick={() => openEdit(row)}
                             >
                               编辑
                             </Button>
                             <Button
-                              variant="link"
+                              variant="ghost"
                               size="sm"
                               disabled={row.id === "default" || toggleMutation.isPending}
                               title={
@@ -366,7 +366,7 @@ export function AgentsSettingsClient() {
                                   ? "不能禁用 default"
                                   : undefined
                               }
-                              className="h-auto px-2 text-[#666] hover:text-[#333] disabled:opacity-100 dark:text-white/50 dark:hover:text-white/70"
+                              className="h-8 gap-1.5 px-3 text-sm font-medium text-muted-foreground transition-all duration-150 hover:bg-muted active:scale-95 disabled:opacity-50"
                               onClick={() =>
                                 toggleMutation.mutate({
                                   id: row.id,
@@ -374,17 +374,15 @@ export function AgentsSettingsClient() {
                                 })
                               }
                             >
-                              <span className="inline-flex items-center gap-1">
-                                {row.enabled ? (
-                                  <EyeOffIcon className="size-3.5" />
-                                ) : (
-                                  <EyeIcon className="size-3.5" />
-                                )}
-                                {row.enabled ? "禁用" : "启用"}
-                              </span>
+                              {row.enabled ? (
+                                <EyeOffIcon className="size-3.5" />
+                              ) : (
+                                <EyeIcon className="size-3.5" />
+                              )}
+                              {row.enabled ? "禁用" : "启用"}
                             </Button>
                             <Button
-                              variant="link"
+                              variant="ghost"
                               size="sm"
                               disabled={
                                 row.id === "default" || Boolean(row.is_builtin)
@@ -396,13 +394,11 @@ export function AgentsSettingsClient() {
                                     ? "不能删除内置 QA 智能体"
                                     : undefined
                               }
-                              className="h-auto px-2 text-destructive hover:text-destructive disabled:opacity-100 dark:text-[#ff7875] dark:hover:text-[#ff9c9a]"
+                              className="h-8 gap-1.5 px-3 text-sm font-medium text-destructive transition-all duration-150 hover:bg-destructive/10 active:scale-95 disabled:opacity-50"
                               onClick={() => setDeleteId(row.id)}
                             >
-                              <span className="inline-flex items-center gap-1">
-                                <Trash2Icon className="size-3.5" />
-                                删除
-                              </span>
+                              <Trash2Icon className="size-3.5" />
+                              删除
                             </Button>
                           </div>
                         </td>
@@ -412,23 +408,23 @@ export function AgentsSettingsClient() {
                 </table>
               </div>
               {totalPages > 1 ? (
-                <div className="flex items-center justify-end gap-2 border-t border-[#f0f0f0] px-4 py-3 dark:border-white/8">
+                <div className="flex items-center justify-end gap-2 border-t border-border/50 px-4 py-3">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-base"
+                    className="text-sm shadow-sm transition-all duration-150 hover:shadow active:scale-95"
                     disabled={safePage <= 1}
                     onClick={() => setListPage((p) => Math.max(1, p - 1))}
                   >
                     上一页
                   </Button>
-                  <span className="text-sm text-[#999] dark:text-white/40">
+                  <span className="text-sm tabular-nums text-muted-foreground">
                     {safePage} / {totalPages}
                   </span>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-base"
+                    className="text-sm shadow-sm transition-all duration-150 hover:shadow active:scale-95"
                     disabled={safePage >= totalPages}
                     onClick={() =>
                       setListPage((p) => Math.min(totalPages, p + 1))
@@ -446,10 +442,10 @@ export function AgentsSettingsClient() {
       <Dialog open={createOpen} onOpenChange={setCreateOpen}>
         <DialogContent className="text-base sm:max-w-[520px]">
           <DialogHeader>
-            <DialogTitle className="text-lg font-semibold text-[#1a1a1a] dark:text-white/90">
+            <DialogTitle className="text-lg font-semibold text-foreground">
               新建智能体
             </DialogTitle>
-            <DialogDescription className="text-[#999] dark:text-white/40">
+            <DialogDescription className="text-muted-foreground">
               服务端生成短 ID; 工作区目录留空则使用默认路径.
             </DialogDescription>
           </DialogHeader>
@@ -464,7 +460,7 @@ export function AgentsSettingsClient() {
             rows={3}
             value={cDesc}
             onChange={(e) => setCDesc(e.target.value)}
-            className="rounded-md border-[#d9d9d9] text-base dark:border-white/10"
+            className="rounded-lg border-border/60 text-base focus:border-primary/50"
           />
           <div className="space-y-1.5">
             <div className="text-sm font-medium">语言</div>
@@ -495,7 +491,7 @@ export function AgentsSettingsClient() {
             </Button>
             <Button
               disabled={createMutation.isPending || !cName.trim()}
-              className="inline-flex gap-2 bg-[#615ced] text-white hover:bg-[#615ced]/90"
+              className="gap-2 bg-primary font-medium shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95"
               onClick={() => createMutation.mutate()}
             >
               {createMutation.isPending ? (
@@ -518,8 +514,8 @@ export function AgentsSettingsClient() {
           aria-describedby={undefined}
           className="flex w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-[600px]"
         >
-          <SheetHeader className="shrink-0 border-b border-[#f1f2f6] px-6 py-4 dark:border-white/8">
-            <SheetTitle className="text-lg font-semibold text-[#1a1a1a] dark:text-white/90">
+          <SheetHeader className="shrink-0 border-b border-border/50 px-6 py-4">
+            <SheetTitle className="text-lg font-semibold text-foreground">
               {editId ? `编辑: ${editId}` : "编辑"}
             </SheetTitle>
           </SheetHeader>
@@ -552,7 +548,7 @@ export function AgentsSettingsClient() {
                   rows={4}
                   value={eDesc}
                   onChange={(e) => setEDesc(e.target.value)}
-                  className="rounded-md border-[#d9d9d9] text-base dark:border-white/10"
+                  className="rounded-lg border-border/60 text-base focus:border-primary/50"
                 />
               </div>
               <div className="space-y-1.5">
@@ -583,14 +579,14 @@ export function AgentsSettingsClient() {
             </div>
           </ScrollArea>
 
-          <SheetFooter className="border-t border-[#f1f2f6] bg-transparent px-6 py-3 dark:border-white/8">
+          <SheetFooter className="border-t border-border/50 bg-transparent px-6 py-3">
             <div className="flex w-full justify-end gap-2">
               <Button variant="outline" onClick={() => setSheetOpen(false)}>
                 取消
               </Button>
               <Button
                 disabled={updateMutation.isPending || !editId || !eName.trim()}
-                className="inline-flex gap-2 bg-[#615ced] text-white hover:bg-[#615ced]/90"
+                className="gap-2 bg-primary font-medium shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95"
                 onClick={() => {
                   if (!editId) return;
                   updateMutation.mutate({
@@ -614,10 +610,10 @@ export function AgentsSettingsClient() {
       <Dialog open={deleteId != null} onOpenChange={() => setDeleteId(null)}>
         <DialogContent className="text-base">
           <DialogHeader>
-            <DialogTitle>删除智能体</DialogTitle>
+            <DialogTitle className="font-semibold">删除智能体</DialogTitle>
             <DialogDescription>
               将注销{" "}
-              <span className="font-mono text-foreground">{deleteId}</span>.
+              <span className="font-mono font-medium text-foreground">{deleteId}</span>.
               工作区目录不会自动删除.
             </DialogDescription>
           </DialogHeader>
@@ -632,7 +628,7 @@ export function AgentsSettingsClient() {
             </Button>
             <Button
               variant="destructive"
-              className="inline-flex gap-2"
+              className="gap-2 font-medium shadow-sm transition-all duration-200 hover:shadow-md active:scale-95"
               disabled={deleteMutation.isPending || !deleteId}
               onClick={() => deleteId && deleteMutation.mutate(deleteId)}
             >

@@ -39,10 +39,10 @@ function BotAvatar({ center = false }: { center?: boolean }) {
   return (
     <Avatar
       size="default"
-      className={`shrink-0 ring-2 ring-border${center ? "" : " mt-0.5"}`}
+      className={`shrink-0 ring-2 ring-border/60 shadow-sm${center ? "" : " mt-0.5"}`}
     >
-      <AvatarFallback>
-        <BotIcon className="size-3.5" />
+      <AvatarFallback className="bg-primary/10">
+        <BotIcon className="size-3.5 text-primary" />
       </AvatarFallback>
     </Avatar>
   );
@@ -58,9 +58,9 @@ function UserAvatar({
   initials: string;
 }) {
   return (
-    <Avatar size="default" className="mt-0.5 shrink-0 ring-2 ring-border">
+    <Avatar size="default" className="mt-0.5 shrink-0 ring-2 ring-border/60 shadow-sm">
       <AvatarImage src={image} alt={name ?? "User"} />
-      <AvatarFallback>{initials}</AvatarFallback>
+      <AvatarFallback className="bg-muted font-medium">{initials}</AvatarFallback>
     </Avatar>
   );
 }
@@ -182,7 +182,7 @@ export function ChatMessageList({
         const isUser = msg.role === "user";
         const prevRole = idx > 0 ? messages[idx - 1].role : null;
         const showAvatar = prevRole !== msg.role;
-        const marginTop = idx === 0 ? "" : showAvatar ? "mt-6" : "mt-1";
+        const marginTop = idx === 0 ? "" : showAvatar ? "mt-8" : "mt-2";
 
         if (msg.type === "thinking") {
           return (
@@ -371,7 +371,7 @@ function StreamingBlock({
   return (
     <>
       {rows.map((row, i) => {
-        const mt = i === 0 ? (prevIsAssistant ? "mt-1" : "mt-6") : "mt-1";
+        const mt = i === 0 ? (prevIsAssistant ? "mt-2" : "mt-8") : "mt-2";
         return (
           <div
             key={row.key}

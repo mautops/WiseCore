@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PanelLeftCloseIcon, PanelLeftOpenIcon } from "lucide-react";
+import { PanelLeftCloseIcon, PanelLeftOpenIcon, SearchIcon } from "lucide-react";
 
 export function ToolsToolbar({
   showLeftSidebar,
@@ -16,7 +16,7 @@ export function ToolsToolbar({
   onFilterQueryChange: (v: string) => void;
 }) {
   return (
-    <header className="sticky top-0 z-20 flex h-[52px] shrink-0 items-center gap-3 border-b border-border bg-muted/90 px-4 backdrop-blur-md backdrop-saturate-150 supports-backdrop-filter:bg-muted/75">
+    <header className="sticky top-0 z-20 flex h-14 shrink-0 items-center gap-3 border-b border-border/50 bg-background/95 px-4 backdrop-blur-lg backdrop-saturate-150 supports-backdrop-filter:bg-background/80">
       <Button
         size="icon"
         variant="ghost"
@@ -30,12 +30,15 @@ export function ToolsToolbar({
           <PanelLeftOpenIcon className="size-4" />
         )}
       </Button>
-      <Input
-        placeholder="搜索工具名称或描述..."
-        value={filterQuery}
-        onChange={(e) => onFilterQueryChange(e.target.value)}
-        className="h-9 max-w-md flex-1 text-base"
-      />
+      <div className="relative min-w-0 flex-1 max-w-md">
+        <SearchIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/70" />
+        <Input
+          placeholder="搜索工具名称或描述..."
+          value={filterQuery}
+          onChange={(e) => onFilterQueryChange(e.target.value)}
+          className="h-9 w-full pl-9 text-base"
+        />
+      </div>
       <div className="flex-1" />
     </header>
   );

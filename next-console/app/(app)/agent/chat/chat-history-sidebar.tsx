@@ -110,7 +110,6 @@ function SessionItem({
 }: SessionItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(session.name);
-  const [isHovered, setIsHovered] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -156,34 +155,31 @@ function SessionItem({
   );
 
   return (
-    <li
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <li>
       {isEditing ? (
-        <div className="flex items-center gap-1 px-2 py-1.5">
+        <div className="flex items-center gap-1.5 px-2 py-1.5">
           <Input
             ref={inputRef}
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="h-8 text-base md:text-base"
+            className="h-8 text-sm"
           />
           <Button
             size="icon"
             variant="ghost"
-            className="size-6 shrink-0"
+            className="size-7 shrink-0 hover:bg-emerald-500/10 hover:text-emerald-600"
             onClick={confirmEdit}
           >
-            <CheckIcon className="size-3" />
+            <CheckIcon className="size-3.5" />
           </Button>
           <Button
             size="icon"
             variant="ghost"
-            className="size-6 shrink-0"
+            className="size-7 shrink-0 hover:bg-muted"
             onClick={cancelEdit}
           >
-            <XIcon className="size-3" />
+            <XIcon className="size-3.5" />
           </Button>
         </div>
       ) : (
@@ -193,43 +189,44 @@ function SessionItem({
           onClick={onSelect}
           onKeyDown={(e) => e.key === "Enter" && onSelect()}
           className={cn(
-            "group relative w-full cursor-pointer rounded-md px-3 py-2 text-left transition-colors hover:bg-accent",
-            isActive && "bg-accent text-accent-foreground",
+            "group relative flex w-full cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-left",
+            "hover:bg-muted/60",
+            isActive && "bg-muted",
           )}
         >
-          <div className="flex min-w-0 items-center gap-2">
-            {isGenerating ? (
-              <Loader2Icon className="size-3.5 shrink-0 animate-spin text-primary" />
-            ) : (
-              <MessageSquareIcon className="size-3.5 shrink-0 text-muted-foreground" />
-            )}
-            <span className="flex-1 truncate">{session.name}</span>
+          {/* Active indicator */}
+          {isActive && (
+            <span className="absolute bottom-1.5 left-0 top-1.5 w-0.5 rounded-r bg-primary" />
+          )}
 
-            {(isHovered || isActive) && (
-              <div
-                className="flex shrink-0 items-center gap-0.5"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="size-5 opacity-60 hover:opacity-100"
-                  onClick={startEdit}
-                  title="重命名"
-                >
-                  <PencilIcon className="size-3" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="size-5 opacity-60 hover:opacity-100 hover:text-destructive"
-                  onClick={handleDelete}
-                  title="删除"
-                >
-                  <Trash2Icon className="size-3" />
-                </Button>
-              </div>
-            )}
+          {isGenerating ? (
+            <Loader2Icon className="size-4 shrink-0 animate-spin text-primary" />
+          ) : (
+            <MessageSquareIcon className="size-4 shrink-0 text-muted-foreground group-hover:text-foreground" />
+          )}
+          <span className="min-w-0 flex-1 truncate text-sm">{session.name}</span>
+
+          {/* Action buttons - pure CSS opacity, no JS state */}
+          <div
+            className="flex shrink-0 items-center gap-0.5 opacity-0 group-hover:opacity-100"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="flex size-6 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground"
+              onClick={startEdit}
+              title="重命名"
+            >
+              <PencilIcon className="size-3.5" />
+            </button>
+            <button
+              type="button"
+              className="flex size-6 items-center justify-center rounded text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+              onClick={handleDelete}
+              title="删除"
+            >
+              <Trash2Icon className="size-3.5" />
+            </button>
           </div>
         </div>
       )}
@@ -260,17 +257,17 @@ function GroupSection({
   return (
     <div>
       <button
+        type="button"
         onClick={() => collapsible && setCollapsed((v) => !v)}
         className={cn(
-          "mb-1 flex w-full items-center gap-1 rounded px-2 py-0.5 font-medium text-muted-foreground",
-          collapsible &&
-            "cursor-pointer hover:text-foreground transition-colors",
+          "mb-1.5 flex w-full items-center gap-1.5 rounded-md px-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground",
+          collapsible && "cursor-pointer hover:bg-muted hover:text-foreground",
         )}
       >
         {collapsible && (
           <ChevronRightIcon
             className={cn(
-              "size-3 shrink-0 transition-transform",
+              "size-3.5 shrink-0",
               !collapsed && "rotate-90",
             )}
           />
@@ -353,34 +350,35 @@ export function ChatHistorySidebar({
 
   return (
     <aside
-      className="relative flex h-full shrink-0 flex-col border-l border-border bg-card"
+      className="relative flex h-full shrink-0 flex-col border-l border-border/50 bg-card"
       style={{ width }}
     >
       {/* Resize handle */}
       <div
         onMouseDown={handleMouseDown}
-        className="absolute top-0 left-0 h-full w-1 cursor-col-resize hover:bg-primary/30 active:bg-primary/50 transition-colors"
+        className="absolute top-0 left-0 h-full w-1 cursor-col-resize hover:bg-primary/30"
       />
 
-      <div className="flex items-center justify-between border-b border-border px-4 py-3">
-        <span className="font-medium text-foreground">历史记录</span>
+      <div className="flex items-center justify-between border-b border-border/50 px-4 py-3">
+        <span className="text-sm font-semibold text-foreground">历史记录</span>
         <Button
           onClick={onNewChat}
           size="icon-sm"
           variant="ghost"
           title="新建对话"
+          className="hover:bg-primary/10 hover:text-primary"
         >
           <PlusIcon className="size-4" />
         </Button>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-2">
+      <div className="flex-1 overflow-y-auto p-3">
         {groups.length === 0 ? (
-          <p className="px-2 py-6 text-center text-muted-foreground">
+          <p className="px-2 py-6 text-center text-sm text-muted-foreground">
             暂无对话记录
           </p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {groups.map((group) => (
               <GroupSection
                 key={group.label}

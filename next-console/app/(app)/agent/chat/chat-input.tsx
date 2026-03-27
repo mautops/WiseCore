@@ -63,14 +63,14 @@ function ChatInlineRefTags({
         <Badge
           key={t.id}
           variant="secondary"
-          className="h-auto min-h-7 max-w-[min(100%,14rem)] shrink-0 gap-1 px-2 py-1 font-mono text-base font-normal leading-none"
+          className="h-auto min-h-7 max-w-[min(100%,14rem)] shrink-0 gap-1.5 border border-border/50 bg-secondary/50 px-2.5 py-1 font-mono text-sm font-medium leading-none transition-colors hover:bg-secondary/80"
         >
           <span className="min-w-0 truncate">
             {t.kind === "skill" ? `/${t.key}` : `@${t.key}`}
           </span>
           <button
             type="button"
-            className="rounded-sm p-0.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+            className="rounded-sm p-0.5 text-muted-foreground transition-all duration-150 hover:bg-muted hover:text-foreground active:scale-90"
             aria-label="移除引用"
             onClick={() => onRemove(t.id)}
           >
@@ -112,7 +112,7 @@ export function ChatInput({
 
   const followUp =
     showFollowUpSuggestions && onSuggestionClick && status === "ready" ? (
-      <div className="mb-2 px-1">
+      <div className="mb-3 px-1">
         <Suggestions className="w-full">
           <Suggestion suggestion="继续说明上一点" onClick={onSuggestionClick} />
           <Suggestion
@@ -126,7 +126,7 @@ export function ChatInput({
     ) : null;
 
   return (
-    <div className="absolute inset-x-0 bottom-0 z-20 border-t border-border bg-muted/90 py-4 backdrop-blur-md backdrop-saturate-150 supports-backdrop-filter:bg-muted/75">
+    <div className="absolute inset-x-0 bottom-0 z-20 border-t border-border/50 bg-muted/90 py-4 backdrop-blur-lg backdrop-saturate-150 supports-backdrop-filter:bg-muted/80">
       <div className="mx-auto w-full max-w-5xl min-w-0 px-6">
         {followUp}
         <PromptInputProvider>
@@ -140,7 +140,7 @@ export function ChatInput({
             <PromptInputHeader>
               <ChatAttachmentStrip />
             </PromptInputHeader>
-            <div className="flex w-full min-w-0 flex-col gap-1.5 px-3 pt-1.5 pb-0">
+            <div className="flex w-full min-w-0 flex-col gap-2 px-3.5 pt-2 pb-0">
               {refTags.length > 0 ? (
                 <div className="flex flex-wrap items-center gap-1.5">
                   <ChatInlineRefTags tags={refTags} onRemove={removeRefTag} />

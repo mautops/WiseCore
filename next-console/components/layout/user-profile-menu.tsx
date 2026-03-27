@@ -157,13 +157,13 @@ export function UserProfileMenu({ user }: UserProfileMenuProps) {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="flex w-full items-center gap-3 rounded-lg px-2.5 py-2 text-left transition-all duration-200 hover:bg-accent/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
           aria-label={`用户菜单, ${displayName}`}
           aria-haspopup="menu"
         >
-          <Avatar size="sm">
+          <Avatar size="sm" className="ring-2 ring-border/60 shadow-sm">
             <AvatarImage src={user.image ?? undefined} alt={displayName} />
-            <AvatarFallback>{initials}</AvatarFallback>
+            <AvatarFallback className="bg-primary/10 text-primary font-medium">{initials}</AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-foreground">
@@ -178,12 +178,12 @@ export function UserProfileMenu({ user }: UserProfileMenuProps) {
       <DropdownMenuContent
         side="right"
         align="start"
-        sideOffset={6}
-        className="min-w-52 max-w-[min(100vw-1rem,20rem)]"
+        sideOffset={8}
+        className="min-w-56 max-w-[min(100vw-1rem,20rem)]"
       >
-        <div className="flex items-start gap-2 px-2 py-1.5">
+        <div className="flex items-start gap-3 px-3 py-2">
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium">{displayName}</p>
+            <p className="text-sm font-semibold">{displayName}</p>
             <p className="text-xs text-muted-foreground">{user.email}</p>
           </div>
           <div className="flex shrink-0 gap-1">
@@ -192,7 +192,7 @@ export function UserProfileMenu({ user }: UserProfileMenuProps) {
               disabled={accessTokenCopying}
               onClick={() => void handleCopyAccessToken()}
               onPointerDown={(e) => e.preventDefault()}
-              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-50"
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-all duration-150 hover:bg-emerald-500/10 hover:text-emerald-600 active:scale-90 disabled:pointer-events-none disabled:opacity-50"
               title={accessTokenCopied ? "已复制" : "复制 Access Token"}
               aria-label={accessTokenCopied ? "已复制 Access Token" : "复制 Access Token"}
             >
@@ -207,7 +207,7 @@ export function UserProfileMenu({ user }: UserProfileMenuProps) {
               disabled={cliTokenCopying}
               onClick={() => void handleCopyCliToken()}
               onPointerDown={(e) => e.preventDefault()}
-              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:pointer-events-none disabled:opacity-50"
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground transition-all duration-150 hover:bg-primary/10 hover:text-primary active:scale-90 disabled:pointer-events-none disabled:opacity-50"
               title={cliTokenCopied ? "已复制 CLI 配置" : "复制 CLI Token 配置"}
               aria-label={cliTokenCopied ? "已复制 CLI Token 配置" : "复制 CLI Token 配置"}
             >
@@ -224,10 +224,10 @@ export function UserProfileMenu({ user }: UserProfileMenuProps) {
           <Fragment key={group.label}>
             {gi > 0 ? <DropdownMenuSeparator /> : null}
             <DropdownMenuGroup>
-              <DropdownMenuLabel>{group.label}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{group.label}</DropdownMenuLabel>
               {group.items.map(({ label, href, icon: Icon }) => (
                 <DropdownMenuItem key={href} asChild>
-                  <Link href={href} className="cursor-default gap-2">
+                  <Link href={href} className="cursor-default gap-2.5 transition-colors duration-150">
                     <Icon className="size-4 shrink-0" aria-hidden />
                     {label}
                   </Link>
@@ -241,6 +241,7 @@ export function UserProfileMenu({ user }: UserProfileMenuProps) {
           disabled={signingOut}
           variant="destructive"
           onClick={() => void handleSignOut()}
+          className="transition-colors duration-150"
         >
           <LogOutIcon className="size-4" aria-hidden />
           {signingOut ? "正在登出..." : "登出"}

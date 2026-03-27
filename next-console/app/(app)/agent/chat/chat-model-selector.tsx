@@ -92,7 +92,7 @@ export function ChatModelSelector() {
         <Button
           variant="outline"
           size="sm"
-          className="h-8 max-w-[min(14rem,calc(100vw-12rem))] gap-1 px-2 font-normal"
+          className="h-8 max-w-[min(14rem,calc(100vw-12rem))] gap-1.5 border-border/60 bg-background/50 px-2.5 text-sm font-medium shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-background/80 hover:shadow active:scale-[0.98]"
           disabled={providersQuery.isLoading && !providersQuery.data}
         >
           {setMutation.isPending ? (
@@ -101,31 +101,31 @@ export function ChatModelSelector() {
           <span className="min-w-0 flex-1 truncate text-left">
             {providersQuery.isLoading && !providersQuery.data ? "加载…" : label}
           </span>
-          <ChevronDownIcon className="size-3.5 shrink-0 opacity-60" />
+          <ChevronDownIcon className="size-3.5 shrink-0 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>对话模型</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="w-60">
+        <DropdownMenuLabel className="text-xs font-semibold uppercase tracking-wide">对话模型</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {providersQuery.isError ? (
-          <div className="px-2 py-2 text-destructive">无法加载模型列表</div>
+          <div className="px-3 py-2.5 text-sm text-destructive">无法加载模型列表</div>
         ) : providersQuery.isLoading ? (
-          <div className="px-2 py-3 text-center text-muted-foreground">
+          <div className="px-3 py-4 text-center text-sm text-muted-foreground">
             加载中…
           </div>
         ) : eligible.length === 0 ? (
-          <div className="space-y-2 px-2 py-2">
-            <p className="text-muted-foreground">
+          <div className="space-y-3 px-3 py-3">
+            <p className="text-sm text-muted-foreground">
               没有已配置且含模型的供应商, 请先到设置中配置.
             </p>
-            <Button variant="secondary" size="sm" className="w-full" asChild>
+            <Button variant="secondary" size="sm" className="w-full transition-all duration-200 hover:shadow-sm active:scale-[0.98]" asChild>
               <Link href="/settings/models">打开模型设置</Link>
             </Button>
           </div>
         ) : (
           eligible.map((p) => (
             <DropdownMenuSub key={p.id}>
-              <DropdownMenuSubTrigger>
+              <DropdownMenuSubTrigger className="transition-colors duration-150">
                 <span className="truncate">{p.name}</span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent className="max-h-72 overflow-y-auto">
@@ -135,7 +135,7 @@ export function ChatModelSelector() {
                     <DropdownMenuItem
                       key={m.id}
                       disabled={setMutation.isPending}
-                      className="gap-2"
+                      className="gap-2 transition-colors duration-150"
                       onClick={() => {
                         if (isActive) return;
                         setMutation.mutate({
@@ -144,11 +144,11 @@ export function ChatModelSelector() {
                         });
                       }}
                     >
-                      <span className="min-w-0 flex-1 truncate">
+                      <span className="min-w-0 flex-1 truncate text-sm">
                         {m.name || m.id}
                       </span>
                       {isActive ? (
-                        <CheckIcon className="size-3.5 shrink-0 text-primary" />
+                        <CheckIcon className="size-4 shrink-0 text-primary" />
                       ) : null}
                     </DropdownMenuItem>
                   );

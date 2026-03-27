@@ -189,7 +189,7 @@ export function ModelsSettingsClient() {
             </Alert>
           ) : (
             <>
-              <p className="mb-8 text-sm text-[#999] dark:text-white/35">
+              <p className="mb-8 text-sm text-muted-foreground">
                 活动模型写入当前智能体配置. Provider 与密钥由 Wisecore
                 服务端持久化, 与{" "}
                 <span className="font-mono text-foreground">/agent/config</span>{" "}
@@ -197,13 +197,13 @@ export function ModelsSettingsClient() {
               </p>
 
               {/* ---- LLM slot (console slotSection) ---- */}
-              <div className="mb-8 rounded-2xl border border-[#e8e8e8] bg-card p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-200 hover:border-[#d9d9d9] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] dark:border-white/[0.08] dark:bg-[#2a2a2a] dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)] dark:hover:border-white/[0.15] dark:hover:shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
-                <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-[#f0f0f0] pb-4 dark:border-white/[0.08]">
-                  <h3 className="text-lg font-semibold text-[#1a1a1a] dark:text-white/85">
+              <div className="mb-8 rounded-2xl border border-border/50 bg-card p-6 shadow-sm transition-all duration-200 hover:border-primary/20 hover:shadow-md">
+                <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-border/50 pb-4">
+                  <h3 className="text-lg font-semibold text-foreground">
                     大模型 (LLM) 配置
                   </h3>
                   {active?.provider_id && active?.model ? (
-                    <span className="rounded-full border border-[#b7eb8f] bg-[#f6ffed] px-3 py-1 font-mono text-[13px] text-[#52c41a] dark:border-[rgba(82,196,26,0.3)] dark:bg-[rgba(82,196,26,0.1)]">
+                    <span className="rounded-full border border-emerald-500/50 bg-emerald-500/15 px-3 py-1 font-mono text-xs font-medium text-emerald-700 dark:text-emerald-300">
                       当前: {active.provider_id} / {active.model}
                     </span>
                   ) : null}
@@ -211,7 +211,7 @@ export function ModelsSettingsClient() {
 
                 <div className="flex flex-wrap items-end gap-5">
                   <div className="min-w-[200px] flex-1 space-y-2">
-                    <label className="text-sm font-medium text-[#666] dark:text-white/50">
+                    <label className="text-sm font-medium text-muted-foreground">
                       Provider
                     </label>
                     <Select
@@ -238,7 +238,7 @@ export function ModelsSettingsClient() {
                     </Select>
                   </div>
                   <div className="min-w-[200px] flex-1 space-y-2">
-                    <label className="text-sm font-medium text-[#666] dark:text-white/50">
+                    <label className="text-sm font-medium text-muted-foreground">
                       模型
                     </label>
                     <Select
@@ -276,7 +276,7 @@ export function ModelsSettingsClient() {
                   <div className="w-full min-w-[120px] shrink-0 space-y-2 sm:w-auto">
                     <label className="invisible text-sm font-medium">.</label>
                     <Button
-                      className="h-10 w-full gap-2 bg-[#615ced] text-base hover:bg-[#615ced]/90 sm:w-[120px]"
+                      className="h-10 w-full gap-2 bg-primary text-base font-medium shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95 sm:w-[120px]"
                       disabled={!canSaveSlot}
                       onClick={handleSaveSlot}
                     >
@@ -298,28 +298,28 @@ export function ModelsSettingsClient() {
 
               {/* ---- Providers (console providersBlock) ---- */}
               <div className="mt-8">
-                <div className="mb-0 flex flex-wrap items-start justify-between gap-4">
+                <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
                   <section>
-                    <h2 className="mb-1 text-2xl font-semibold tracking-tight">
+                    <h2 className="mb-1 text-2xl font-semibold tracking-tight text-foreground">
                       模型提供方
                     </h2>
-                    <p className="m-0 max-w-2xl text-sm text-[#999] dark:text-white/35">
+                    <p className="m-0 max-w-2xl text-sm text-muted-foreground">
                       管理远程与本地推理服务, API 密钥与可用模型列表.
                     </p>
                   </section>
                   <Button
-                    className="mt-1 shrink-0 gap-2 bg-[#615ced] text-base hover:bg-[#615ced]/90"
+                    className="mt-1 shrink-0 gap-2 bg-primary text-base font-medium shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95"
                     onClick={() => setCustomOpen(true)}
                   >
                     添加 Provider
                   </Button>
                 </div>
 
-                <div className="my-4 flex flex-wrap items-center gap-3">
+                <div className="mb-4 flex flex-wrap items-center gap-3">
                   <div className="relative max-w-[400px] flex-1">
                     <SearchIcon className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
-                      className="h-10 pl-9 text-base"
+                      className="h-10 border-border/60 pl-9 text-base shadow-sm transition-all duration-200 hover:border-primary/30 focus:border-primary/50"
                       placeholder="按名称筛选..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -327,7 +327,7 @@ export function ModelsSettingsClient() {
                   </div>
                   <Button
                     type="button"
-                    className="h-10 shrink-0 gap-2 bg-[#615ced] text-base hover:bg-[#615ced]/90"
+                    className="h-10 shrink-0 gap-2 border-border/60 bg-background text-base shadow-sm transition-all duration-200 hover:border-primary/30 hover:bg-accent hover:shadow active:scale-95"
                     onClick={refetchProviders}
                     disabled={providersQuery.isFetching}
                   >
@@ -359,7 +359,7 @@ export function ModelsSettingsClient() {
 
                 {embeddedProviders.length > 0 ? (
                   <div className="mb-6">
-                    <h4 className="mb-3 text-sm font-semibold tracking-wide text-[#666] dark:text-white/40">
+                    <h4 className="mb-3 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                       本地 / 嵌入式
                     </h4>
                     <div className="flex flex-wrap gap-4">
@@ -394,12 +394,12 @@ export function ModelsSettingsClient() {
       <Dialog open={customOpen} onOpenChange={setCustomOpen}>
         <DialogContent className="text-base sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>新建自定义 Provider</DialogTitle>
+            <DialogTitle className="text-lg font-semibold">新建自定义 Provider</DialogTitle>
             <DialogDescription>
               id 创建后不可改; 可在卡片中打开配置并添加模型.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-2">
+          <div className="grid gap-3">
             <Input
               placeholder="id (唯一)"
               className="font-mono"
@@ -449,6 +449,7 @@ export function ModelsSettingsClient() {
               disabled={
                 createCustomMutation.isPending || !cid.trim() || !cname.trim()
               }
+              className="gap-2 bg-primary font-medium shadow-sm transition-all duration-200 hover:bg-primary/90 hover:shadow-md active:scale-95"
               onClick={() => createCustomMutation.mutate()}
             >
               {createCustomMutation.isPending ? (

@@ -43,13 +43,16 @@ export function SkillCreateDialog({
         <DialogHeader>
           <DialogTitle>新建 Skill</DialogTitle>
           <DialogDescription>
-            目录名仅允许字母, 数字, 下划线等 (与服务器 skill 目录一致). 正文需含 YAML
-            头且包含 name 与 description 字段.
+            目录名仅允许字母、数字、下划线等（与服务器 skill 目录一致）。正文需含 YAML
+            头且包含 name 与 description 字段。
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-3 py-2">
-          <div className="grid gap-1.5">
-            <label className="font-medium text-muted-foreground">目录名</label>
+
+        <div className="grid gap-4 py-2">
+          <div className="grid gap-2">
+            <label className="text-sm font-medium text-muted-foreground">
+              目录名
+            </label>
             <Input
               placeholder="my_skill"
               value={name}
@@ -58,27 +61,31 @@ export function SkillCreateDialog({
               className="h-10 rounded-lg font-mono text-sm"
             />
           </div>
-          <div className="grid gap-1.5">
-            <label className="font-medium text-muted-foreground">SKILL.md 正文</label>
+
+          <div className="grid gap-2">
+            <label className="text-sm font-medium text-muted-foreground">
+              SKILL.md 正文
+            </label>
             <Textarea
               value={content}
               onChange={(e) => onContentChange(e.target.value)}
               spellCheck={false}
-              className="min-h-[220px] rounded-md border-[#d9d9d9] font-mono text-sm dark:border-white/10"
+              className="min-h-[220px] rounded-lg border-border/60 font-mono text-sm"
             />
           </div>
+
           {createMutation.isError && (
-            <p className="text-destructive">
+            <p className="text-sm text-destructive">
               {(createMutation.error as Error).message}
             </p>
           )}
         </div>
+
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             取消
           </Button>
           <Button
-            className="bg-[#615ced] text-white hover:bg-[#615ced]/90"
             disabled={!canSubmit || createMutation.isPending}
             onClick={() =>
               createMutation.mutate({

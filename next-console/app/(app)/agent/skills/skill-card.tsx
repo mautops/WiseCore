@@ -11,61 +11,42 @@ import { cn } from "@/lib/utils";
 import type { SkillSpec } from "@/lib/skills-api";
 import { sourceLabel } from "./skills-domain";
 import {
-  ArchiveIcon,
-  CodeIcon,
-  FileImageIcon,
-  FileSpreadsheetIcon,
-  FileTextIcon,
-  Presentation,
+  CpuIcon,
+  SparklesIcon,
+  TerminalIcon,
+  WrenchIcon,
+  ZapIcon,
   Trash2Icon,
+  FileCode2Icon,
 } from "lucide-react";
 
-function fileIconForName(name: string) {
-  const ext = name.split(".").pop()?.toLowerCase() ?? "";
-  const iconClass = "size-[22px] shrink-0";
-  switch (ext) {
-    case "zip":
-    case "rar":
-    case "7z":
-    case "tar":
-    case "gz":
-      return <ArchiveIcon className={cn(iconClass, "text-[#fa8c16]")} />;
-    case "pdf":
-      return <FileTextIcon className={cn(iconClass, "text-[#f5222d]")} />;
-    case "doc":
-    case "docx":
-      return <FileTextIcon className={cn(iconClass, "text-[#2b579a]")} />;
-    case "xls":
-    case "xlsx":
-      return (
-        <FileSpreadsheetIcon className={cn(iconClass, "text-[#217346]")} />
-      );
-    case "ppt":
-    case "pptx":
-      return <Presentation className={cn(iconClass, "text-[#d24726]")} />;
-    case "jpg":
-    case "jpeg":
-    case "png":
-    case "gif":
-    case "svg":
-    case "webp":
-      return <FileImageIcon className={cn(iconClass, "text-[#eb2f96]")} />;
-    case "py":
-    case "js":
-    case "ts":
-    case "jsx":
-    case "tsx":
-    case "java":
-    case "cpp":
-    case "c":
-    case "go":
-    case "rs":
-    case "rb":
-    case "php":
-      return <CodeIcon className={cn(iconClass, "text-[#52c41a]")} />;
-    default:
-      return <FileTextIcon className={cn(iconClass, "text-[#1890ff]")} />;
+/** Map skill name keywords to semantic icons */
+function skillIconForName(name: string) {
+  const lower = name.toLowerCase();
+  const iconClass = "size-5 shrink-0";
+
+  // AI/Agent related
+  if (lower.includes("ai") || lower.includes("agent") || lower.includes("llm")) {
+    return <SparklesIcon className={cn(iconClass, "text-violet-500")} />;
   }
+  // Code/Development
+  if (lower.includes("code") || lower.includes("dev") || lower.includes("script")) {
+    return <FileCode2Icon className={cn(iconClass, "text-emerald-500")} />;
+  }
+  // Terminal/CLI
+  if (lower.includes("terminal") || lower.includes("cli") || lower.includes("shell")) {
+    return <TerminalIcon className={cn(iconClass, "text-slate-600 dark:text-slate-400")} />;
+  }
+  // Automation/Workflow
+  if (lower.includes("workflow") || lower.includes("auto") || lower.includes("pipeline")) {
+    return <ZapIcon className={cn(iconClass, "text-amber-500")} />;
+  }
+  // Tool/Utility
+  if (lower.includes("tool") || lower.includes("util") || lower.includes("helper")) {
+    return <WrenchIcon className={cn(iconClass, "text-sky-500")} />;
+  }
+  // Default: generic processor icon
+  return <CpuIcon className={cn(iconClass, "text-blue-500")} />;
 }
 
 export function SkillCard({
@@ -82,7 +63,7 @@ export function SkillCard({
   onRequestDelete?: (e: React.MouseEvent) => void;
 }) {
   const customized = skill.source === "customized";
-  const desc = skill.description?.trim() ? skill.description : "—";
+  const desc = skill.description?.trim() ? skill.description : "暂无描述";
 
   return (
     <Card
@@ -95,116 +76,155 @@ export function SkillCard({
           onOpen();
         }
       }}
+      aria-label={`${skill.name}, ${skill.enabled ? "已启用" : "未启用"}, ${sourceLabel(skill.source)}`}
       className={cn(
-        "cursor-pointer gap-0 rounded-2xl py-0 shadow-none ring-0 transition-all duration-200 outline-none focus-visible:ring-2 focus-visible:ring-[#615ced]/40",
+        "group cursor-pointer gap-0 rounded-xl py-0 shadow-sm transition-all duration-200 outline-none",
+        "hover:shadow-md focus-visible:ring-2 focus-visible:ring-primary/40",
         skill.enabled
-          ? "border-2 border-[#615ced] shadow-[0_8px_24px_rgba(97,92,237,0.2)] dark:shadow-[0_8px_24px_rgba(97,92,237,0.25)]"
-          : cn(
-              "border border-black/4 shadow-[0_4px_12px_rgba(0,0,0,0.04)] dark:border-white/8 dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)]",
-              "hover:border-[#615ced] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] dark:hover:border-[#615ced] dark:hover:shadow-[0_12px_32px_rgba(0,0,0,0.4)]",
-            ),
+          ? "border-2 border-primary/80 bg-gradient-to-br from-primary/5 to-transparent shadow-primary/10"
+          : "border border-border/60 bg-card hover:border-primary/40 hover:shadow-lg",
       )}
     >
       <CardContent className="space-y-3 px-4 pt-4 pb-3">
-        <div className="mb-2 flex items-start justify-between gap-2">
-          <div className="flex min-w-0 flex-1 items-center gap-2">
-            {fileIconForName(skill.name)}
-            <h3 className="truncate text-[17px] leading-snug font-semibold text-[#1a1a1a] dark:text-white/90">
+        {/* Header: Icon + Name + Status */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
+            <div
+              className={cn(
+                "flex size-9 shrink-0 items-center justify-center rounded-lg",
+                skill.enabled
+                  ? "bg-primary/10"
+                  : "bg-muted/50 group-hover:bg-muted/70",
+              )}
+            >
+              {skillIconForName(skill.name)}
+            </div>
+            <h3 className="truncate text-base font-semibold leading-tight">
               {skill.name}
             </h3>
           </div>
-          <div className="flex shrink-0 items-center gap-1.5">
+
+          {/* Status Badge */}
+          <div
+            className={cn(
+              "flex shrink-0 items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium",
+              skill.enabled
+                ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400"
+                : "bg-muted text-muted-foreground",
+            )}
+          >
             <span
               className={cn(
                 "size-1.5 rounded-full",
-                skill.enabled ? "bg-[#52c41a]" : "bg-[#d9d9d9] dark:bg-white/20",
+                skill.enabled
+                  ? "animate-pulse bg-emerald-500"
+                  : "bg-muted-foreground/50",
               )}
             />
-            <span
-              className={cn(
-                "text-xs",
-                skill.enabled
-                  ? "text-[#52c41a]"
-                  : "text-[#999] dark:text-white/30",
-              )}
-            >
-              {skill.enabled ? "已启用" : "未启用"}
-            </span>
+            {skill.enabled ? "已启用" : "未启用"}
           </div>
         </div>
 
-        <div className="space-y-1.5">
-          <div className="text-xs text-[#999] dark:text-white/30">描述</div>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div
-                className={cn(
-                  "line-clamp-3 min-h-16 max-h-16 cursor-default rounded-lg border border-[#eceff6] bg-[#f5f6fa] px-2.5 py-2 text-xs leading-snug wrap-break-word text-[#525866] dark:border-white/8 dark:bg-white/5 dark:text-white/65",
-                )}
-              >
-                {desc}
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-[360px] text-sm">
+        {/* Description */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className={cn(
+                "line-clamp-2 min-h-10 cursor-default rounded-md border bg-muted/30 px-2.5 py-2 text-xs leading-relaxed text-muted-foreground",
+              )}
+            >
               {desc}
+            </div>
+          </TooltipTrigger>
+          {skill.description && (
+            <TooltipContent side="top" className="max-w-[320px] text-sm">
+              {skill.description}
             </TooltipContent>
-          </Tooltip>
-        </div>
+          )}
+        </Tooltip>
 
-        <div className="flex flex-col gap-2.5">
-          <div className="min-w-0 space-y-1">
-            <div className="text-xs text-[#999] dark:text-white/30">来源</div>
+        {/* Meta: Source + Path */}
+        <div className="flex flex-wrap items-center gap-3 text-xs">
+          <div className="flex items-center gap-1.5">
+            <span className="text-muted-foreground/70">来源</span>
             <span
               className={cn(
-                "inline-block rounded px-1.5 py-px text-xs whitespace-nowrap",
+                "rounded px-1.5 py-0.5 font-medium",
                 customized
-                  ? "bg-[rgba(250,140,22,0.1)] text-[#fa8c16]"
-                  : "bg-[rgba(97,92,237,0.1)] text-[#615ced]",
+                  ? "bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400"
+                  : "bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-400",
               )}
             >
               {sourceLabel(skill.source)}
             </span>
           </div>
-          <div className="min-w-0 space-y-1">
-            <div className="text-xs text-[#999] dark:text-white/30">路径</div>
-            <div
-              className="truncate rounded-lg border border-[#eceff6] bg-[#f5f6fa] px-2.5 py-2 text-xs text-[#525866] dark:border-white/8 dark:bg-white/5 dark:text-white/65"
-              title={skill.path}
-            >
-              {skill.path}
-            </div>
+          <div className="min-w-0 flex-1">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="truncate rounded bg-muted/40 px-1.5 py-0.5 font-mono text-muted-foreground/80">
+                  {skill.path}
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-[400px]">
+                <code className="text-xs">{skill.path}</code>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </CardContent>
 
+      {/* Actions Footer */}
       <CardFooter
-        className="mt-0.5 justify-end gap-2 border-t border-[#f1f2f6] bg-transparent px-4 pt-2.5 pb-3 dark:border-white/8"
+        className="justify-end gap-2 border-t border-border/40 bg-transparent px-4 py-2.5"
         onClick={(e) => e.stopPropagation()}
       >
         <Button
           type="button"
-          variant="link"
+          variant="ghost"
+          size="sm"
           disabled={toggling}
-          className="h-auto px-0 text-[#615ced] hover:text-[#615ced]/90 dark:text-[#615ced]"
+          className={cn(
+            "h-7 px-2.5 text-xs",
+            skill.enabled
+              ? "text-muted-foreground hover:text-destructive"
+              : "text-primary hover:text-primary",
+          )}
           onClick={onToggleEnabled}
         >
-          {skill.enabled ? "禁用" : "启用"}
+          {toggling ? (
+            <span className="opacity-70">处理中...</span>
+          ) : skill.enabled ? (
+            "禁用"
+          ) : (
+            "启用"
+          )}
         </Button>
         {customized && onRequestDelete && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            disabled={skill.enabled}
-            title={skill.enabled ? "请先禁用后再删除" : "删除"}
-            className="size-8 text-destructive hover:bg-[#ff4d4f] hover:text-white dark:hover:bg-[#ff4d4f]"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!skill.enabled) onRequestDelete(e);
-            }}
-          >
-            <Trash2Icon className="size-4" />
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                disabled={skill.enabled}
+                className={cn(
+                  "size-7",
+                  skill.enabled
+                    ? "cursor-not-allowed opacity-40"
+                    : "text-muted-foreground hover:bg-destructive/10 hover:text-destructive",
+                )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!skill.enabled) onRequestDelete(e);
+                }}
+              >
+                <Trash2Icon className="size-3.5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              {skill.enabled ? "请先禁用后再删除" : "删除此 Skill"}
+            </TooltipContent>
+          </Tooltip>
         )}
       </CardFooter>
     </Card>

@@ -274,7 +274,10 @@ class AgentRunner(Runner):
             # Load agent-specific configuration
             agent_config = load_agent_config(self.agent_id)
 
-            cli_token = getattr(request.state, "cli_access_token", None)
+            # CLI token is only available in FastAPI Request objects, not AgentRequest
+            cli_token = None
+            if hasattr(request, "state"):
+                cli_token = getattr(request.state, "cli_access_token", None)
             rc: dict[str, str] = {
                 "session_id": session_id,
                 "user_id": user_id,
